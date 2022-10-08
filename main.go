@@ -8,5 +8,5 @@ import (
 func main() {
 	// Main Process of Gateway
 	mainProcess := fiber.New()
-	mainProcess.Listen(":10000")
+	mainProcess.Listen(":12000")
 }
