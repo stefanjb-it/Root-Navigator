@@ -31,4 +31,24 @@ func SetupGateway(proc *fiber.App) {
 
 	// Return relevant Fh Data on Request
 	proc.Get("/fhData/:query/:from/:to", handler.HandleFHData)
+
+	// ----- Interaction Data End-Points
+
+	// Registering (Details of registering)
+	// TODO
+
+	// Login Request
+	// TODO
+
+	// Route Request
+	// TODO
+
+	// Verbund Request
+	// TODO
+
+	// Pic&Push Request
+	// TODO
+
+	// Alarm Request
+	// TODO
 }

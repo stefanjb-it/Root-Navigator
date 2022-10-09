@@ -10,13 +10,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Process FH-Data Requests
 func HandleFHData(c *fiber.Ctx) error {
-
 	// Splitting Parameters
 	query, from, to := c.Params("query"), c.Params("from"), c.Params("to")
 	if len(query) != 5 || len(from) != 10 || len(to) != 10 {
+		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
-			"code": 10,
+			"code": 1,
 			"data": nil,
 		})
 	}
@@ -24,13 +25,13 @@ func HandleFHData(c *fiber.Ctx) error {
 	// Init Data Retrieval
 	data, state := StartRequest(query, from, to)
 	if !state {
+		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{
-			"code": 11,
+			"code": 2,
 			"data": nil,
 		})
 	}
 
-	//fmt.Println("worked through request:", string(data))
 	return c.JSON(fiber.Map{
 		"code": 0,
 		"data": string(data),

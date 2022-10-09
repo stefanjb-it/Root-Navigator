@@ -1,0 +1,10 @@
+[
+    {
+        "code":1,
+        "desc":"Request not in correct format"
+    },
+    {
+        "code":2,
+        "desc":"Request could not be processed"
+    }
+]
