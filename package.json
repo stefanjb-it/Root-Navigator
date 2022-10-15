@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
+    "hafas-client": "^5.26.0",
     "hafas-rest-api": "^4.1.0"
   }
 }
