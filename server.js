@@ -17,3 +17,5 @@ const api = createApi(hafas, config)
 api.listen(8080, (err) => {
 	if (err) console.error(err)
 })
+
+module.exports = api;
