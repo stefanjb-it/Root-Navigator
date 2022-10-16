@@ -8,18 +8,32 @@ let should = chai.should()
 
 chai.use(chaiHttp)
 
-describe('/GET ', () => {
-    it('it should GET status 200 ok back', (done) => {
+describe('/ ', () => {
+    it('should return status 200 ok', (done) => {
         chai.request(server)
             .get('/')
             .end((err, res) => {
                 res.should.have.status(200)
-                res.should.be.json;
+                res.should.be.json
                 res.should.be.a('object')
                 res.body.should.have.all.keys(
-                    'reachableFromUrl','stopUrl','departuresUrl','arrivalsUrl','journeysUrl',
-                    'tripUrl','nearbyUrl','locationsUrl','radarUrl','refreshJourneyUrl')
-                done();
+                    'reachableFromUrl', 'stopUrl', 'departuresUrl', 'arrivalsUrl', 'journeysUrl',
+                    'tripUrl', 'nearbyUrl', 'locationsUrl', 'radarUrl', 'refreshJourneyUrl')
+                done()
+            });
+    });
+});
+
+describe('/locations/nearby', () => {
+    it('should return status 200 ok and 6 results', (done) => {
+        chai.request(server)
+            .get('/locations/nearby/?latitude=47.06727184602459&longitude=15.442097181893473&distance=250')
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.should.be.json
+                res.body.should.be.a('array')
+                res.body.should.have.lengthOf(6)
+                done()
             });
     });
 });
