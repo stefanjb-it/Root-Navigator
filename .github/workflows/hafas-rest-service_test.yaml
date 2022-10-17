@@ -3,7 +3,7 @@ name: Node.js CI
 on:
   push:
     branches:
-      - 'hafas-rest-service'
+      - hafas-rest-service
 
 jobs:
   build:
