@@ -3,7 +3,7 @@ const oebbProfile = require('hafas-client/p/oebb')
 const createApi = require('hafas-rest-api')
 
 const config = {
-	hostname: 'STVL2',
+	hostname: 'hafas-rest-service',
 	name: 'elcapo-paris',
 	homepage: 'https://github.com/stefanjb-it/elcapo-paris',
 	version: '1.0.0',
