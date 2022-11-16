@@ -6,7 +6,7 @@ let server = require('../server.js')
 let should = chai.should()
 
 
-chai.use(chaiHttp)
+chai.use(chaiHttp) // enable HTTP
 
 describe('/ ', () => {
     it('should return status 200 ok', (done) => {
