@@ -1,0 +1,101 @@
+---------- ---------- ---------- ---------- ---------- ----------
+Describes Basic Functionality of the APP (grouped by Activity)
+---------- ---------- ---------- ---------- ---------- ----------
+
+----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+Screens
+    - SplashScreen
+
+    - RegScreen
+        - modes: Standard, Invalid
+        - values: basics, AdIn:Route-Finding
+
+    - WaitingForAuthScreen
+        - Loading Screen, circle with lock inside
+
+    - LoginScreen
+        - modes: Standard, Invalid
+
+    - HomeScreen
+        - modes: Standard, WithData, Offline
+        - RecyclerView with surrounding stations and first incoming routes
+
+    - GeneralSettingsScreens
+        - values: Type, Study, Group, preferred Lines
+
+    - UnauthSafeScreen
+
+-----
+
+AdIn:
+    - Route-finding
+        - home, dest given
+        - auto route-finding
+        - manual intervention before saving
+
+----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+
+__INIT__
+    - show SplashScreen
+    - ask for permissions (once / recurring)
+    - check for locally saved config
+        - exists?
+            - decrypt
+            - load data
+            - LOGIN
+
+        - offline & login timestamp expired?
+            - show UnauthSafeScreen
+
+        - no / one-time-login
+            - create new empty config
+            - REGISTER
+
+
+REGISTER
+    - show GeneralSettingsScreens
+    - show RegScreen(Standard)
+    - ENTER submit --> check / parse values and call /register
+    - show WaitingForAuthScreen
+    - AWAIT response --> parse / validate response content
+        - ok?
+            - HOME
+
+        - no
+            - REGISTER(Invalid)
+
+
+LOGIN_AUTO
+    - call /register with user data
+    - show WaitingForAuthScreen
+    - AWAIT response --> parse / validate response content
+        - ok?
+            - HOME
+
+        - no
+            - LOGIN
+
+
+LOGIN
+    - show LoginScreen(Standard)
+    - ENTER submit --> check / parse values and call /login
+    - show WaitingForAuthScreen
+    - AWAIT response --> parse / validate response content
+        - ok?
+            - HOME
+
+        - no
+            - LOGIN(Invalid)
+
+
+HOME
+    - call /envstationdata with GPS location
+    - show HomeScreen(Standard)
+    - AWAIT response --> parse / validate response content
+        - ok?
+            - show HomeScreen(WithData)
+
+        - no
+            - RETRY (max. 3 times)

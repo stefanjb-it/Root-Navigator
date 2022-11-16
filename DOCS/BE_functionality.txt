@@ -1,0 +1,14 @@
+---------- ---------- ---------- ---------- ---------- ----------
+Describes Basic Functionality of the BackEnd (grouped by Activity)
+---------- ---------- ---------- ---------- ---------- ----------
+
+/register (FIREBASE)
+    - all done by FireBase
+
+
+/login
+    - all done by FireBase
+
+
+/envstationdata
+    - 

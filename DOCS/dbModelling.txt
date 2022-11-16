@@ -10,6 +10,7 @@ Datenpunkte allgemein:
     - Studenten / reg. User
     - used devices
 
+[DEPRECATED]
 Google API:
     - Streckendaten
         - Start / End Zeiten
@@ -22,7 +23,7 @@ Google API:
         - Gehzeiten
         - ...
 
-Verbund API:
+HAFAS API (self-hosted):
     - GPS von Anfragen
     - Häufigkeit Haltestellen
     - Verspätungen
