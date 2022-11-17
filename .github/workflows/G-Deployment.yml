@@ -25,12 +25,12 @@ jobs:
     steps:
       - name: checkout_for_deployment
         uses: actions/checkout@v3
-      - name: setup_gcloud
-        uses: google-github-actions/setup-gcloud@v0
+      - name: 'auth'
+        uses: 'google-github-actions/auth@v1'
         with:
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_EMAIL }}
-          enable_default_credentials: true
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: setup_gcloud
+        uses: google-github-actions/setup-gcloud@v1
       - name: configure_docker
         run: gcloud auth configure-docker
       - name: build_and_publish
