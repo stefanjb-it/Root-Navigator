@@ -2,7 +2,7 @@ name: G-Deployment
 
 on:
   push:
-    tags: ["deployment"]
+    tags: ["deployment**"]
 
 jobs:
   test:
