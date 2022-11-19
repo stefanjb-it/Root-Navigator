@@ -1,0 +1,26 @@
+---------- ---------- ---------- ---------- ---------- ----------
+Describes Data Request Structures, Data Storage & Analysis
+---------- ---------- ---------- ---------- ---------- ----------
+
+
+REGISTER
+    - FIREBASE
+
+
+LOGIN
+    - FIREBASE
+
+
+ENVSTATIONDATA
+    - TODO
+
+
+LVDATA [POST]
+    - base-Url: /lvdata
+    - Body JSON:
+        - study
+        - device_id
+    - response:
+        - List<LV>
+        - data for next 14 days (at max. 14 LVs sent)
+

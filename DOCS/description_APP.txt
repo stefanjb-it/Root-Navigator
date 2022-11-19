@@ -2,6 +2,7 @@
 Describes Basic Functionality of the APP (grouped by Activity)
 ---------- ---------- ---------- ---------- ---------- ----------
 
+
 ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 Screens
@@ -9,7 +10,7 @@ Screens
 
     - RegScreen
         - modes: Standard, Invalid
-        - values: basics, AdIn:Route-Finding
+        - values: basics, AdIn_Route-Finding
 
     - WaitingForAuthScreen
         - Loading Screen, circle with lock inside
@@ -19,12 +20,35 @@ Screens
 
     - HomeScreen
         - modes: Standard, WithData, Offline
-        - RecyclerView with surrounding stations and first incoming routes
+        - RecyclerView with surrounding stations and first incoming lines
 
     - GeneralSettingsScreens
         - values: Type, Study, Group, preferred Lines
 
     - UnauthSafeScreen
+
+    - PicAndPushScreen
+        - [no online data]
+        - momentary reminders
+        - previous reminders (re-selectable)
+    
+    - NewPushScreen
+        - new / re-use
+        - title
+        - when
+        - alarm?
+        [ - location? [allow pictures] ] LtoI
+        - back to parent
+
+    - AlarmScreen
+        - on/off
+        - wakeup x minutes before first connection
+        - once / number of alarms
+        - sound
+        - set manually
+            - days?
+            - time?
+            - feedback!
 
 -----
 
@@ -33,6 +57,26 @@ AdIn:
         - home, dest given
         - auto route-finding
         - manual intervention before saving
+    
+    - LtoI
+        - Last-to-Implement
+
+
+AlarmManager:
+    - Update-Data
+        - Cur Data
+        - call /lvdata/from/to
+        - at 20:00
+        - ok?
+            - replace local version with current one
+        
+        - no
+            - retry in 1h
+
+    - Set-Alarm
+        - at 20:10
+        - implements alarm
+        - PUSH alarm details (can be disabled)
 
 ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -44,7 +88,7 @@ __INIT__
         - exists?
             - decrypt
             - load data
-            - LOGIN
+            - LOGIN_AUTO
 
         - offline & login timestamp expired?
             - show UnauthSafeScreen
@@ -75,6 +119,7 @@ LOGIN_AUTO
             - HOME
 
         - no
+            - clear config>AuthData
             - LOGIN
 
 
@@ -99,3 +144,18 @@ HOME
 
         - no
             - RETRY (max. 3 times)
+
+    - ENTER "Pic&Push" --> PIC&PUSH
+    - ENTER "AlarmSettings" --> ALARM
+
+
+[offline-enabled]
+PIC&PUSH
+    - show PicAndPushScreen
+    - ENTER "NewPush" --> show NewPushScreen
+
+
+[offline-enabled]
+ALARM
+    - show AlarmScreen
+    - ENTER "NewAlarm" --> save values / CREATE new alarm
