@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -11,6 +12,15 @@ import (
 
 // Process FH-Data Requests
 func HandleFHData(c *fiber.Ctx) error {
+	userId := c.Cookies("userId")
+	if !authenticateIdToken(userId) {
+		log.Println("Invalid User ID")
+		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
+			"code": 3,
+			"data": nil,
+		})
+	}
+
 	// Splitting Parameters
 	query, from, to := c.Params("query"), c.Params("from"), c.Params("to")
 	if len(query) != 5 || len(from) != 10 || len(to) != 10 {

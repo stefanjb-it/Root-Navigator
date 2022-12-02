@@ -6,5 +6,9 @@
     {
         "code":2,
         "desc":"Request could not be processed"
+    },
+    {
+        "code":3,
+        "desc":"Invalid UserID found"
     }
 ]
