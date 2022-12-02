@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
@@ -14,7 +13,7 @@ import (
 func HandleFHData(c *fiber.Ctx) error {
 	userId := c.Cookies("userId")
 	if !authenticateIdToken(userId) {
-		log.Println("Invalid User ID")
+		//log.Println("Invalid User ID", userId)
 		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
 			"code": 3,
 			"data": nil,

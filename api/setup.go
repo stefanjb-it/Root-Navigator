@@ -24,12 +24,14 @@ func SetupGateway(proc *fiber.App) {
 	}))
 
 	// Connect to Firebase Instance
-	plainText, err := base64.StdEncoding.DecodeString(os.Getenv("FIREBASE_CONFIG"))
+	plainText, err := base64.StdEncoding.DecodeString(os.Getenv("FIREBASE_CONFIG_BASE64"))
 	if err != nil {
 		log.Fatal(err)
 	}
+	os.Setenv("FIREBASE_CONFIG", string(plainText))
+	//log.Println(string(plainText))
 
-	opt := option.WithCredentialsJSON([]byte(plainText))
+	opt := option.WithCredentialsJSON(plainText)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		log.Fatal(err)
