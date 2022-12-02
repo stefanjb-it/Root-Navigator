@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/base64"
 	"log"
 	"os"
 
@@ -23,7 +24,12 @@ func SetupGateway(proc *fiber.App) {
 	}))
 
 	// Connect to Firebase Instance
-	opt := option.WithCredentialsJSON([]byte(os.Getenv("FIREBASE_CREDENTIALS")))
+	plainText, err := base64.StdEncoding.DecodeString(os.Getenv("FIREBASE_CONFIG"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	opt := option.WithCredentialsJSON([]byte(plainText))
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		log.Fatal(err)
