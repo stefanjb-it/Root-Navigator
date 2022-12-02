@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"io/ioutil"
-	logger "mappdev/main/logger"
 	"net/http"
 	"strings"
 
@@ -69,19 +68,19 @@ func StartRequest(study, from, to string) (string, bool) {
 	to = timeTo + to
 	resp, err := http.Get(DataAdress + study + from + to)
 	if err != nil {
-		logger.RetrieverLogger.Println("Invalid Request -->", study, from, to)
+		//logger.RetrieverLogger.Println("Invalid Request -->", study, from, to)
 		return "", false
 	}
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.RetrieverLogger.Println("Invalid Response -->", study, from, to)
+		//logger.RetrieverLogger.Println("Invalid Response -->", study, from, to)
 		return "", false
 	}
 
 	var relevantContent []ExternalDataInstance
 	err = json.Unmarshal(content, &relevantContent)
 	if err != nil {
-		logger.RetrieverLogger.Println("Invalid Parsing -->", study, from, to)
+		//logger.RetrieverLogger.Println("Invalid Parsing -->", study, from, to)
 		return "", false
 	}
 
@@ -95,7 +94,7 @@ func StartRequest(study, from, to string) (string, bool) {
 	}
 	d, err := json.Marshal(resultList)
 	if err != nil {
-		logger.RetrieverLogger.Println("Invalid Re-Parsing -->", resultList)
+		//logger.RetrieverLogger.Println("Invalid Re-Parsing -->", resultList)
 		return "", false
 	}
 

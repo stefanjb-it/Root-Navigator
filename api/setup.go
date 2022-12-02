@@ -9,11 +9,6 @@ import (
 
 // Setup for Routes, CORS
 func SetupGateway(proc *fiber.App) {
-	/*
-		// Loading Cookie Secret from DB
-		cookieSecret := "unglaublichHerrlicher92Schluessel"
-	*/
-
 	// Setup CORS for User Access Management
 	proc.Use(cors.New(cors.Config{
 		AllowCredentials: true,

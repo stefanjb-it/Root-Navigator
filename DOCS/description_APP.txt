@@ -21,6 +21,11 @@ Screens
     - HomeScreen
         - modes: Standard, WithData, Offline
         - RecyclerView with surrounding stations and first incoming lines
+        - Top Nav Bar with Name, Settings
+        - Bottom Nav Bar with WebView TK, Home, Alarm, Pic&Push
+
+    - WebView TK
+        - WebView with TK Cur&EP
 
     - GeneralSettingsScreens
         - values: Type, Study, Group, preferred Lines
@@ -112,7 +117,7 @@ REGISTER
 
 
 LOGIN_AUTO
-    - call /register with user data
+    - call /login with user data
     - show WaitingForAuthScreen
     - AWAIT response --> parse / validate response content
         - ok?
@@ -136,7 +141,7 @@ LOGIN
 
 
 HOME
-    - call /envstationdata with GPS location
+    - call /envstationdata with GPS location every 10 seconds
     - show HomeScreen(Standard)
     - AWAIT response --> parse / validate response content
         - ok?
@@ -144,6 +149,7 @@ HOME
 
         - no
             - RETRY (max. 3 times)
+            - show HomeScreen(Offline)
 
     - ENTER "Pic&Push" --> PIC&PUSH
     - ENTER "AlarmSettings" --> ALARM

@@ -2,7 +2,6 @@ package main
 
 import (
 	api "mappdev/main/api"
-	logger "mappdev/main/logger"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +11,6 @@ import (
 func main() {
 	// Setting up logging process
 	logChan := make(chan *os.File)
-	go logger.SetupLogger(logChan)
 
 	// Main Process of Gateway
 	mainProcess := fiber.New()
