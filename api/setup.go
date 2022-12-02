@@ -53,12 +53,6 @@ func SetupGateway(proc *fiber.App) {
 
 	// ----- Interaction Data End-Points
 
-	// Registering (Details of registering)
-	// TODO
-
-	// Login Request
-	// TODO
-
 	// Route Request
 	// TODO
 
