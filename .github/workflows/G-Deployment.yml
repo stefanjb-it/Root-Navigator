@@ -43,7 +43,7 @@ jobs:
           gcloud run deploy ${{ secrets.GCP_APPLICATION }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION }} \
             --platform managed \
             --max-instances 100 \
-            --timeout 5m \
+            --timeout 30s \
             --allow-unauthenticated \
-            --memory 256M \
+            --memory 512M \
             --service-account hafas-rest-service@hosting-351419.iam.gserviceaccount.com

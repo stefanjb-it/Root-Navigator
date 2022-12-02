@@ -2,7 +2,7 @@ name: G-Unit
 
 on:
   push:
-    branches: [ "hafas-rest-service" ]
+    branches: [ "oebb-hafas" ]
     tags-ignore: ["deployment"]
 
 jobs:
