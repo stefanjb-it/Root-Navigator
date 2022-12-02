@@ -1,0 +1,35 @@
+name: force-push-main
+
+on:
+  push:
+    tags: ["deployment**"]
+
+jobs:
+  gcp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout_for_deployment
+        uses: actions/checkout@v3
+      - name: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: setup_gcloud
+        uses: google-github-actions/setup-gcloud@v1
+      - name: configure_docker
+        run: gcloud auth configure-docker
+      - name: build_and_publish
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION_BACKEND }}
+          gcloud config set run/region europe-west1
+      - name: Deploy
+        run: |
+          gcloud run deploy ${{ secrets.GCP_APPLICATION_BACKEND }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION_BACKEND }} \
+            --set-env-vars FIREBASE_CREDENTIALS=${{ secrets.FIREBASE_CREDENTIALS }} \
+            --platform managed \
+            --max-instances 100 \
+            --timeout 30s \
+            --allow-unauthenticated \
+            --memory 512M \
+            --service-account root-nv-backend@hosting-351419.iam.gserviceaccount.com
