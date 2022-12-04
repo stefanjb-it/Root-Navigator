@@ -31,7 +31,7 @@ func SetupGateway(proc *fiber.App) {
 	os.Setenv("FIREBASE_CONFIG", string(plainText))
 	//log.Println(string(plainText))
 
-	opt := option.WithCredentialsJSON(plainText)
+	opt := option.WithCredentialsJSON([]byte(plainText))
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		log.Fatal(err)

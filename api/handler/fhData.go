@@ -31,7 +31,7 @@ func HandleFHData(c *fiber.Ctx) error {
 	}
 
 	// Init Data Retrieval
-	data, state := StartRequest(query, from, to)
+	_, state, rawList := StartRequest(query, from, to)
 	if !state {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{
@@ -42,7 +42,7 @@ func HandleFHData(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"code": 0,
-		"data": string(data),
+		"data": rawList,
 	})
 
 }
@@ -71,26 +71,27 @@ const studyProgram = "q="
 const timeFrom = "&start="
 const timeTo = "&end="
 
-func StartRequest(study, from, to string) (string, bool) {
+// !!! ONLY USE return list, otherwise double JSON conversion due to fiber !!!
+func StartRequest(study, from, to string) ([]byte, bool, []InternalDataInstance) {
 	study = studyProgram + study
 	from = timeFrom + from
 	to = timeTo + to
 	resp, err := http.Get(DataAdress + study + from + to)
 	if err != nil {
 		//logger.RetrieverLogger.Println("Invalid Request -->", study, from, to)
-		return "", false
+		return nil, false, nil
 	}
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		//logger.RetrieverLogger.Println("Invalid Response -->", study, from, to)
-		return "", false
+		return nil, false, nil
 	}
 
 	var relevantContent []ExternalDataInstance
 	err = json.Unmarshal(content, &relevantContent)
 	if err != nil {
 		//logger.RetrieverLogger.Println("Invalid Parsing -->", study, from, to)
-		return "", false
+		return nil, false, nil
 	}
 
 	var resultList []InternalDataInstance
@@ -104,10 +105,10 @@ func StartRequest(study, from, to string) (string, bool) {
 	d, err := json.Marshal(resultList)
 	if err != nil {
 		//logger.RetrieverLogger.Println("Invalid Re-Parsing -->", resultList)
-		return "", false
+		return nil, false, nil
 	}
 
-	return string(d), true
+	return d, true, resultList
 }
 
 // Splits Title into 4 main parts
