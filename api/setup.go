@@ -52,5 +52,6 @@ func SetupGateway(proc *fiber.App) {
 	// Return relevant Fh Data on Request
 	proc.Get("/fhData/:query/:from/:to", handler.HandleFHData)
 
-	proc.Get("/api/hafas/v1/:endpoint", handler.ForwardData)
+	//proc.Get("/api/hafas/v1/:endpoint", handler.ForwardData)
+	proc.Get("/api/hafas/v1/:ep1?/:ep2?/:ep3?", handler.ForwardDataDynamic)
 }
