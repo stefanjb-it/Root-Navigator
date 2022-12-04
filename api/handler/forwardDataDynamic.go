@@ -11,7 +11,6 @@ import (
 const URI = "https://oebb-hafas.fastcloud-it.net"
 
 func ForwardDataDynamic(c *fiber.Ctx) error {
-	log.Println(c.Request().URI())
 	queryString := c.Request().URI().QueryArgs()
 
 	localURI := URI
@@ -22,7 +21,6 @@ func ForwardDataDynamic(c *fiber.Ctx) error {
 		if param != "" {
 			localURI += "/" + param
 		}
-		log.Println(param)
 	}
 
 	localURI += "?" + queryString.String()
