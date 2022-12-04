@@ -11,6 +11,11 @@ import (
 const URI = "https://oebb-hafas.fastcloud-it.net"
 
 func ForwardDataDynamic(c *fiber.Ctx) error {
+	userId := c.Cookies("userId")
+	if !authenticateIdToken(userId) {
+		return c.Status(http.StatusUnauthorized).JSON(nil)
+	}
+
 	queryString := c.Request().URI().QueryArgs()
 
 	localURI := URI
