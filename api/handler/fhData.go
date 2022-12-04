@@ -13,38 +13,23 @@ import (
 func HandleFHData(c *fiber.Ctx) error {
 	userId := c.Cookies("userId")
 	if !authenticateIdToken(userId) {
-		//log.Println("Invalid User ID", userId)
-		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{
-			"code": 3,
-			"data": nil,
-		})
+		return c.Status(http.StatusUnauthorized).JSON(nil)
 	}
 
 	// Splitting Parameters
 	query, from, to := c.Params("query"), c.Params("from"), c.Params("to")
 	if len(query) != 5 || len(from) != 10 || len(to) != 10 {
 		c.Status(fiber.StatusBadRequest)
-		return c.JSON(fiber.Map{
-			"code": 1,
-			"data": nil,
-		})
+		return c.JSON(nil)
 	}
 
 	// Init Data Retrieval
-	_, state, rawList := StartRequest(query, from, to)
+	rawList, state := StartRequest(query, from, to)
 	if !state {
 		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{
-			"code": 2,
-			"data": nil,
-		})
+		return c.JSON(nil)
 	}
-
-	return c.JSON(fiber.Map{
-		"code": 0,
-		"data": rawList,
-	})
-
+	return c.JSON(rawList)
 }
 
 // ----- Data Types for Request -----
@@ -72,26 +57,23 @@ const timeFrom = "&start="
 const timeTo = "&end="
 
 // !!! ONLY USE return list, otherwise double JSON conversion due to fiber !!!
-func StartRequest(study, from, to string) ([]byte, bool, []InternalDataInstance) {
+func StartRequest(study, from, to string) ([]InternalDataInstance, bool) {
 	study = studyProgram + study
 	from = timeFrom + from
 	to = timeTo + to
 	resp, err := http.Get(DataAdress + study + from + to)
 	if err != nil {
-		//logger.RetrieverLogger.Println("Invalid Request -->", study, from, to)
-		return nil, false, nil
+		return nil, false
 	}
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		//logger.RetrieverLogger.Println("Invalid Response -->", study, from, to)
-		return nil, false, nil
+		return nil, false
 	}
 
 	var relevantContent []ExternalDataInstance
 	err = json.Unmarshal(content, &relevantContent)
 	if err != nil {
-		//logger.RetrieverLogger.Println("Invalid Parsing -->", study, from, to)
-		return nil, false, nil
+		return nil, false
 	}
 
 	var resultList []InternalDataInstance
@@ -102,13 +84,8 @@ func StartRequest(study, from, to string) ([]byte, bool, []InternalDataInstance)
 			Title: t, Prof: prof, Typ: typ, Room: room, Start: instance.Start, End: instance.End,
 		})
 	}
-	d, err := json.Marshal(resultList)
-	if err != nil {
-		//logger.RetrieverLogger.Println("Invalid Re-Parsing -->", resultList)
-		return nil, false, nil
-	}
 
-	return d, true, resultList
+	return resultList, true
 }
 
 // Splits Title into 4 main parts

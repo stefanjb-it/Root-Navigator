@@ -28,8 +28,8 @@ func SetupGateway(proc *fiber.App) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	os.Setenv("FIREBASE_CONFIG", string(plainText))
-	//log.Println(string(plainText))
 
 	opt := option.WithCredentialsJSON([]byte(plainText))
 	app, err := firebase.NewApp(context.Background(), nil, opt)
@@ -46,30 +46,10 @@ func SetupGateway(proc *fiber.App) {
 	// Setting Auth Client to current Instance
 	handler.FbClient = client
 
-	/*
-		// Cookie Encryption for safer Storage
-		proc.Use(encryptcookie.Config{
-			Key: cookieSecret,
-		})
-	*/
-
 	// Testing Basic Connectivity
 	proc.Get("/test", handler.HandleTest)
 
 	// Return relevant Fh Data on Request
 	proc.Get("/fhData/:query/:from/:to", handler.HandleFHData)
 
-	// ----- Interaction Data End-Points
-
-	// Route Request
-	// TODO
-
-	// Verbund Request
-	// TODO
-
-	// Pic&Push Request
-	// TODO
-
-	// Alarm Request
-	// TODO
 }
