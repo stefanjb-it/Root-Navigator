@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -65,7 +65,7 @@ func StartRequest(study, from, to string) ([]InternalDataInstance, bool) {
 	if err != nil {
 		return nil, false
 	}
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, false
 	}
