@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.registerForActivityResult
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -38,8 +39,10 @@ class NewReminderActivity : ComponentActivity() {
 
         setContent {
             RootNavigatorTheme {
-                Surface(color = MaterialTheme.colors.background) {
+                Surface(
 
+                ) {
+                    NewReminderUI()
                 }
             }
         }
@@ -49,7 +52,11 @@ class NewReminderActivity : ComponentActivity() {
 
 @Composable
 fun NewReminderUI(){
-
-    Column() {
+    // Wrapper Element für Background Color!
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.primary)
+    ) {
     }
 }

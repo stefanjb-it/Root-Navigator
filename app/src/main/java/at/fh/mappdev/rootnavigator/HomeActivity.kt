@@ -25,6 +25,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.semantics.Role.Companion.Image
@@ -45,9 +46,10 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                // Surface(color = MaterialTheme.colors.background) {
-                Surface(color = colorResource(id = R.color.dark_gray)) {
-                    //Connections()
+                Surface(
+                    // modifier = Modifier.background(MaterialTheme.colors.primary)
+                    // color = MaterialTheme.colors.primary
+                ) {
                     MyScaffold()
                 }
             }
@@ -58,9 +60,9 @@ class HomeActivity : ComponentActivity() {
 @Composable
 fun Connection(name: String) {
     Card(
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
-        backgroundColor = colorResource(id = R.color.light_gray),
-        shape = RoundedCornerShape(20.dp)
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+        backgroundColor = MaterialTheme.colors.primaryVariant,
+        shape = RoundedCornerShape(25.dp)
     ) {
         CardContent(name)
     }
@@ -71,7 +73,10 @@ private fun Connections(
     modifier: Modifier = Modifier,
     connections: List<String> = List(1000) { "$it" }
 ) {
-    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
+    LazyColumn(
+        modifier = modifier
+            .background(MaterialTheme.colors.primary)
+    ) {
         items(items = connections) {
                 connection -> Connection(name = connection)
         }
@@ -80,13 +85,6 @@ private fun Connections(
 
 @Composable
 fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>){
-    /*
-    TopAppBar(
-        title = { Text(text ="Navigator")},
-        backgroundColor = colorResource(id = R.color.light_gray)
-    )
-    */
-
     val settingItem = BarItem(
         title = "Settings",
         image = painterResource(R.drawable.settings),
@@ -98,28 +96,33 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
         enter = slideInVertically(initialOffsetY = { -it }),
         exit = slideOutVertically(targetOffsetY = { -it }),
         content = {
-            TopAppBar(
+            CenterTopAppBar(
                 title = {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
                             text = "/",
-                            color = colorResource(id = R.color.orange),
-                            textAlign = TextAlign.Center
+                            color = MaterialTheme.colors.secondary,
+                            style = MaterialTheme.typography.h1,
+                            modifier = Modifier
+                                .offset(y = 2.dp)
                         )
                         Text(
-                            text = "Navigator",
-                            color = colorResource(id = R.color.dark_gray),
-                            textAlign = TextAlign.Center
+                            text = "Navigator ",
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.h1,
+                            modifier = Modifier
+                                .offset(y = 2.dp)
                         )
                     }
                 },
 
-                backgroundColor = colorResource(id = R.color.light_gray),
+                backgroundColor = MaterialTheme.colors.primaryVariant,
                 navigationIcon = {
-                    // id = R.drawable.logo_no_text
                     Image(
                         painter = painterResource(id = R.drawable.logo_no_text),
                         contentDescription = "Logo",
@@ -141,7 +144,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                         Icon(
                             painter = painterResource(id = R.drawable.settings),
                             contentDescription = "Settings",
-                            tint = colorResource(id = R.color.orange),
+                            tint = MaterialTheme.colors.secondary,
                             modifier = Modifier
                                 .size(28.dp)
                         )
@@ -149,31 +152,6 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                 }
             )
 
-            /*{
-                val backStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = backStackEntry?.destination?.route
-
-                when (backStackEntry?.destination?.route) {
-                    "reminder" -> {
-                        topBarState.value = false
-                    }
-                    "alarm" -> {
-                        topBarState.value = false
-                    }
-                    "timetable" -> {
-                        topBarState.value = false
-                    }
-                    "settings" -> {
-                        topBarState.value = false
-                    }
-                    "home" -> {
-                        topBarState.value = true
-                    }
-                }
-
-                // add Top App Bar
-
-            }*/
         }
     )
 }
@@ -182,6 +160,11 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
 @Composable
 fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>){
     val barItems = listOf(
+        BarItem(
+            title = "Home",
+            image = painterResource(R.drawable.home_door),
+            route = "home"
+        ),
         BarItem(
             title = "Reminder",
             image = painterResource(R.drawable.clipboard_notes),
@@ -199,40 +182,33 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
         )
     )
 
-    // Log.v("BottomBarState", bottomBarState.toString())
     AnimatedVisibility(
         visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
         content = {
             BottomNavigation(
-                backgroundColor = colorResource(id = R.color.light_gray)
+                backgroundColor = MaterialTheme.colors.primaryVariant
             ){
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
-                // val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-                //backStackEntry?.destination?.route?.let { Log.v("backStackEntry", it) }
+
                 when (backStackEntry?.destination?.route) {
                     "reminder" -> {
-                        // Show BottomBar and TopBar
-                        bottomBarState.value = false
-                        topBarState.value = false
-                        //Log.v("State","Reminder!!!")
+                        bottomBarState.value = true
+                        topBarState.value = true
                     }
                     "alarm" -> {
-                        // Show BottomBar and TopBar
-                        bottomBarState.value = false
-                        topBarState.value = false
+                        bottomBarState.value = true
+                        topBarState.value = true
                     }
                     "timetable" -> {
-                        // Show BottomBar and TopBar
-                        bottomBarState.value = false
-                        topBarState.value = false
+                        bottomBarState.value = true
+                        topBarState.value = true
                     }
                     "settings" -> {
-                        // Hide BottomBar and TopBar
-                        bottomBarState.value = false
-                        topBarState.value = false
+                        bottomBarState.value = true
+                        topBarState.value = true
                     }
                     "home" -> {
                         bottomBarState.value = true
@@ -242,6 +218,9 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
                 barItems.forEach { navItem ->
                     BottomNavigationItem(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .offset(y = 3.dp),
                         selected = currentRoute == navItem.route,
                         onClick = {
                             navController.navigate(navItem.route) {
@@ -252,20 +231,17 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                                 restoreState = true
                             }
                         },
-
                         icon = {
                             Icon(
                                 painter = navItem.image,
                                 contentDescription = navItem.title,
-                                tint = colorResource(id = R.color.orange),
+                                tint = MaterialTheme.colors.secondary,
                                 modifier = Modifier.size(28.dp)
                             )
                         },
-                        /*
                         label = {
                             Text(text = navItem.title)
                         }
-                        */
                     )
                 }
 
@@ -281,21 +257,27 @@ fun NavigationHost(navController: NavHostController) {
         startDestination = NavRoutes.Home.route
     ) {
         composable(NavRoutes.Home.route){
+            // Home Screen
             Connections()
         }
 
         composable(NavRoutes.Reminder.route) {
             // Reminder
-            SettingUi()
+            NewReminderUI()
         }
 
         composable(NavRoutes.Alarm.route) {
             // Alarm
-            SettingUi()
+            AlarmUi()
         }
 
         composable(NavRoutes.Timetable.route) {
             // Timetable
+            SessionExpiredUI()
+        }
+
+        composable(NavRoutes.Settings.route) {
+            // Settings
             SettingUi()
         }
     }
@@ -339,23 +321,22 @@ private fun CardContent(name: String) {
         ) {
             Text(
                 text = "Hello, $name",
-                color = colorResource(id = R.color.text_white),
-                fontSize = 12.sp
+                color = MaterialTheme.colors.surface,
+                fontSize = 14.sp
             )
             if (expanded) {
                 Text(
                     text = ("Coposem ipsum color sit lazy, " +
                             "padding theme elit, sed do bouncy").repeat(4),
-                    color = colorResource(id = R.color.text_white),
-                    fontSize = 10.sp
-
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 12.sp
                 )
             }
         }
         IconButton(onClick = { expanded = !expanded }) {
             Icon(
                 imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                tint = colorResource(id = R.color.text_white),
+                tint = MaterialTheme.colors.surface,
                 contentDescription = if (expanded) {
                     stringResource(id = R.string.show_less)
                 } else {
@@ -366,6 +347,7 @@ private fun CardContent(name: String) {
     }
 }
 
+/*
 @Preview(
     showBackground = true,
     widthDp = 320,
@@ -380,6 +362,7 @@ private fun CardContent(name: String) {
 @Composable
 private fun ConnectionsPreview() {
     RootNavigatorTheme {
-        MyScaffold()
+        Connections()
     }
 }
+*/
