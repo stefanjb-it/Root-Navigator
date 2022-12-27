@@ -6,5 +6,9 @@
     <string name="button_save">Save</string>
     <string name="button_sign_in">Sign In</string>
     <string name="button_back">Back to Login</string>
+    <string name="button_student">Student</string>
+    <string name="button_standard">Standard</string>
+    <string name="button_continue">Continue</string>
     <string name="title_activity_alarm">AlarmActivity</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
 </resources>

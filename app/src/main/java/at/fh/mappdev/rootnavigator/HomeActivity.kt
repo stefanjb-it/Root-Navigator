@@ -28,6 +28,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,6 +78,10 @@ private fun Connections(
     LazyColumn(
         modifier = modifier
             .background(MaterialTheme.colors.primary)
+            .paint(
+                painter = painterResource(R.drawable.threelines),
+                contentScale = ContentScale.FillWidth
+            )
     ) {
         items(items = connections) {
                 connection -> Connection(name = connection)
@@ -264,11 +270,13 @@ fun NavigationHost(navController: NavHostController) {
         composable(NavRoutes.Reminder.route) {
             // Reminder
             LoginUI()
+            // NewReminderUI()
         }
 
         composable(NavRoutes.Alarm.route) {
             // Alarm
-            AlarmUi()
+            RegistrationUIMode()
+            // AlarmUi()
         }
 
         composable(NavRoutes.Timetable.route) {

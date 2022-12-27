@@ -13,8 +13,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -53,6 +56,10 @@ fun AlarmUi(Context: Context = LocalContext.current) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.primary)
+            .paint(
+                painter = painterResource(R.drawable.threelines),
+                contentScale = ContentScale.FillWidth
+            )
     ) {
 
         Column(
