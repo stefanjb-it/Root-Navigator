@@ -263,7 +263,7 @@ fun NavigationHost(navController: NavHostController) {
 
         composable(NavRoutes.Reminder.route) {
             // Reminder
-            NewReminderUI()
+            LoginUI()
         }
 
         composable(NavRoutes.Alarm.route) {
@@ -273,7 +273,7 @@ fun NavigationHost(navController: NavHostController) {
 
         composable(NavRoutes.Timetable.route) {
             // Timetable
-            SessionExpiredUI()
+            TimetableUI()
         }
 
         composable(NavRoutes.Settings.route) {

@@ -103,17 +103,17 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = wakeUpTime,
                     onValueChange = { wakeUpTime = it },
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(width = 150.dp),
-                    label = { Text(text = "x minutes before") },
+                    label = { Text(text = "X min before") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -132,7 +132,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = numberOfAlarms,
                     onValueChange = { numberOfAlarms = it },
                     modifier = Modifier
@@ -142,10 +142,10 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Number
                     )
                 )
             }
@@ -161,7 +161,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = interval,
                     onValueChange = { interval = it },
                     modifier = Modifier
@@ -171,10 +171,10 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
+                        keyboardType = KeyboardType.Number
                     )
                 )
             }
@@ -190,7 +190,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp,
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = wakeUpSound,
                     onValueChange = { wakeUpSound = it },
                     modifier = Modifier
@@ -200,7 +200,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text

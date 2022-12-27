@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -84,14 +85,15 @@ fun SettingUi(Context: Context = LocalContext.current) {
                         label = { Text("Type") })
                     ExposedDropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = {
-                            expanded = false
-                        }) {
+                        onDismissRequest = {expanded = false},
+                        modifier = Modifier.background(MaterialTheme.colors.primaryVariant)
+                    ) {
                         typelist.forEach {
-                            DropdownMenuItem(onClick = {
+                            DropdownMenuItem(
+                                onClick = {
                                 type = it
-                                expanded = false
-                            }) {
+                                expanded = false}
+                            ) {
                                 Text(text = it)
                             }
                         }
@@ -111,7 +113,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = degreeprogram,
                     onValueChange = { degreeprogram = it },
                     modifier = Modifier
@@ -121,7 +123,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -141,7 +143,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = group,
                     onValueChange = { group = it },
                     modifier = Modifier
@@ -151,7 +153,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -171,7 +173,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = preferredRootpoint,
                     onValueChange = { preferredRootpoint = it },
                     modifier = Modifier
@@ -181,7 +183,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -201,7 +203,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                OutlinedTextField(
+                TextField(
                     value = preferredLine,
                     onValueChange = { preferredLine = it },
                     modifier = Modifier
@@ -211,7 +213,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colors.surface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -220,16 +222,12 @@ fun SettingUi(Context: Context = LocalContext.current) {
             }
 
             // Button Row
-            Row(
-                modifier = Modifier
-                    .padding(
-                        top = 50.dp
-                    )
-            ) {
+            Row(modifier = Modifier.padding(top = 32.dp)) {
                 Button(
                     onClick = { Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show() },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(height = 60.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(
