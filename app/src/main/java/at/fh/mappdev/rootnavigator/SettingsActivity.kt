@@ -75,6 +75,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                 Text(
                     text = "Type",
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -117,6 +118,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                 Text(
                     text = "Degree Program",
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -147,6 +149,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                 Text(
                     text = "Group",
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -177,6 +180,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                 Text(
                     text = "Preferred Rootpoint",
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -207,6 +211,7 @@ fun SettingUi(Context: Context = LocalContext.current) {
                 Text(
                     text = "Preferred Lines",
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))

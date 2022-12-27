@@ -71,6 +71,7 @@ fun LoginUI(){
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                Text(text = "Sign In",
                    textAlign = TextAlign.Center,
+                   color = MaterialTheme.colors.surface,
                    fontSize = 27.sp)
             }
 
@@ -79,6 +80,7 @@ fun LoginUI(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Username",
                     textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp)
             }
 
@@ -89,11 +91,12 @@ fun LoginUI(){
                     value = username,
                     onValueChange = { username = it },
                     modifier = Modifier
-                        .height(height = 50.dp)
+                        .height(height = 60.dp)
                         .fillMaxWidth(),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = 14.sp
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -106,6 +109,7 @@ fun LoginUI(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Password",
                     textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.surface,
                     fontSize = 18.sp)
             }
 
@@ -117,11 +121,12 @@ fun LoginUI(){
                     onValueChange = { password = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(height = 50.dp),
+                        .height(height = 60.dp),
                     singleLine = true,
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
-                        fontSize = 14.sp
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -143,7 +148,9 @@ fun LoginUI(){
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Stay Logged In?",
-                    textAlign=TextAlign.Start)
+                    textAlign=TextAlign.Start,
+                    color = MaterialTheme.colors.surface
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
 

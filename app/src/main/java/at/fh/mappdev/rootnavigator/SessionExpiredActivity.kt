@@ -53,11 +53,12 @@ fun SessionExpiredUI(){
         Text(
             text = "Your Offline Session has expired!",
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.surface,
             fontSize = 48.sp,
         )
-        Spacer(
-            modifier = Modifier.padding(bottom = 100.dp)
-        )
+
+        Spacer(modifier = Modifier.padding(bottom = 100.dp))
+
         Button(
             onClick = { /*TODO Implement:Back to Login Screen*/ },
             modifier = Modifier
