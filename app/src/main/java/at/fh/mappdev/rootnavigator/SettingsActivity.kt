@@ -89,6 +89,9 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     TextField(
                         readOnly = true,
                         value = type,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.secondaryVariant
+                        ),
                         onValueChange = { type = it },
                         label = { Text("Type") })
                     ExposedDropdownMenu(
@@ -128,6 +131,9 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     label = { Text(text = "Degree Program") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -159,6 +165,9 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     label = { Text(text = "Group") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -190,6 +199,9 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     label = { Text(text = "Rootpoint") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -221,6 +233,9 @@ fun SettingUi(Context: Context = LocalContext.current) {
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     label = { Text(text = "Line") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,

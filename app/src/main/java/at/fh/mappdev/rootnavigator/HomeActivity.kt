@@ -118,8 +118,9 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                                 .offset(y = 2.dp)
                         )
                         Text(
-                            text = "Navigator ",
+                            text = "Navigator",
                             color = MaterialTheme.colors.primary,
+                            // color = MaterialTheme.colors.primaryVariant,
                             style = MaterialTheme.typography.h1,
                             modifier = Modifier
                                 .offset(y = 2.dp)
@@ -128,6 +129,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                 },
 
                 backgroundColor = MaterialTheme.colors.primaryVariant,
+                // backgroundColor = MaterialTheme.colors.onSurface,
                 navigationIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.logo_no_text),
@@ -195,6 +197,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
         content = {
             BottomNavigation(
                 backgroundColor = MaterialTheme.colors.primaryVariant
+                // backgroundColor = MaterialTheme.colors.onSurface
             ){
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
@@ -246,7 +249,11 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             )
                         },
                         label = {
-                            Text(text = navItem.title)
+                            Text(
+                                text = navItem.title,
+                                // color = MaterialTheme.colors.surface
+                                color = MaterialTheme.colors.primary
+                            )
                         }
                     )
                 }
@@ -269,14 +276,15 @@ fun NavigationHost(navController: NavHostController) {
 
         composable(NavRoutes.Reminder.route) {
             // Reminder
-            LoginUI()
+            // LoginUI()
             // NewReminderUI()
+            ReminderOverviewUI()
         }
 
         composable(NavRoutes.Alarm.route) {
             // Alarm
-            RegistrationUIMode()
-            // AlarmUi()
+            // RegistrationUIMode()
+            AlarmUi()
         }
 
         composable(NavRoutes.Timetable.route) {

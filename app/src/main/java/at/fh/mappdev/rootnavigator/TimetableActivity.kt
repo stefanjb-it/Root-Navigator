@@ -40,6 +40,8 @@ fun TimetableUI(){
                 )
                 webViewClient = WebViewClient()
                 loadUrl("https://cur.tk-dev.at/")
+                settings.javaScriptEnabled = true
+                // addJavascriptInterface()
             }
         }, update = {
             it.loadUrl("https://cur.tk-dev.at/")

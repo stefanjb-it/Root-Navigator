@@ -182,6 +182,9 @@ fun RegistrationUIAccount(){
                     modifier = Modifier
                         .height(height = 50.dp)
                         .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 14.sp
@@ -209,6 +212,9 @@ fun RegistrationUIAccount(){
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 50.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     singleLine = true,
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -307,6 +313,9 @@ fun RegistrationUIAddress(){
                     modifier = Modifier
                         .height(height = 50.dp)
                         .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 14.sp
@@ -334,6 +343,9 @@ fun RegistrationUIAddress(){
                     modifier = Modifier
                         .height(height = 50.dp)
                         .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 14.sp
@@ -361,6 +373,9 @@ fun RegistrationUIAddress(){
                     modifier = Modifier
                         .height(height = 50.dp)
                         .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 14.sp

@@ -93,6 +93,9 @@ fun LoginUI(){
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
@@ -122,6 +125,9 @@ fun LoginUI(){
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 60.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
                     singleLine = true,
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -156,7 +162,10 @@ fun LoginUI(){
 
                 Checkbox(
                     checked = stayLoggedIn,
-                    onCheckedChange = {stayLoggedIn = !stayLoggedIn}
+                    onCheckedChange = {stayLoggedIn = !stayLoggedIn},
+                    colors = CheckboxDefaults.colors(
+                        uncheckedColor = MaterialTheme.colors.secondaryVariant
+                    ),
                 )
             }
 

@@ -9,6 +9,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,7 +44,6 @@ class AlarmActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AlarmUi(Context: Context = LocalContext.current) {
     val switchStateOn = remember {mutableStateOf(false)}
@@ -84,157 +86,201 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                 )
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Automatic / Manual",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = switchStateAutomatic.value,
-                    onCheckedChange = {switchStateAutomatic.value = it},
-                )
-            }
-            
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Wake up time",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                TextField(
-                    value = wakeUpTime,
-                    onValueChange = { wakeUpTime = it },
-                    modifier = Modifier
-                        .height(height = 60.dp)
-                        .width(width = 150.dp),
-                    label = { Text(text = "X min before") },
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colors.surface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = switchStateOn.value,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Automatic / Manual",
+                            textAlign = TextAlign.Left,
+                            fontSize = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Switch(
+                            checked = switchStateAutomatic.value,
+                            onCheckedChange = { switchStateAutomatic.value = it },
+                        )
+                    }
+                })
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Number of alarms",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                TextField(
-                    value = numberOfAlarms,
-                    onValueChange = { numberOfAlarms = it },
-                    modifier = Modifier
-                        .height(height = 60.dp)
-                        .width(width = 150.dp),
-                    label = { Text(text = "alarms") },
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colors.surface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = switchStateOn.value,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Wake up time",
+                            textAlign = TextAlign.Left,
+                            fontSize = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextField(
+                            value = wakeUpTime,
+                            onValueChange = { wakeUpTime = it },
+                            modifier = Modifier
+                                .height(height = 60.dp)
+                                .width(width = 150.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = MaterialTheme.colors.secondaryVariant
+                            ),
+                            label = { Text(text = "X min before") },
+                            textStyle = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colors.surface
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text
+                            )
+                        )
+                    }
+                })
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Interval",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                TextField(
-                    value = interval,
-                    onValueChange = { interval = it },
-                    modifier = Modifier
-                        .height(height = 60.dp)
-                        .width(width = 150.dp),
-                    label = { Text(text = "interval") },
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colors.surface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = switchStateOn.value,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Number of alarms",
+                            textAlign = TextAlign.Left,
+                            fontSize = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextField(
+                            value = numberOfAlarms,
+                            onValueChange = { numberOfAlarms = it },
+                            modifier = Modifier
+                                .height(height = 60.dp)
+                                .width(width = 150.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = MaterialTheme.colors.secondaryVariant
+                            ),
+                            label = { Text(text = "alarms") },
+                            textStyle = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colors.surface
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                    }
+                })
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Wake-up Sound",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                TextField(
-                    value = wakeUpSound,
-                    onValueChange = { wakeUpSound = it },
-                    modifier = Modifier
-                        .height(height = 60.dp)
-                        .width(width = 150.dp),
-                    label = { Text(text = "Select sound") },
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colors.surface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
+            androidx.compose.animation.AnimatedVisibility(
+                visible = switchStateOn.value,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Interval",
+                            textAlign = TextAlign.Left,
+                            fontSize = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextField(
+                            value = interval,
+                            onValueChange = { interval = it },
+                            modifier = Modifier
+                                .height(height = 60.dp)
+                                .width(width = 150.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = MaterialTheme.colors.secondaryVariant
+                            ),
+                            label = { Text(text = "interval") },
+                            textStyle = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colors.surface
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                    }
+                })
 
-            Row(
-                modifier = Modifier
-                    .padding(
-                        top = 50.dp
-                    )
-            ) {
-                Button(
-                    onClick = { Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show() },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.button_save),
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
-                    )
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = switchStateOn.value,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Wake-up Sound",
+                            textAlign = TextAlign.Left,
+                            fontSize = 18.sp,
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextField(
+                            value = wakeUpSound,
+                            onValueChange = { wakeUpSound = it },
+                            modifier = Modifier
+                                .height(height = 60.dp)
+                                .width(width = 150.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = MaterialTheme.colors.secondaryVariant
+                            ),
+                            label = { Text(text = "Select sound") },
+                            textStyle = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colors.surface
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text
+                            )
+                        )
+                    }
+                })
+
+                    Row(
+                        modifier = Modifier
+                            .padding(
+                                top = 50.dp
+                            )
+                    ) {
+                        Button(
+                            onClick = {
+                                Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.button_save),
+                                color = MaterialTheme.colors.surface,
+                                fontSize = 18.sp
+                            )
+                        }
+                    }
                 }
-            }
-        }
 
     }
 }
