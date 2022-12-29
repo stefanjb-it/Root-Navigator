@@ -34,9 +34,7 @@ object NewReminderActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                Surface( ) {
-                    NewReminderUI()
-                }
+                NewReminderUI()
             }
         }
     }

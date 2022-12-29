@@ -14,7 +14,7 @@ abstract class ReminderDatabase : RoomDatabase() {
 
         private var INSTANCE: ReminderDatabase? = null
 
-        fun getInstace(context: Context): ReminderDatabase {
+        fun getInstance(context: Context): ReminderDatabase {
             synchronized(this) {
                 var instance = INSTANCE
 

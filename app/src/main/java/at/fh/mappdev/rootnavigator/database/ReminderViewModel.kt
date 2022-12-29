@@ -10,10 +10,10 @@ import kotlinx.coroutines.launch
 class ReminderViewModel(application: Application) : AndroidViewModel(application) {
 
     val allReminders: LiveData<List<ReminderItemRoom>>
-    private  val repository: ReminderRepository
+    private val repository: ReminderRepository
 
     init {
-        val reminderDao = ReminderDatabase.getInstace(application).reminderDao()
+        val reminderDao = ReminderDatabase.getInstance(application).reminderDao()
         repository = ReminderRepository(reminderDao)
         allReminders = repository.AllReminder
     }

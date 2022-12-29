@@ -11,7 +11,7 @@ import androidx.room.Update
 @Dao
 interface ReminderDatabaseDao {
     @Query("SELECT * FROM Reminders")
-    fun getAllReminder(): LiveData<List<ReminderItemRoom>>
+    fun getAllReminders(): LiveData<List<ReminderItemRoom>>
 
     @Insert
     suspend fun newReminder(reminder: ReminderItemRoom)

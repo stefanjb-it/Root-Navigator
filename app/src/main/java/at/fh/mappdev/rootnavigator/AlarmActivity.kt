@@ -1,8 +1,10 @@
 package at.fh.mappdev.rootnavigator
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.Space
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import java.util.*
 
 class AlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +48,7 @@ class AlarmActivity : ComponentActivity() {
 }
 
 @Composable
-fun AlarmUi(Context: Context = LocalContext.current) {
+fun AlarmUi(context: Context = LocalContext.current) {
     val switchStateOn = remember {mutableStateOf(false)}
     val switchStateAutomatic = remember {mutableStateOf(false)}
 
@@ -53,6 +56,17 @@ fun AlarmUi(Context: Context = LocalContext.current) {
     var numberOfAlarms by remember { mutableStateOf("") }
     var interval by remember { mutableStateOf("") }
     var wakeUpSound by remember { mutableStateOf("") }
+
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(
+        context,
+        { _: TimePicker, hour: Int, minute: Int ->
+            wakeUpTime = "${if (hour <10) { "0" + hour} else {hour}}:${if (minute <10) { "0" + minute} else {minute}}"
+        }, hour, minute, true
+    )
 
     Column(
         modifier = Modifier
@@ -123,7 +137,19 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                             fontSize = 18.sp,
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        TextField(
+                        Button(onClick = { timePickerDialog.show() },
+                            modifier = Modifier
+                                .width(width = 150.dp)
+                                .height(height = 35.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                        ) {
+                            Text(
+                                text = "Pick Time",
+                                color = MaterialTheme.colors.surface,
+                                fontSize = 14.sp
+                            )
+                        }
+                        /*TextField(
                             value = wakeUpTime,
                             onValueChange = { wakeUpTime = it },
                             modifier = Modifier
@@ -141,7 +167,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Text
                             )
-                        )
+                        )*/
                     }
                 })
 
@@ -267,7 +293,7 @@ fun AlarmUi(Context: Context = LocalContext.current) {
                     ) {
                         Button(
                             onClick = {
-                                Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
                             },
                             modifier = Modifier
                                 .fillMaxWidth(),

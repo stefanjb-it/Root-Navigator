@@ -1,6 +1,7 @@
 package at.fh.mappdev.rootnavigator
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +26,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class ReminderOverviewActivity : ComponentActivity() {
@@ -66,6 +70,16 @@ private fun Reminders(
 
 @Composable
 fun ReminderOverviewUI(Context: Context = LocalContext.current) {
+    val navController = rememberNavController()
+    // val navigation = Navigation()
+    // navigation.NavigationHost(navController = navController, NavRoutes.Reminder.route)
+    // Navigation(navController = navController, startRoute = NavRoutes.Reminder.route)
+
+    /*
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+     */
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,7 +106,13 @@ fun ReminderOverviewUI(Context: Context = LocalContext.current) {
         ) {
             Button(
                 onClick = {
-                    // NewReminder
+                    navController.navigate("new_reminder") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(),

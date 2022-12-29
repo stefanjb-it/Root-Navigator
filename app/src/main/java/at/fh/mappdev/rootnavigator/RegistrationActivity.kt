@@ -32,13 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.fh.mappdev.rootnavigator.ui.theme.ui.theme.RootNavigatorTheme
+import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class RegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme {
+            RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
                     RegistrationUIMode()
                 }

@@ -71,7 +71,7 @@ fun Connection(name: String) {
 }
 
 @Composable
-private fun Connections(
+fun Connections(
     modifier: Modifier = Modifier,
     connections: List<String> = List(1000) { "$it" }
 ) {
@@ -263,6 +263,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
     )
 }
 
+/*
 @Composable
 fun NavigationHost(navController: NavHostController) {
     NavHost(
@@ -298,6 +299,7 @@ fun NavigationHost(navController: NavHostController) {
         }
     }
 }
+*/
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -308,10 +310,15 @@ fun MyScaffold(){
     val topBarState = rememberSaveable { (mutableStateOf(true)) }
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
+    // val navigation = Navigation()
+
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController) },
+        // content = { Navigation(startRoute = NavRoutes.Home.route)},
+        content = { Navigation(navController = navController, startRoute = NavRoutes.Home.route) },
+        // content = { navigation.NavigationHost(navController = navController, NavRoutes.Home.route) },
+        // content = { NavigationHost(navController = navController) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

@@ -36,6 +36,15 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".NewReminderActivity"
+            android:exported="false"
+            android:label="@string/title_activity_new_reminder"
+            android:theme="@style/Theme.RootNavigator">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".RegistrationActivity"
             android:exported="false"
             android:label="@string/title_activity_registration"
