@@ -26,10 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class ReminderOverviewActivity : ComponentActivity() {
@@ -46,40 +48,36 @@ class ReminderOverviewActivity : ComponentActivity() {
 }
 
 @Composable
-fun Reminder(name: String) {
+fun Reminder(name: String, desc: String) {
     Card(
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        ReminderContent(name)
+        ReminderContent(name, desc)
     }
 }
 
 @Composable
-private fun Reminders(
-    reminderList: List<String> = List(10) { "$it" }
-) {
+private fun Reminders(context: Context, viewModel: ReminderViewModel) {
+
+    // val reminderList = viewModel.allReminders.value
+
     LazyColumn(
         modifier = Modifier.height(530.dp)
     ) {
-        items(items = reminderList) {
-                reminder -> Reminder(name = reminder)
-        }
+        /*if (reminderList != null){
+            items(items = reminderList) {
+                    reminder -> Reminder(name = "Reminder " + reminder?.ReminderTime + " " +
+                    reminder?.ReminderDate, desc = reminder?.ReminderDescription)
+            }
+        }*/
     }
 }
 
 @Composable
 fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
-    // val navController = rememberNavController()
-    // val navigation = Navigation()
-    // navigation.NavigationHost(navController = navController, NavRoutes.Reminder.route)
-    // Navigation(navController = navController, startRoute = NavRoutes.Reminder.route)
-
-    /*
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route
-     */
+    //val viewModel: ReminderViewModel by viewModel()
 
     Column(
         modifier = Modifier
@@ -96,7 +94,7 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        Reminders()
+        //Reminders(Context, viewModel)
 
         Row(
             modifier = Modifier
@@ -130,7 +128,7 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
 }
 
 @Composable
-private fun ReminderContent(name: String) {
+private fun ReminderContent(name: String, desc: String) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(
@@ -154,8 +152,7 @@ private fun ReminderContent(name: String) {
             )
             if (expanded) {
                 Text(
-                    text = ("Coposem ipsum color sit lazy, " +
-                            "padding theme elit, sed do bouncy").repeat(4),
+                    text = desc,
                     color = MaterialTheme.colors.surface,
                     fontSize = 12.sp
                 )

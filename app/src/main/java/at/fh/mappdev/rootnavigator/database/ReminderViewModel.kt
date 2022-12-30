@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class ReminderViewModel(application: Application) : AndroidViewModel(application) {
 
-    val allReminders: LiveData<List<ReminderItemRoom>>
+    val allReminders: LiveData<List<ReminderItemRoom>?>
     private val repository: ReminderRepository
 
     init {
@@ -35,7 +35,5 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
             repository.deleteReminder(Reminder)
         }
     }
-
-    // TODO: Implement LiveData into UI -> https://youtu.be/4fzbxnzIJsI?t=233
 
 }

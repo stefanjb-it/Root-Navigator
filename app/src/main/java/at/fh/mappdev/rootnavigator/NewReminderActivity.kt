@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -28,7 +29,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import at.fh.mappdev.rootnavigator.database.ReminderDatabase
+import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 object NewReminderActivity : ComponentActivity() {
@@ -179,12 +184,24 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
         ) {
             Button(
                 onClick = {
-                    navController.navigate("reminder") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    if (date != "" && time != "" && description != ""){
+                        Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
+
+                        val db = ReminderDatabase.getInstance(context)
+                        val newreminder = ReminderItemRoom(ReminderDate = date,
+                            ReminderTime = time, ReminderActive = true, ReminderDescription = description)
+
+                        // GlobalScope.launch { db.reminderDao().newReminder(newreminder) }
+
+                        navController.navigate("reminder") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    } else {
+                        Toast.makeText(context, "You Donkey!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier

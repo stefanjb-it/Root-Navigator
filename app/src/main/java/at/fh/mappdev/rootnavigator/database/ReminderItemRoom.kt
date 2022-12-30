@@ -17,8 +17,9 @@ data class ReminderItemRoom(
     var ReminderTime: String,
 
     @ColumnInfo(name = "description")
-    var ReminderDesciption : String
+    var ReminderDescription : String,
 
-
+    @ColumnInfo(name = "active")
+    var ReminderActive: Boolean
 
 )

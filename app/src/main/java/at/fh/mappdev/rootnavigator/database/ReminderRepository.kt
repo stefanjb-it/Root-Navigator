@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 
 class ReminderRepository(private val reminderDatabaseDao: ReminderDatabaseDao) {
 
-    val AllReminders : LiveData<List<ReminderItemRoom>> = reminderDatabaseDao.getAllReminders()
+    val AllReminders : LiveData<List<ReminderItemRoom>?> = reminderDatabaseDao.getAllReminders()
 
     suspend fun newReminder(Reminder: ReminderItemRoom) {
         reminderDatabaseDao.newReminder(Reminder)
