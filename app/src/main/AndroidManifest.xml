@@ -27,6 +27,49 @@
         android:theme="@style/Theme.RootNavigator"
         tools:targetApi="31">
         <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.RootNavigator">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".RegistrationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_registration"
+            android:theme="@style/Theme.RootNavigator">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".SessionExpiredActivity"
+            android:exported="false"
+            android:label="@string/title_activity_exp"
+            android:theme="@style/Theme.RootNavigator">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".AuthActivity"
+            android:exported="true"
+            android:label="@string/title_activity_auth"
+            android:theme="@style/Theme.RootNavigator">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ReminderOverviewActivity"
             android:exported="false"
             android:label="@string/title_activity_reminder_overview"
@@ -39,15 +82,6 @@
             android:name=".NewReminderActivity"
             android:exported="false"
             android:label="@string/title_activity_new_reminder"
-            android:theme="@style/Theme.RootNavigator">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".RegistrationActivity"
-            android:exported="false"
-            android:label="@string/title_activity_registration"
             android:theme="@style/Theme.RootNavigator">
             <meta-data
                 android:name="android.app.lib_name"
@@ -67,11 +101,14 @@
             android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.RootNavigator">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
 
             <meta-data
                 android:name="android.app.lib_name"

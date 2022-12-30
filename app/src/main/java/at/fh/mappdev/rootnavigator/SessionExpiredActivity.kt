@@ -1,6 +1,7 @@
 package at.fh.mappdev.rootnavigator
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -30,11 +31,7 @@ class SessionExpiredActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                Surface(
-                    // color = MaterialTheme.colors.primary
-                ) {
-                    SessionExpiredUI()
-                }
+                SessionExpiredUI()
             }
         }
     }
@@ -43,6 +40,8 @@ class SessionExpiredActivity : ComponentActivity() {
 @Preview
 @Composable
 fun SessionExpiredUI(){
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +59,10 @@ fun SessionExpiredUI(){
         Spacer(modifier = Modifier.padding(bottom = 100.dp))
 
         Button(
-            onClick = { /*TODO Implement:Back to Login Screen*/ },
+            onClick = {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(

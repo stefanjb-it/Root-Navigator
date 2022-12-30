@@ -48,12 +48,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                Surface(
-                    // modifier = Modifier.background(MaterialTheme.colors.primary)
-                    // color = MaterialTheme.colors.primary
-                ) {
                     MyScaffold()
-                }
             }
         }
     }
@@ -314,14 +309,9 @@ fun MyScaffold(){
     val topBarState = rememberSaveable { (mutableStateOf(true)) }
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-    // val navigation = Navigation()
-
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        // content = { Navigation(startRoute = NavRoutes.Home.route)},
-        // content = { Navigation(navController = navController, startRoute = NavRoutes.Home.route) },
-        // content = { navigation.NavigationHost(navController = navController, NavRoutes.Home.route) },
         content = { NavigationHost(navController = navController) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )

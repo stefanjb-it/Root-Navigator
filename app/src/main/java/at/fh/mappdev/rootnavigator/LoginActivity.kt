@@ -1,5 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -51,6 +53,8 @@ fun LoginUI(){
     var password by remember{ mutableStateOf("")}
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var stayLoggedIn by rememberSaveable { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -172,7 +176,10 @@ fun LoginUI(){
             Spacer(modifier = Modifier.padding(top = 36.dp))
 
             Row(modifier = Modifier.fillMaxWidth()){
-                Button(onClick = { /*TODO: Onto Loading Profile Screen and Checking Data*/ },
+                Button(onClick = {
+                    val intent = Intent(context, AuthActivity::class.java)
+                    context.startActivity(intent)
+                },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 60.dp),
@@ -201,7 +208,10 @@ fun LoginUI(){
                 Spacer(modifier = Modifier.weight(1f))
 
                 ClickableText(text = AnnotatedString("Sign Up"),
-                    onClick = {/*TODO Switch to Register Screen*/},
+                    onClick = {
+                        val intent = Intent(context, RegistrationActivity::class.java)
+                        context.startActivity(intent)
+                    },
                     style = TextStyle(
                         color = MaterialTheme.colors.surface,
                         fontSize = 18.sp,

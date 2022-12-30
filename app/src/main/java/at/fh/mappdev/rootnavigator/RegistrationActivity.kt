@@ -1,5 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -73,7 +75,8 @@ fun RegistrationUIMode(){
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(text = "Choose your mode",
                     textAlign = TextAlign.Center,
-                    fontSize = 27.sp)
+                    fontSize = 27.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 80.dp))
@@ -161,7 +164,8 @@ fun RegistrationUIAccount(){
                 Text(
                     text = "Enter Account Data",
                     textAlign = TextAlign.Center,
-                    fontSize = 27.sp
+                    fontSize = 27.sp,
+                    color = MaterialTheme.colors.surface
                 )
             }
 
@@ -170,7 +174,8 @@ fun RegistrationUIAccount(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Username",
                     textAlign = TextAlign.Start,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -200,7 +205,8 @@ fun RegistrationUIAccount(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Password",
                     textAlign = TextAlign.Start,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -269,7 +275,8 @@ fun RegistrationUIAddress(){
     var rootPoint by remember { mutableStateOf("") }
     var preferredLine by remember { mutableStateOf("") }
     var preferredDestination by remember { mutableStateOf("") }
-    var buttonClicked by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -292,7 +299,8 @@ fun RegistrationUIAddress(){
                 Text(
                     text = "Enter Address Data",
                     textAlign = TextAlign.Center,
-                    fontSize = 27.sp
+                    fontSize = 27.sp,
+                    color = MaterialTheme.colors.surface
                 )
             }
 
@@ -301,7 +309,8 @@ fun RegistrationUIAddress(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Root Point",
                     textAlign = TextAlign.Start,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -331,7 +340,8 @@ fun RegistrationUIAddress(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Preferred Line",
                     textAlign = TextAlign.Start,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -361,7 +371,8 @@ fun RegistrationUIAddress(){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Preferred Destination",
                     textAlign = TextAlign.Start,
-                    fontSize = 18.sp)
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -393,7 +404,10 @@ fun RegistrationUIAddress(){
                     )
             ) {
                 Button(
-                    onClick = { buttonClicked = true },
+                    onClick = {
+                        val intent = Intent(context, AuthActivity::class.java)
+                        context.startActivity(intent)
+                    },
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
