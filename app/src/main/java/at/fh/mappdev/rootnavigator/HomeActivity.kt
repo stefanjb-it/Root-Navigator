@@ -263,7 +263,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
     )
 }
 
-/*
+
 @Composable
 fun NavigationHost(navController: NavHostController) {
     NavHost(
@@ -279,7 +279,11 @@ fun NavigationHost(navController: NavHostController) {
             // Reminder
             // LoginUI()
             // NewReminderUI()
-            ReminderOverviewUI()
+            ReminderOverviewUI(navController)
+        }
+
+        composable(NavRoutes.NewReminder.route){
+            NewReminderUI(navController)
         }
 
         composable(NavRoutes.Alarm.route) {
@@ -299,7 +303,7 @@ fun NavigationHost(navController: NavHostController) {
         }
     }
 }
-*/
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -316,9 +320,9 @@ fun MyScaffold(){
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
         // content = { Navigation(startRoute = NavRoutes.Home.route)},
-        content = { Navigation(navController = navController, startRoute = NavRoutes.Home.route) },
+        // content = { Navigation(navController = navController, startRoute = NavRoutes.Home.route) },
         // content = { navigation.NavigationHost(navController = navController, NavRoutes.Home.route) },
-        // content = { NavigationHost(navController = navController) },
+        content = { NavigationHost(navController = navController) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

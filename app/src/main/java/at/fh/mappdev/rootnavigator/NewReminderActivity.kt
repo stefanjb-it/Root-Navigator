@@ -25,6 +25,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
 
@@ -34,14 +37,14 @@ object NewReminderActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                NewReminderUI()
+                NewReminderUI(navController = rememberNavController())
             }
         }
     }
 }
 
 @Composable
-fun NewReminderUI(context: Context = LocalContext.current){
+fun NewReminderUI(navController: NavHostController, context: Context = LocalContext.current){
 
     var date by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("") }
@@ -82,7 +85,7 @@ fun NewReminderUI(context: Context = LocalContext.current){
 
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 32.dp, top = 32.dp,  end = 32.dp),
+            .padding(start = 32.dp, top = 32.dp, end = 32.dp),
             horizontalArrangement = Arrangement.Center
 
         ) {
@@ -175,7 +178,15 @@ fun NewReminderUI(context: Context = LocalContext.current){
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = { /*TODO Implement back to ReminderOverview*/ },
+                onClick = {
+                    navController.navigate("reminder") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(height = 50.dp),

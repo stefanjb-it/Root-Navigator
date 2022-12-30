@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
@@ -37,7 +38,7 @@ class ReminderOverviewActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    ReminderOverviewUI()
+                    ReminderOverviewUI(navController = rememberNavController())
                 }
             }
         }
@@ -69,8 +70,8 @@ private fun Reminders(
 }
 
 @Composable
-fun ReminderOverviewUI(Context: Context = LocalContext.current) {
-    val navController = rememberNavController()
+fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
+    // val navController = rememberNavController()
     // val navigation = Navigation()
     // navigation.NavigationHost(navController = navController, NavRoutes.Reminder.route)
     // Navigation(navController = navController, startRoute = NavRoutes.Reminder.route)
