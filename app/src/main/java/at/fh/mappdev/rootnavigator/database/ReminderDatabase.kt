@@ -7,29 +7,25 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [ReminderItemRoom::class], version = 2)
 abstract class ReminderDatabase : RoomDatabase() {
-    abstract fun reminderDao(): ReminderDatabaseDao
+
+    abstract val reminderDao: ReminderDatabaseDao
 
     companion object {
-
         private var INSTANCE: ReminderDatabase? = null
-
-        fun getInstance(context: Context): ReminderDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-
-                if(instance == null){
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        ReminderDatabase::class.java,
-                        "reminderdatabase"
-                    ).fallbackToDestructiveMigration()
-                        .build()
-
-                    INSTANCE = instance
-                }
-                return instance
+        fun getDatabase(context: Context): ReminderDatabase {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
+        }
 
+        private fun buildDatabase(context: Context): ReminderDatabase {
+            return Room.databaseBuilder(
+                context,
+                ReminderDatabase::class.java, "lesson-note-db"
+            )
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build()
         }
     }
 }

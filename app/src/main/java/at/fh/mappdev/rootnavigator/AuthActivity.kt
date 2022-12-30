@@ -42,7 +42,7 @@ class AuthActivity : ComponentActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         // else: go to Session Expired
         // val intent = Intent(this, SessionExpiredActivity::class.java)
-        timer.schedule(timerTask { startActivity(intent) }, 2000)
+        timer.schedule(timerTask { startActivity(intent) }, 0)
     }
 }
 

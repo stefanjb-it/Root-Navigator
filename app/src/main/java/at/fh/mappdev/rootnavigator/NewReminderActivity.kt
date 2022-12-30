@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.database.ReminderDatabase
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
+import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -187,11 +188,9 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                     if (date != "" && time != "" && description != ""){
                         Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
 
-                        val db = ReminderDatabase.getInstance(context)
-                        val newreminder = ReminderItemRoom(ReminderDate = date,
+                        val newReminder = ReminderItemRoom(ReminderDate = date,
                             ReminderTime = time, ReminderActive = true, ReminderDescription = description)
-
-                        // GlobalScope.launch { db.reminderDao().newReminder(newreminder) }
+                        ReminderRepository.newReminder(context, newReminder)
 
                         navController.navigate("reminder") {
                             popUpTo(navController.graph.findStartDestination().id) {

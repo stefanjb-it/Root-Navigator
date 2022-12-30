@@ -26,13 +26,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.fh.mappdev.rootnavigator.database.ReminderViewModel
+import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
+import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import androidx.compose.material.Text
 
 class ReminderOverviewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,25 +59,19 @@ fun Reminder(name: String, desc: String) {
 }
 
 @Composable
-private fun Reminders(context: Context, viewModel: ReminderViewModel) {
+fun Reminders() {
 
-    // val reminderList = viewModel.allReminders.value
+    var reminderList : MutableState<List<ReminderItemRoom>>
 
     LazyColumn(
         modifier = Modifier.height(530.dp)
     ) {
-        /*if (reminderList != null){
-            items(items = reminderList) {
-                    reminder -> Reminder(name = "Reminder " + reminder?.ReminderTime + " " +
-                    reminder?.ReminderDate, desc = reminder?.ReminderDescription)
-            }
-        }*/
+
     }
 }
 
 @Composable
 fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
-    //val viewModel: ReminderViewModel by viewModel()
 
     Column(
         modifier = Modifier
@@ -94,7 +88,11 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        //Reminders(Context, viewModel)
+        LazyColumn(
+            modifier = Modifier.height(530.dp)
+        ) {
+            ReminderRepository.getReminders(Context)?.map {item {Reminder(name = it.ReminderId.toString(), desc = it.ReminderDescription)}}
+        }
 
         Row(
             modifier = Modifier

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class ReminderItemRoom(
 
     @PrimaryKey(autoGenerate = true)
-    var ReminderId: Long = 1L,
+    var ReminderId: Int = 0,
 
     @ColumnInfo(name = "date")
     var ReminderDate: String,

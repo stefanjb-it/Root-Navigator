@@ -1,20 +1,32 @@
 package at.fh.mappdev.rootnavigator.database
 
+import android.content.Context
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class ReminderRepository(private val reminderDatabaseDao: ReminderDatabaseDao) {
-
-    val AllReminders : LiveData<List<ReminderItemRoom>?> = reminderDatabaseDao.getAllReminders()
-
-    suspend fun newReminder(Reminder: ReminderItemRoom) {
-        reminderDatabaseDao.newReminder(Reminder)
+object ReminderRepository {
+    // get all Reminders
+    fun getReminders(context: Context) : List<ReminderItemRoom>? {
+        val db = ReminderDatabase.getDatabase(context.applicationContext)
+        return db.reminderDao.getAllReminders()
     }
 
-    suspend fun updateReminder(Reminder: ReminderItemRoom) {
-        reminderDatabaseDao.updateReminder(Reminder)
+    // || WORKS || add Reminder
+    fun newReminder(context: Context, Reminder: ReminderItemRoom) {
+        val db = ReminderDatabase.getDatabase(context.applicationContext)
+        GlobalScope.launch { db.reminderDao.newReminder(Reminder) }
     }
 
-    suspend fun deleteReminder(Reminder: ReminderItemRoom) {
-        reminderDatabaseDao.deleteReminder(Reminder)
+    // TODO
+    fun updateReminder(context:Context, Reminder: ReminderItemRoom) {
+        val db = ReminderDatabase.getDatabase(context.applicationContext)
+        GlobalScope.launch { db.reminderDao.updateReminder(Reminder) }
+    }
+
+    // TODO
+    fun deleteReminder(context:Context, Reminder: ReminderItemRoom) {
+        val db = ReminderDatabase.getDatabase(context.applicationContext)
+        GlobalScope.launch { db.reminderDao.deleteReminder(Reminder) }
     }
 }
