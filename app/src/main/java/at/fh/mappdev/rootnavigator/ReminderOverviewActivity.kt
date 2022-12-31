@@ -1,8 +1,8 @@
 package at.fh.mappdev.rootnavigator
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.animateContentSize
@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -29,11 +27,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
+import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 
 class ReminderOverviewActivity : ComponentActivity() {
@@ -42,7 +41,6 @@ class ReminderOverviewActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    // ReminderOverviewUI(navController = rememberNavController())
                 }
             }
         }
@@ -50,7 +48,7 @@ class ReminderOverviewActivity : ComponentActivity() {
 }
 
 @Composable
-fun Reminder(name: String, desc: String) {
+fun Reminder(reminder : ReminderItemRoom, Context: Context) {
     Card(
         modifier = Modifier.padding(
             vertical = 12.dp
@@ -58,23 +56,9 @@ fun Reminder(name: String, desc: String) {
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        ReminderContent(name, desc)
+        ReminderContent(reminder, Context)
     }
 }
-
-/*
-@Composable
-fun Reminders() {
-
-    var reminderList : MutableState<List<ReminderItemRoom>>
-
-    LazyColumn(
-        modifier = Modifier.height(530.dp)
-    ) {
-
-    }
-}
-*/
 
 @Composable
 fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderViewModel, Context: Context = LocalContext.current) {
@@ -97,11 +81,12 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-
         LazyColumn(
-            modifier = Modifier.height(530.dp)
+            modifier = Modifier
+                .height(530.dp)
+                .padding(top = 12.dp)
         ) {
-            reminders.value?.map { item {Reminder(name = it.ReminderId.toString(), desc = it.ReminderDescription)} }
+            reminders.value?.map { item {Reminder(it, Context)} }
         }
 
         Row(
@@ -136,15 +121,14 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
 }
 
 @Composable
-private fun ReminderContent(name: String, desc: String) {
+private fun ReminderContent(reminder: ReminderItemRoom, Context: Context) {
     var expanded by remember { mutableStateOf(false) }
-    var reminderChecked by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .padding(
                 start = 24.dp,
-                end = 24.dp,
+                end = 12.dp,
                 top = 8.dp,
                 bottom = 8.dp
             )
@@ -155,36 +139,45 @@ private fun ReminderContent(name: String, desc: String) {
                 )
             )
     ) {
-        
+
         Row(modifier = Modifier
-                .fillMaxWidth(),
+            .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$name",
+                text = reminder.ReminderDate + " - " + reminder.ReminderTime,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { /* TODO implement delete */ }) {
+            IconButton(onClick = {
+                ReminderRepository.deleteReminder(Context, reminder)
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     tint = MaterialTheme.colors.secondary,
-                    contentDescription = if (expanded) {
-                        stringResource(id = R.string.show_less)
+                    contentDescription = "Delete"
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    reminder.ReminderActive = !reminder.ReminderActive
+                    ReminderRepository.updateReminder(Context, reminder)
+                }
+            ) {
+                Icon(
+                    imageVector = if (reminder.ReminderActive) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
+                    tint = MaterialTheme.colors.secondary,
+                    contentDescription = if (reminder.ReminderActive) {
+                        stringResource(id = R.string.done)
                     } else {
-                        stringResource(id = R.string.show_more)
+                        stringResource(id = R.string.undone)
                     }
                 )
             }
-            Checkbox(
-                checked = reminderChecked,
-                onCheckedChange = {reminderChecked = !reminderChecked},
-                colors = CheckboxDefaults.colors(
-                    uncheckedColor = MaterialTheme.colors.secondary
-                ),
-            )
+
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
@@ -207,26 +200,13 @@ private fun ReminderContent(name: String, desc: String) {
                 )
                 Spacer(modifier = Modifier.padding(top = 16.dp))
                 Text(
-                    text = desc,
+                    text = reminder.ReminderDescription,
                     color = MaterialTheme.colors.surface,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.padding(top = 16.dp))
             }
         }
-
     }
 }
 
-@Preview(
-    showBackground = true,
-    widthDp = 320,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Darkmode"
-)
-@Composable
-private fun ConnectionsPreview() {
-    RootNavigatorTheme {
-        ReminderContent("Test", "This is a Test")
-    }
-}

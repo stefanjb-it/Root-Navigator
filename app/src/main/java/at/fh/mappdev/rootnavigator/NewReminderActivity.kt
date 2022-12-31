@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
@@ -86,7 +87,9 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
             .paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
-            )
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Row(modifier = Modifier
@@ -189,7 +192,7 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                         Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
 
                         val newReminder = ReminderItemRoom(ReminderDate = date,
-                            ReminderTime = time, ReminderActive = true, ReminderDescription = description)
+                            ReminderTime = time, ReminderActive = false, ReminderDescription = description)
                         ReminderRepository.newReminder(context, newReminder)
 
                         navController.navigate("reminder") {

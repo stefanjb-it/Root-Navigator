@@ -2,6 +2,8 @@
     <string name="app_name">RootNavigator</string>
     <string name="show_less">Show less</string>
     <string name="show_more">Show more</string>
+    <string name="done">Done</string>
+    <string name="undone">Undone</string>
 
     <!-- Button Labels -->
     <string name="button_save">Save</string>

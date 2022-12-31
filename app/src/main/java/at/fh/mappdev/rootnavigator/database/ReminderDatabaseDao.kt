@@ -10,7 +10,7 @@ interface ReminderDatabaseDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun newReminder(reminder: ReminderItemRoom)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateReminder(reminder: ReminderItemRoom)
 
     @Delete
