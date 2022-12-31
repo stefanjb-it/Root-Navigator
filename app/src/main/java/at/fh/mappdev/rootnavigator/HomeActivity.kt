@@ -294,7 +294,7 @@ fun NavigationHost(navController: NavHostController) {
 
         composable(NavRoutes.Settings.route) {
             // Settings
-            SettingUi()
+            SettingUi(navController)
         }
     }
 }

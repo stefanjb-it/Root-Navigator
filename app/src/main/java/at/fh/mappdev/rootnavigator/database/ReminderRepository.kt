@@ -1,7 +1,6 @@
 package at.fh.mappdev.rootnavigator.database
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

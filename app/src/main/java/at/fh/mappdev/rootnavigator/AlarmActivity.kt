@@ -40,7 +40,7 @@ class AlarmActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    SettingUi()
+                    // SettingUi()
                 }
             }
         }

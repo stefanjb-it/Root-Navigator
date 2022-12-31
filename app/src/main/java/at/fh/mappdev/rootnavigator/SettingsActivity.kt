@@ -26,6 +26,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import at.fh.mappdev.rootnavigator.database.ReminderRepository
+import at.fh.mappdev.rootnavigator.database.SettingsItemRoom
+import at.fh.mappdev.rootnavigator.database.SettingsRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class SettingsActivity : ComponentActivity() {
@@ -34,7 +39,7 @@ class SettingsActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    SettingUi()
+                    //SettingUi()
                 }
             }
         }
@@ -43,7 +48,8 @@ class SettingsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SettingUi(Context: Context = LocalContext.current) {
+fun SettingUi(navController: NavHostController, Context: Context = LocalContext.current) {
+
     var typelist = listOf("Student", "Normal")
     var type by remember { mutableStateOf("") }
     var degreeprogram by remember { mutableStateOf("") }
@@ -51,6 +57,14 @@ fun SettingUi(Context: Context = LocalContext.current) {
     var preferredRootpoint by remember { mutableStateOf("") }
     var preferredLine by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+
+
+    var dbSettings: SettingsItemRoom = SettingsItemRoom(SettingType = "", SettingDegreeProgram = "",
+    SettingGroup =  "", SettingsPrefRootpoint =  "", SettingsPrefLines =  "")
+
+    if (SettingsRepository.getSettingsCount(Context) > 0) {
+        dbSettings = SettingsRepository.getSettings(Context)
+    }
 
     Column(
         modifier = Modifier
@@ -251,7 +265,31 @@ fun SettingUi(Context: Context = LocalContext.current) {
             // Button Row
             Row(modifier = Modifier.padding(top = 32.dp)) {
                 Button(
-                    onClick = { Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show() },
+                    onClick = {
+                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != ""){
+
+                            val newSettingRoom = SettingsItemRoom(SettingType = type, SettingDegreeProgram = degreeprogram,
+                                SettingGroup =  group, SettingsPrefRootpoint =  preferredRootpoint, SettingsPrefLines =  preferredLine)
+
+                            if (SettingsRepository.getSettingsCount(Context) > 0){
+                                SettingsRepository.updateSetting(Context, newSettingRoom)
+                            } else {
+                                SettingsRepository.newSetting(Context, newSettingRoom)
+                            }
+                            Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
+
+                            navController.navigate("home") {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+
+                        } else {
+                            Toast.makeText(Context, "You Donkey! You not Gigasaal!", Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 60.dp),

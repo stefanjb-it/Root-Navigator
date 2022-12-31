@@ -1,6 +1,5 @@
 package at.fh.mappdev.rootnavigator.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -8,7 +7,7 @@ interface ReminderDatabaseDao {
     @Query("SELECT * FROM Reminders")
     fun getAllReminders(): List<ReminderItemRoom>?
 
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun newReminder(reminder: ReminderItemRoom)
 
     @Update

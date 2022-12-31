@@ -5,23 +5,23 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ReminderItemRoom::class], version = 2)
-abstract class ReminderDatabase : RoomDatabase() {
+@Database(entities = [SettingsItemRoom::class], version = 1)
+abstract class SettingsDatabase : RoomDatabase() {
 
-    abstract val reminderDao: ReminderDatabaseDao
+    abstract val settingsDao: SettingsDatabaseDao
 
     companion object {
-        private var INSTANCE: ReminderDatabase? = null
-        fun getDatabase(context: Context): ReminderDatabase {
+        private var INSTANCE: SettingsDatabase? = null
+        fun getDatabase(context: Context): SettingsDatabase {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
         }
 
-        private fun buildDatabase(context: Context): ReminderDatabase {
+        private fun buildDatabase(context: Context): SettingsDatabase {
             return Room.databaseBuilder(
                 context,
-                ReminderDatabase::class.java, "reminder-db"
+                SettingsDatabase::class.java, "setting-db"
             )
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
