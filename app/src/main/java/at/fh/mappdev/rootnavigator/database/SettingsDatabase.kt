@@ -24,6 +24,7 @@ abstract class SettingsDatabase : RoomDatabase() {
                 SettingsDatabase::class.java, "setting-db"
             )
                 .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build()
         }
     }

@@ -1,5 +1,7 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -49,9 +51,10 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel : ReminderViewModel by viewModels()
+        val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         setContent {
             RootNavigatorTheme {
-                    MyScaffold(viewModel)
+                    MyScaffold(viewModel, sharedPrefs)
             }
         }
     }
@@ -263,7 +266,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
 
 @Composable
-fun NavigationHost(navController: NavHostController, reminderViewModel: ReminderViewModel) {
+fun NavigationHost(navController: NavHostController, reminderViewModel: ReminderViewModel, preferences : SharedPreferences) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
@@ -297,7 +300,7 @@ fun NavigationHost(navController: NavHostController, reminderViewModel: Reminder
 
         composable(NavRoutes.Settings.route) {
             // Settings
-            SettingUi(navController)
+            SettingUi(navController, preferences)
         }
     }
 }
@@ -305,7 +308,7 @@ fun NavigationHost(navController: NavHostController, reminderViewModel: Reminder
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyScaffold(reminderViewModel: ReminderViewModel){
+fun MyScaffold(reminderViewModel: ReminderViewModel, preferences: SharedPreferences){
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val navController = rememberNavController()
 
@@ -315,7 +318,7 @@ fun MyScaffold(reminderViewModel: ReminderViewModel){
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController, reminderViewModel = reminderViewModel) },
+        content = { NavigationHost(navController = navController, reminderViewModel = reminderViewModel, preferences) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

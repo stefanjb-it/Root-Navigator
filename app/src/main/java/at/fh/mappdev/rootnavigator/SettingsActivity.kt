@@ -1,6 +1,7 @@
 package at.fh.mappdev.rootnavigator
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -28,10 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import at.fh.mappdev.rootnavigator.database.PrefHolder
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.database.SettingsItemRoom
 import at.fh.mappdev.rootnavigator.database.SettingsRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import java.util.prefs.Preferences
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,23 +51,16 @@ class SettingsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SettingUi(navController: NavHostController, Context: Context = LocalContext.current) {
+fun SettingUi(navController: NavHostController, preferences: SharedPreferences, Context: Context = LocalContext.current) {
 
     var typelist = listOf("Student", "Normal")
-    var type by remember { mutableStateOf("") }
-    var degreeprogram by remember { mutableStateOf("") }
-    var group by remember { mutableStateOf("") }
-    var preferredRootpoint by remember { mutableStateOf("") }
-    var preferredLine by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
-
-    var dbSettings: SettingsItemRoom = SettingsItemRoom(SettingType = "", SettingDegreeProgram = "",
-    SettingGroup =  "", SettingsPrefRootpoint =  "", SettingsPrefLines =  "")
-
-    if (SettingsRepository.getSettingsCount(Context) > 0) {
-        dbSettings = SettingsRepository.getSettings(Context)
-    }
+    var type by remember { mutableStateOf(preferences.getString(PrefHolder.TYPE, "") ?: "") }
+    var degreeprogram by remember { mutableStateOf(preferences.getString(PrefHolder.PROGRAMME, "") ?: "") }
+    var group by remember { mutableStateOf(preferences.getString(PrefHolder.GROUP, "") ?: "") }
+    var preferredRootpoint by remember { mutableStateOf(preferences.getString(PrefHolder.ROOTPOINT, "") ?: "") }
+    var preferredLine by remember { mutableStateOf(preferences.getString(PrefHolder.PREFERREDLINE, "") ?: "") }
 
     Column(
         modifier = Modifier
@@ -102,7 +98,7 @@ fun SettingUi(navController: NavHostController, Context: Context = LocalContext.
                 ) {
                     TextField(
                         readOnly = true,
-                        value = if (dbSettings.SettingType != "") {dbSettings.SettingType} else {type} ,
+                        value = type ,
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = MaterialTheme.colors.secondaryVariant
                         ),
@@ -116,7 +112,7 @@ fun SettingUi(navController: NavHostController, Context: Context = LocalContext.
                         typelist.forEach {
                             DropdownMenuItem(
                                 onClick = {
-                                type = it
+                                    type = it
                                 expanded = false}
                             ) {
                                 Text(text = it)
@@ -268,14 +264,11 @@ fun SettingUi(navController: NavHostController, Context: Context = LocalContext.
                     onClick = {
                         if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != ""){
 
-                            val newSettingRoom = SettingsItemRoom(SettingType = type, SettingDegreeProgram = degreeprogram,
-                                SettingGroup =  group, SettingsPrefRootpoint =  preferredRootpoint, SettingsPrefLines =  preferredLine)
-
-                            if (SettingsRepository.getSettingsCount(Context) > 0){
-                                SettingsRepository.updateSetting(Context, newSettingRoom)
-                            } else {
-                                SettingsRepository.newSetting(Context, newSettingRoom)
-                            }
+                            preferences.edit().putString(PrefHolder.TYPE, type).apply()
+                            preferences.edit().putString(PrefHolder.PROGRAMME, degreeprogram).apply()
+                            preferences.edit().putString(PrefHolder.GROUP, group).apply()
+                            preferences.edit().putString(PrefHolder.PREFERREDLINE, preferredLine).apply()
+                            preferences.edit().putString(PrefHolder.ROOTPOINT, preferredRootpoint).apply()
                             Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
 
                             navController.navigate("home") {
