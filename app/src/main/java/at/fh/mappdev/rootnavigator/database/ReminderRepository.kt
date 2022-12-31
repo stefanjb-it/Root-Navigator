@@ -5,10 +5,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 object ReminderRepository {
+    var allReminders : List<ReminderItemRoom>? = listOf()
+
     // get all Reminders
-    fun getReminders(context: Context) : List<ReminderItemRoom>? {
+    fun getReminders(context: Context) {
         val db = ReminderDatabase.getDatabase(context.applicationContext)
-        return db.reminderDao.getAllReminders()
+        allReminders = db.reminderDao.getAllReminders()
     }
 
     // || WORKS || add Reminder

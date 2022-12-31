@@ -102,7 +102,7 @@ fun SettingUi(navController: NavHostController, Context: Context = LocalContext.
                 ) {
                     TextField(
                         readOnly = true,
-                        value = type,
+                        value = if (dbSettings.SettingType != "") {dbSettings.SettingType} else {type} ,
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = MaterialTheme.colors.secondaryVariant
                         ),

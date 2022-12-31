@@ -24,7 +24,6 @@ abstract class ReminderDatabase : RoomDatabase() {
                 ReminderDatabase::class.java, "reminder-db"
             )
                 .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
                 .build()
         }
     }

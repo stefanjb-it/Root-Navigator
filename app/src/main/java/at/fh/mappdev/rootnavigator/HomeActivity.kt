@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -41,14 +42,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel : ReminderViewModel by viewModels()
         setContent {
             RootNavigatorTheme {
-                    MyScaffold()
+                    MyScaffold(viewModel)
             }
         }
     }
@@ -260,7 +263,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
 
 @Composable
-fun NavigationHost(navController: NavHostController) {
+fun NavigationHost(navController: NavHostController, reminderViewModel: ReminderViewModel) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
@@ -274,7 +277,7 @@ fun NavigationHost(navController: NavHostController) {
             // Reminder
             // LoginUI()
             // NewReminderUI()
-            ReminderOverviewUI(navController)
+            ReminderOverviewUI(navController, reminderViewModel)
         }
 
         composable(NavRoutes.NewReminder.route){
@@ -302,7 +305,7 @@ fun NavigationHost(navController: NavHostController) {
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyScaffold(){
+fun MyScaffold(reminderViewModel: ReminderViewModel){
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val navController = rememberNavController()
 
@@ -312,7 +315,7 @@ fun MyScaffold(){
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController) },
+        content = { NavigationHost(navController = navController, reminderViewModel = reminderViewModel) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

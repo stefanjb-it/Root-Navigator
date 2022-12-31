@@ -1,7 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +11,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,17 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
-import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.sharp.Close
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 
 class ReminderOverviewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +42,7 @@ class ReminderOverviewActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    ReminderOverviewUI(navController = rememberNavController())
+                    // ReminderOverviewUI(navController = rememberNavController())
                 }
             }
         }
@@ -82,7 +77,10 @@ fun Reminders() {
 */
 
 @Composable
-fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
+fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderViewModel, Context: Context = LocalContext.current) {
+
+    val reminders = viewModel.reminders.observeAsState()
+    viewModel.refreshReminder()
 
     Column(
         modifier = Modifier
@@ -99,10 +97,11 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
+
         LazyColumn(
             modifier = Modifier.height(530.dp)
         ) {
-            ReminderRepository.getReminders(Context)?.map {item {Reminder(name = it.ReminderDate + " - " + it.ReminderTime, desc = it.ReminderDescription)}}
+            reminders.value?.map { item {Reminder(name = it.ReminderId.toString(), desc = it.ReminderDescription)} }
         }
 
         Row(
