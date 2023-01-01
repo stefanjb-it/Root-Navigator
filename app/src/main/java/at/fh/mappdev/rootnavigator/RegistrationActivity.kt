@@ -1,6 +1,8 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -8,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,33 +17,33 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
+import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
+import at.fh.mappdev.rootnavigator.database.PrefHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class RegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    RegistrationUIMode()
+                    RegistrationUIMode(sharedPrefs)
                 }
             }
         }
@@ -50,7 +51,7 @@ class RegistrationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegistrationUIMode(){
+fun RegistrationUIMode(preferences: SharedPreferences){
 
     var studentMode by remember { mutableStateOf(false) }
     var buttonClicked by remember { mutableStateOf(false) }
@@ -81,9 +82,7 @@ fun RegistrationUIMode(){
 
             Spacer(modifier = Modifier.padding(top = 80.dp))
 
-            Row(
-
-            ) {
+            Row {
                 Button(
                     onClick = {
                         studentMode = true
@@ -105,9 +104,7 @@ fun RegistrationUIMode(){
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
-            Row(
-
-            ) {
+            Row {
                 Button(
                     onClick = {
                         studentMode = false
@@ -131,14 +128,14 @@ fun RegistrationUIMode(){
     }
 
     if (buttonClicked) {
-        RegistrationUIAccount()
+        RegistrationUIAccount(studentMode, preferences)
     }
 }
 
 @Composable
-fun RegistrationUIAccount(){
+fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
 
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember{ mutableStateOf("")}
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var buttonClicked by remember { mutableStateOf(false) }
@@ -172,7 +169,7 @@ fun RegistrationUIAccount(){
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Username",
+                Text(text = "E-Mail",
                     textAlign = TextAlign.Start,
                     fontSize = 18.sp,
                     color = MaterialTheme.colors.surface)
@@ -182,8 +179,8 @@ fun RegistrationUIAccount(){
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(
-                    value = username,
-                    onValueChange = { username = it },
+                    value = email,
+                    onValueChange = { email = it },
                     modifier = Modifier
                         .height(height = 50.dp)
                         .fillMaxWidth(),
@@ -264,19 +261,40 @@ fun RegistrationUIAccount(){
         }
     }
 
+    fun notEmpty(): Boolean = email.trim().isNotEmpty() &&
+            password.trim().isNotEmpty()
+
     if (buttonClicked) {
-        RegistrationUIAddress()
+        if (notEmpty()) {
+            RegistrationUIAddress(studentMode, email, password, preferences)
+        } else {
+            buttonClicked = false
+            Toast.makeText(LocalContext.current, "Please enter valid credentials.", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
 @Composable
-fun RegistrationUIAddress(){
+fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, preferences: SharedPreferences){
 
     var rootPoint by remember { mutableStateOf("") }
     var preferredLine by remember { mutableStateOf("") }
     var preferredDestination by remember { mutableStateOf("") }
 
     val context = LocalContext.current
+
+    fun sendEmailVerification() {
+        firebaseUser?.let {
+            it.sendEmailVerification().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context, "email sent to $Email", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    fun notEmpty(): Boolean = rootPoint.trim().isNotEmpty() &&
+            preferredLine.trim().isNotEmpty() && preferredDestination.trim().isNotEmpty()
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -405,8 +423,29 @@ fun RegistrationUIAddress(){
             ) {
                 Button(
                     onClick = {
-                        val intent = Intent(context, AuthActivity::class.java)
-                        context.startActivity(intent)
+                          if (notEmpty()) {
+                              if(StudentMode) {
+                                  preferences.edit().putString(PrefHolder.TYPE, "Student").apply()
+                              } else {
+                                  preferences.edit().putString(PrefHolder.TYPE, "Normal").apply()
+                              }
+                              preferences.edit().putString(PrefHolder.PREFERREDLINE, preferredLine).apply()
+                              preferences.edit().putString(PrefHolder.ROOTPOINT, rootPoint).apply()
+
+                              firebaseAuth.createUserWithEmailAndPassword(Email, Password)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
+                                            sendEmailVerification()
+                                            val intent = Intent(context, AuthActivity::class.java)
+                                            context.startActivity(intent)
+                                        } else {
+                                            Toast.makeText(context, "Athentication failed!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                          } else {
+                              Toast.makeText(context, "Please enter valid address data.", Toast.LENGTH_SHORT).show()
+                          }
                     },
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -419,7 +458,7 @@ fun RegistrationUIAddress(){
                     )
                 }
             }
-
         }
     }
 }
+

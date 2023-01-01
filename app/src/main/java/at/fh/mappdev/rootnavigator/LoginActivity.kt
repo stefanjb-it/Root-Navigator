@@ -1,7 +1,10 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -32,29 +35,49 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
+import at.fh.mappdev.rootnavigator.database.PrefHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import com.google.firebase.auth.FirebaseUser
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    LoginUI()
+                    LoginUI(sharedPrefs)
                 }
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        if (sharedPrefs.getBoolean(PrefHolder.STAYLOGGEDIN, false)){
+            val user: FirebaseUser? = firebaseAuth.currentUser
+            user?.let {
+                Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, AuthActivity::class.java)
+                this.startActivity(intent)
             }
         }
     }
 }
 
 @Composable
-fun LoginUI(){
-    var username by remember { mutableStateOf("") }
+fun LoginUI(preferences: SharedPreferences){
+    var email by remember { mutableStateOf("") }
     var password by remember{ mutableStateOf("")}
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var stayLoggedIn by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    fun notEmpty(): Boolean = email.trim().isNotEmpty() &&
+            password.trim().isNotEmpty()
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -82,7 +105,7 @@ fun LoginUI(){
             Spacer(modifier = Modifier.padding(top = 64.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Username",
+                Text(text = "E-Mail",
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.surface,
                     fontSize = 18.sp)
@@ -92,8 +115,8 @@ fun LoginUI(){
             
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(
-                    value = username,
-                    onValueChange = { username = it },
+                    value = email,
+                    onValueChange = { email = it },
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),
@@ -177,8 +200,22 @@ fun LoginUI(){
 
             Row(modifier = Modifier.fillMaxWidth()){
                 Button(onClick = {
-                    val intent = Intent(context, AuthActivity::class.java)
-                    context.startActivity(intent)
+                    preferences.edit().putBoolean(PrefHolder.STAYLOGGEDIN, stayLoggedIn).apply()
+
+                    if (notEmpty()) {
+                        firebaseAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { signIn ->
+                                if (signIn.isSuccessful) {
+                                    Toast.makeText(context, "Signed in successfully!", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(context, AuthActivity::class.java)
+                                    context.startActivity(intent)
+                                } else {
+                                    Toast.makeText(context, "Sign in failed!", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context, "Please enter your user credentials.", Toast.LENGTH_SHORT).show()
+                    }
                 },
                     modifier = Modifier
                         .fillMaxWidth()
