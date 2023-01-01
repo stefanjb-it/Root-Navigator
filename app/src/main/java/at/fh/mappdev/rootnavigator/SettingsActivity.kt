@@ -14,11 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,11 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import at.fh.mappdev.rootnavigator.database.PrefHolder
-import at.fh.mappdev.rootnavigator.database.ReminderRepository
-import at.fh.mappdev.rootnavigator.database.SettingsItemRoom
-import at.fh.mappdev.rootnavigator.database.SettingsRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
-import java.util.prefs.Preferences
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

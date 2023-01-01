@@ -163,23 +163,17 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, viewMo
                 )
             }
 
-            IconButton(
-                onClick = {
+            Checkbox(
+                checked = isActive,
+                onCheckedChange = {
                     reminder.ReminderActive = !reminder.ReminderActive
                     ReminderRepository.updateReminder(Context, reminder)
                     isActive = !isActive
-                }
-            ) {
-                Icon(
-                    imageVector = if (isActive) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = if (isActive) {
-                        stringResource(id = R.string.done)
-                    } else {
-                        stringResource(id = R.string.undone)
-                    }
-                )
-            }
+                                  },
+                colors = CheckboxDefaults.colors(
+                    uncheckedColor = MaterialTheme.colors.secondary
+                ),
+            )
 
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
