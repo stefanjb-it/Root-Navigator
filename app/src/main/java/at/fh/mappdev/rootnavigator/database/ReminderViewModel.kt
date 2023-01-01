@@ -1,6 +1,7 @@
 package at.fh.mappdev.rootnavigator.database
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +20,10 @@ class ReminderViewModel(application : Application) : AndroidViewModel(applicatio
             ReminderRepository.getReminders(getApplication())
         }
     }
+        localRefresh()
+    }
+
+    val localRefresh: () -> Unit = {
         reminders.value = ReminderRepository.allReminders
     }
 }

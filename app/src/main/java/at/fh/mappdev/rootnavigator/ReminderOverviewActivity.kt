@@ -48,7 +48,7 @@ class ReminderOverviewActivity : ComponentActivity() {
 }
 
 @Composable
-fun Reminder(reminder : ReminderItemRoom, Context: Context) {
+fun Reminder(reminder : ReminderItemRoom, Context: Context, viewModel : ReminderViewModel) {
     Card(
         modifier = Modifier.padding(
             vertical = 12.dp
@@ -56,7 +56,7 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context) {
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        ReminderContent(reminder, Context)
+        ReminderContent(reminder, Context, viewModel)
     }
 }
 
@@ -86,7 +86,7 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
                 .height(530.dp)
                 .padding(top = 12.dp)
         ) {
-            reminders.value?.map { item {Reminder(it, Context)} }
+            reminders.value?.map { item {Reminder(it, Context, viewModel)} }
         }
 
         Row(
@@ -121,8 +121,9 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
 }
 
 @Composable
-private fun ReminderContent(reminder: ReminderItemRoom, Context: Context) {
+private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, viewModel : ReminderViewModel) {
     var expanded by remember { mutableStateOf(false) }
+    var isActive by remember { mutableStateOf(reminder.ReminderActive)}
 
     Column(
         modifier = Modifier
@@ -153,6 +154,7 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context) {
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = {
                 ReminderRepository.deleteReminder(Context, reminder)
+                viewModel.localRefresh()
             }) {
                 Icon(
                     imageVector = Icons.Filled.Close,
@@ -165,12 +167,13 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context) {
                 onClick = {
                     reminder.ReminderActive = !reminder.ReminderActive
                     ReminderRepository.updateReminder(Context, reminder)
+                    isActive = !isActive
                 }
             ) {
                 Icon(
-                    imageVector = if (reminder.ReminderActive) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
+                    imageVector = if (isActive) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
                     tint = MaterialTheme.colors.secondary,
-                    contentDescription = if (reminder.ReminderActive) {
+                    contentDescription = if (isActive) {
                         stringResource(id = R.string.done)
                     } else {
                         stringResource(id = R.string.undone)
