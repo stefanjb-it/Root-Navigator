@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "267717189563",
+    "project_id": "hosting-351419",
+    "storage_bucket": "hosting-351419.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267717189563:android:03fcc2e4f274e1dc9dae9e",
+        "android_client_info": {
+          "package_name": "at.fh.mappdev.rootnavigator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267717189563-vj7dspdtrkh4oc26q23jp9cff2a14equ.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDITa1zcH0y_oH7HXKtD1cY3mtN-OzlVnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267717189563-vj7dspdtrkh4oc26q23jp9cff2a14equ.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
