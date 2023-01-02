@@ -8,10 +8,12 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -31,19 +33,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import at.fh.mappdev.rootnavigator.database.*
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class HomeActivity : ComponentActivity(), LocationListener {
@@ -103,6 +110,23 @@ fun Connections(
     modifier: Modifier = Modifier,
     connections: List<String> = List(1000) { "$it" }
 ) {
+    var stationsIdResponse =
+        ClasslessNewBEHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250)
+            .observeAsState()
+    var finalMap = ClasslessNewBEHandler.getStationMap().observeAsState()
+
+    when (stationsIdResponse.value?.done) {
+        true -> {
+            Toast.makeText(LocalContext.current, "Your data is here!", Toast.LENGTH_LONG).show()
+            ClasslessNewBEHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
+        }
+        else -> Toast.makeText(
+            LocalContext.current,
+            "Data is being retrieved...",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     LazyColumn(
         modifier = modifier
             .background(MaterialTheme.colors.primary)
@@ -111,9 +135,23 @@ fun Connections(
                 contentScale = ContentScale.FillWidth
             )
     ) {
-        items(items = connections) {
-                connection -> Connection(name = connection)
+        if (finalMap.value != null) {
+            finalMap.value?.forEach {
+                item {
+                    Connection(name = it.value.station.name)
+                }
+            }
+            /*connections.forEach {
+                item {
+                    Connection(name = it)
+                }
+            }*/
+        } else {
+            item {
+                Connection(name = "No data yet")
+            }
         }
+
     }
 }
 
@@ -352,7 +390,7 @@ fun MyScaffold(preferences: SharedPreferences){
 
 
 @Composable
-private fun CardContent(name: String) {
+fun CardContent(name: String) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(
