@@ -52,7 +52,6 @@ class RegistrationActivity : ComponentActivity() {
 
 @Composable
 fun RegistrationUIMode(preferences: SharedPreferences){
-
     var studentMode by remember { mutableStateOf(false) }
     var buttonClicked by remember { mutableStateOf(false) }
 
@@ -190,7 +189,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -223,7 +222,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -348,7 +347,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -380,7 +379,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -412,7 +411,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
