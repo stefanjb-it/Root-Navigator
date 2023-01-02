@@ -1,8 +1,10 @@
 package at.fh.mappdev.rootnavigator
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -33,12 +35,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
 import at.fh.mappdev.rootnavigator.database.PrefHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.firebase.auth.FirebaseUser
 
 class LoginActivity : ComponentActivity() {
+    private val locationPermissionCode = 2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
@@ -47,6 +53,22 @@ class LoginActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.primary) {
                     LoginUI(sharedPrefs)
                 }
+            }
+        }
+
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == locationPermissionCode) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
