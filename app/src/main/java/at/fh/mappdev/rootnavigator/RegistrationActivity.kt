@@ -181,7 +181,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     value = email,
                     onValueChange = { email = it },
                     modifier = Modifier
-                        .height(height = 50.dp)
+                        .height(height = 60.dp)
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
@@ -189,7 +189,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -214,7 +214,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     onValueChange = { password = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(height = 50.dp),
+                        .height(height = 60.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
                     ),
@@ -222,7 +222,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -339,7 +339,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     value = rootPoint,
                     onValueChange = { rootPoint = it },
                     modifier = Modifier
-                        .height(height = 50.dp)
+                        .height(height = 60.dp)
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
@@ -347,7 +347,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -371,7 +371,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     value = preferredLine,
                     onValueChange = { preferredLine = it },
                     modifier = Modifier
-                        .height(height = 50.dp)
+                        .height(height = 60.dp)
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
@@ -379,7 +379,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
@@ -403,7 +403,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     value = preferredDestination,
                     onValueChange = { preferredDestination = it },
                     modifier = Modifier
-                        .height(height = 50.dp)
+                        .height(height = 60.dp)
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
@@ -411,7 +411,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
