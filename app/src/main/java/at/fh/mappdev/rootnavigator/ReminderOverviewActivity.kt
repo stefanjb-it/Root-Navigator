@@ -2,7 +2,6 @@ package at.fh.mappdev.rootnavigator
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.animateContentSize
@@ -28,12 +27,11 @@ import androidx.navigation.NavHostController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
-import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 
 class ReminderOverviewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +46,7 @@ class ReminderOverviewActivity : ComponentActivity() {
 }
 
 @Composable
-fun Reminder(reminder : ReminderItemRoom, Context: Context, viewModel : ReminderViewModel) {
+fun Reminder(reminder : ReminderItemRoom, Context: Context, list :  SnapshotStateList<ReminderItemRoom>) {
     Card(
         modifier = Modifier.padding(
             vertical = 12.dp
@@ -56,15 +54,15 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context, viewModel : Reminder
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        ReminderContent(reminder, Context, viewModel)
+        ReminderContent(reminder, Context, list)
     }
 }
 
 @Composable
-fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderViewModel, Context: Context = LocalContext.current) {
+fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
 
-    val reminders = viewModel.reminders.observeAsState()
-    viewModel.refreshReminder()
+    val reminders = remember { mutableStateListOf<ReminderItemRoom>() }
+    reminders.swapList(ReminderRepository.getReminders(Context))
 
     Column(
         modifier = Modifier
@@ -86,7 +84,7 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
                 .height(530.dp)
                 .padding(top = 12.dp)
         ) {
-            reminders.value?.map { item {Reminder(it, Context, viewModel)} }
+            reminders.map { item {Reminder(it, Context, reminders)} }
         }
 
         Row(
@@ -121,7 +119,7 @@ fun ReminderOverviewUI(navController: NavHostController, viewModel: ReminderView
 }
 
 @Composable
-private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, viewModel : ReminderViewModel) {
+private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, list :  SnapshotStateList<ReminderItemRoom>) {
     var expanded by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(reminder.ReminderActive)}
 
@@ -153,8 +151,7 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, viewMo
             )
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = {
-                ReminderRepository.deleteReminder(Context, reminder)
-                viewModel.localRefresh()
+                list.swapList(ReminderRepository.deleteReminder(Context, reminder))
             }) {
                 Icon(
                     imageVector = Icons.Filled.Close,
@@ -207,3 +204,7 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, viewMo
     }
 }
 
+fun <T> SnapshotStateList<T>.swapList(newList: List<T>){
+    clear()
+    addAll(newList)
+}

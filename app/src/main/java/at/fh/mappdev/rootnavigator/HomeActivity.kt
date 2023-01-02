@@ -2,12 +2,9 @@ package at.fh.mappdev.rootnavigator
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -15,8 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.TopAppBar
-// import androidx.compose.material.BottomAppBar
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -24,7 +19,6 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.Image
@@ -33,9 +27,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -44,17 +35,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.fh.mappdev.rootnavigator.database.ReminderViewModel
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel : ReminderViewModel by viewModels()
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         setContent {
             RootNavigatorTheme {
-                    MyScaffold(viewModel, sharedPrefs)
+                    MyScaffold(sharedPrefs)
             }
         }
     }
@@ -266,7 +255,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
 
 @Composable
-fun NavigationHost(navController: NavHostController, reminderViewModel: ReminderViewModel, preferences : SharedPreferences) {
+fun NavigationHost(navController: NavHostController, preferences : SharedPreferences) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
@@ -280,7 +269,7 @@ fun NavigationHost(navController: NavHostController, reminderViewModel: Reminder
             // Reminder
             // LoginUI()
             // NewReminderUI()
-            ReminderOverviewUI(navController, reminderViewModel)
+            ReminderOverviewUI(navController)
         }
 
         composable(NavRoutes.NewReminder.route){
@@ -308,7 +297,7 @@ fun NavigationHost(navController: NavHostController, reminderViewModel: Reminder
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyScaffold(reminderViewModel: ReminderViewModel, preferences: SharedPreferences){
+fun MyScaffold(preferences: SharedPreferences){
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val navController = rememberNavController()
 
@@ -318,7 +307,7 @@ fun MyScaffold(reminderViewModel: ReminderViewModel, preferences: SharedPreferen
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController, reminderViewModel = reminderViewModel, preferences) },
+        content = { NavigationHost(navController = navController, preferences) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

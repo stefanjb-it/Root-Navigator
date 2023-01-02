@@ -30,12 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import at.fh.mappdev.rootnavigator.database.ReminderDatabase
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 object NewReminderActivity : ComponentActivity() {
