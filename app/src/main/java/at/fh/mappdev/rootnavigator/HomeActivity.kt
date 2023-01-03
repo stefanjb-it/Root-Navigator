@@ -109,8 +109,8 @@ fun Connections(
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
 
     when (stationsIdResponse.value?.done) {
@@ -125,32 +125,41 @@ fun Connections(
         ).show()
     }
 
-    LazyColumn(
-        modifier = modifier
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colors.primary)
             .paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
             )
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+            ),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        if (finalMap.value != null) {
-            Log.v("finalMap", finalMap.value.toString())
-            finalMap.value?.forEach {
-                item {
-                    Connection(station = it.value)
+        LazyColumn()
+        {
+            if (finalMap.value != null) {
+                Log.v("finalMap", finalMap.value.toString())
+                finalMap.value?.forEach {
+                    item {
+                        Connection(station = it.value)
+                    }
                 }
-            }
-            /*connections.forEach {
+                /*connections.forEach {
                 item {
                     Connection(name = it)
                 }
             }*/
-        } else {
-            item {
+            } else {
+                item {
 
+                }
             }
-        }
 
+        }
     }
 }
 

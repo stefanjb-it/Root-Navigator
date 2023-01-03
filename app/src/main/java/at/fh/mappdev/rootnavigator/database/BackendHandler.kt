@@ -119,21 +119,40 @@ object NewBEHandler {
 
 object BackendHandler {
     private val stationMap : MutableLiveData<MutableMap<Int, SafeStationDetails>> = MutableLiveData(
-            mutableMapOf()
+        mutableMapOf()
     )
 
+    private var newMap : MutableMap<Int, SafeStationDetails> = mutableMapOf()
+
+    private val switchMaps = {
+        stationMap.value = newMap.toMutableMap()
+        finishedActionCount = 0}
+    private var finishedActionCount :Int = 0
+    private fun lowerActionCount(){
+        finishedActionCount--
+        if(finishedActionCount == 0){
+            switchMaps()
+        }
+    }
+
     private fun stationToMap(newStation:Station){
-        stationMap.value?.put(newStation.id, SafeStationDetails(newStation, mutableListOf(), mutableListOf()))
+        //stationMap.value?.put(newStation.id, SafeStationDetails(newStation, mutableListOf(), mutableListOf()))
+        newMap[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
+        lowerActionCount()
     }
 
     private fun departureToMap(id:Int, dp : List<Departure>){
-        stationMap.value?.get(id)?.departures?.addAll(dp)
-        stationMap.value = stationMap.value
+        //stationMap.value?.get(id)?.departures?.addAll(dp)
+        //stationMap.value = stationMap.value
+        newMap[id]?.departures?.addAll(dp)
+        lowerActionCount()
     }
 
     private fun arrivalToMap(id:Int, ar : List<Arrival>){
-        stationMap.value?.get(id)?.arrival?.addAll(ar)
-        stationMap.value = stationMap.value
+        //stationMap.value?.get(id)?.arrival?.addAll(ar)
+        //stationMap.value = stationMap.value
+        newMap[id]?.arrival?.addAll(ar)
+        lowerActionCount()
     }
 
     // PUBLIC ACCESS
@@ -208,7 +227,8 @@ object BackendHandler {
 
     // handle all requests for station details
     fun loadStationDetails(stations : List<Station>){
-        stationMap.value = mutableMapOf()
+        newMap = mutableMapOf()
+        finishedActionCount = 3* stations.size
         stations.forEach {
             stationToMap(it)
             getDepartures(it.id)

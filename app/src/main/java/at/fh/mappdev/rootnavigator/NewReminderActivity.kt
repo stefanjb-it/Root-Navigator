@@ -30,10 +30,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.time.DurationUnit
 
 object NewReminderActivity : ComponentActivity() {
 
@@ -192,6 +197,17 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                             ReminderTime = time, ReminderActive = false, ReminderDescription = description)
                         ReminderRepository.newReminder(context, newReminder)
 
+                        val id: Int = 1
+                        val dateArray = date.split("/")
+                        val timeArray = time.split(":")
+
+                        val selectedDateTime = Calendar.getInstance()
+                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt(), dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt())
+                        val dateTimeToday = Calendar.getInstance()
+
+                        val delayInSeconds = (selectedDateTime.timeInMillis/1000L) - (dateTimeToday.timeInMillis/1000L)
+                        createWorkRequest(description, delayInSeconds, id, context)
+
                         navController.navigate("reminder") {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -216,6 +232,20 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
             }
         }
     }
+}
+
+private fun createWorkRequest(message: String, timeDelayInSeconds: Long, id: Int, context: Context) {
+    val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+        .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
+        .setInputData(workDataOf(
+            "title" to "Reminder",
+            "id" to id,
+            "message" to message,
+            )
+        )
+        .build()
+
+    WorkManager.getInstance(context).enqueue(myWorkRequest)
 }
 
 
