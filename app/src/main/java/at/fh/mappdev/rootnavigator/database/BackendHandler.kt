@@ -123,36 +123,46 @@ object BackendHandler {
     )
 
     private var newMap : MutableMap<Int, SafeStationDetails> = mutableMapOf()
+    private val safeNewMap : SafeSwitchMap = SafeSwitchMap(0, mutableMapOf())
 
     private val switchMaps = {
-        stationMap.value = newMap.toMutableMap()
+        //stationMap.value = newMap.toMutableMap()
+        stationMap.value = safeNewMap.map.toMutableMap()
         finishedActionCount = 0}
+
     private var finishedActionCount :Int = 0
-    private fun lowerActionCount(){
+    private fun lowerActionCount(allowedId:Int){
+        if (safeNewMap.id != allowedId) return
         finishedActionCount--
         if(finishedActionCount == 0){
             switchMaps()
         }
     }
 
-    private fun stationToMap(newStation:Station){
+    private fun stationToMap(newStation:Station, allowedId:Int){
+        if (safeNewMap.id != allowedId) return
         //stationMap.value?.put(newStation.id, SafeStationDetails(newStation, mutableListOf(), mutableListOf()))
-        newMap[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
-        lowerActionCount()
+        //newMap[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
+        safeNewMap.map[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
+        lowerActionCount(allowedId)
     }
 
-    private fun departureToMap(id:Int, dp : List<Departure>){
+    private fun departureToMap(id:Int, dp : List<Departure>, allowedId:Int){
+        if (safeNewMap.id != allowedId) return
         //stationMap.value?.get(id)?.departures?.addAll(dp)
         //stationMap.value = stationMap.value
-        newMap[id]?.departures?.addAll(dp)
-        lowerActionCount()
+        //newMap[id]?.departures?.addAll(dp)
+        safeNewMap.map[id]?.departures?.addAll(dp)
+        lowerActionCount(allowedId)
     }
 
-    private fun arrivalToMap(id:Int, ar : List<Arrival>){
+    private fun arrivalToMap(id:Int, ar : List<Arrival>, allowedId: Int){
+        if (safeNewMap.id != allowedId) return
         //stationMap.value?.get(id)?.arrival?.addAll(ar)
         //stationMap.value = stationMap.value
-        newMap[id]?.arrival?.addAll(ar)
-        lowerActionCount()
+        //newMap[id]?.arrival?.addAll(ar)
+        safeNewMap.map[id]?.arrival?.addAll(ar)
+        lowerActionCount(allowedId)
     }
 
     // PUBLIC ACCESS
@@ -184,7 +194,7 @@ object BackendHandler {
     }
 
     // add departures of station to map
-    private fun getDepartures(stationId : Int){
+    private fun getDepartures(stationId : Int, allowedId:Int){
         Backend().retrofitService.getStationDeparture(
             stationId
         ).enqueue(object :
@@ -194,18 +204,19 @@ object BackendHandler {
                 response: Response<List<Departure>>
             ) {
                 Log.v("API Departures onResponse", response.body().toString())
-                departureToMap(stationId, response.body() ?: return)
+                departureToMap(stationId, response.body() ?: return, allowedId)
             }
 
             override fun onFailure(call: Call<List<Departure>>, t: Throwable) {
                 Log.e("API Departures onFailure $stationId", t.toString())
+                lowerActionCount(allowedId)
             }
         }
         )
     }
 
     // add arrivals of station to map
-    private fun getArrivals(stationId : Int){
+    private fun getArrivals(stationId : Int, allowedId:Int){
         Backend().retrofitService.getStationArrival(
             stationId
         ).enqueue(object :
@@ -215,11 +226,12 @@ object BackendHandler {
                 response: Response<List<Arrival>>
             ) {
                 Log.v("API Arrivals onResponse", response.body().toString())
-                arrivalToMap(stationId, response.body() ?: return)
+                arrivalToMap(stationId, response.body() ?: return, allowedId)
             }
 
             override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
                 Log.e("API Arrivals onFailure $stationId", t.toString())
+                lowerActionCount(allowedId)
             }
         }
         )
@@ -228,11 +240,13 @@ object BackendHandler {
     // handle all requests for station details
     fun loadStationDetails(stations : List<Station>){
         newMap = mutableMapOf()
-        finishedActionCount = 3* stations.size
+        safeNewMap.id++
+        val allowedId = safeNewMap.id
+        finishedActionCount = 3 * stations.size
         stations.forEach {
-            stationToMap(it)
-            getDepartures(it.id)
-            getArrivals(it.id)
+            stationToMap(it, allowedId)
+            getDepartures(it.id, allowedId)
+            getArrivals(it.id, allowedId)
         }
         GlobalScope.launch {
             // wait for all requests to finish

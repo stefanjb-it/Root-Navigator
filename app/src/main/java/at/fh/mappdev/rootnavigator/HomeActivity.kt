@@ -69,7 +69,7 @@ class HomeActivity : ComponentActivity(), LocationListener {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
         }
         // ToDo change minTime and mindDistance
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 30f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1f, this)
     }
     override fun onLocationChanged(location: Location) {
         this.location = location
@@ -109,9 +109,10 @@ fun Connections(
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
+    Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
     when (stationsIdResponse.value?.done) {
         true -> {

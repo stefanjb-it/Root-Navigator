@@ -88,3 +88,4 @@ data class ResponseClass(val stations : MutableList<SafeStationDetails>)
 data class SafeStationDetails(val station:Station, var departures: MutableList<Departure>, var arrival:MutableList<Arrival>)
 
 class UIReturnType(val contentMap:MutableMap<Int, SafeStationDetails>)
+class SafeSwitchMap(var id:Int, val map : MutableMap<Int, SafeStationDetails>)
