@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.location.Location
 
-//@Deprecated("only present for testing")
+@Deprecated("only present for testing")
 object NewBEHandler {
     private val stationMap : MutableLiveData<UIReturnType> = MutableLiveData(
         UIReturnType(
@@ -144,6 +144,9 @@ object BackendHandler {
     // get nearby stations
     fun getNearbyStations(latitude:Double, longitude:Double, distance:Int):LiveData<ResponseType>{
         Log.i("API getNearbyStations", "$latitude $longitude $distance")
+        if (latitude < 0 || longitude < 0 || distance < 0){
+            return MutableLiveData(ResponseType(false, null))
+        }
         val returnData : MutableLiveData<ResponseType> = MutableLiveData<ResponseType>()
         Backend().retrofitService.getNearbyStations(latitude, longitude, distance).enqueue(object : Callback<List<Station>>{
             override fun onResponse(
@@ -205,6 +208,7 @@ object BackendHandler {
 
     // handle all requests for station details
     fun loadStationDetails(stations : List<Station>){
+        stationMap.value = mutableMapOf()
         stations.forEach {
             stationToMap(it)
             getDepartures(it.id)

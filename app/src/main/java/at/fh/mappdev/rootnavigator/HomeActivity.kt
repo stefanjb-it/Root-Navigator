@@ -109,15 +109,11 @@ fun Connections(
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: return, currentLocation.value?.longitude ?: return, 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
     //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
 
-    /*if (currentLocation.value != null){
-        stationsIdResponse = BackendHandler.getNearbyStations(currentLocation.value!!.latitude, currentLocation.value!!.longitude, 250).observeAsState()
-    }*/
-
-    when (stationsIdResponse?.value?.done) {
+    when (stationsIdResponse.value?.done) {
         true -> {
             BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
             Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_LONG).show()
@@ -417,21 +413,21 @@ fun CardContent(station: SafeStationDetails) {
             )
             if (expanded) {
                 Text(
-                    text = if (station.departures.isNotEmpty()){
+                    /*text = if (station.departures.isNotEmpty()){
                         station.departures.fold("") { acc, dep ->
                             "$acc${dep.destination.name} ${dep.delay}\n"
                         }
                     } else {
                         station.arrival.fold("") { acc, arrival ->
                             "$acc${arrival.line} ${arrival.delay}\n"
-                        }},
+                        }},*/
 
                     /*text = station.arrival.fold("") { acc, arrival ->
                         "$acc${arrival.line ?: "---"} ${arrival.delay}\n"
                     },*/
-                    /*text = station.departures.fold("") { acc, dep ->
-                        "$acc${dep.plannedPlatform ?: "---"} ${dep.destination.location}\n"
-                    },*/
+                    text = station.departures.fold("") { acc, dep ->
+                        "$acc${dep.line.name} ${dep.direction} ${dep.delay}\n"
+                    },
                     /*text = ("Coposem ipsum color sit lazy, " +
                             "padding theme elit, sed do bouncy").repeat(4),*/
                     color = MaterialTheme.colors.surface,
