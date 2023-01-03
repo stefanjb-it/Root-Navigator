@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
-import at.fh.mappdev.rootnavigator.database.PrefHolder
+import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.firebase.auth.FirebaseUser
 
@@ -76,7 +76,7 @@ class LoginActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-        if (sharedPrefs.getBoolean(PrefHolder.STAYLOGGEDIN, false)){
+        if (sharedPrefs.getBoolean(GlobalVarHolder.STAYLOGGEDIN, false)){
             val user: FirebaseUser? = firebaseAuth.currentUser
             user?.let {
                 Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show()
@@ -220,7 +220,7 @@ fun LoginUI(preferences: SharedPreferences){
 
             Row(modifier = Modifier.fillMaxWidth()){
                 Button(onClick = {
-                    preferences.edit().putBoolean(PrefHolder.STAYLOGGEDIN, stayLoggedIn).apply()
+                    preferences.edit().putBoolean(GlobalVarHolder.STAYLOGGEDIN, stayLoggedIn).apply()
 
                     if (notEmpty()) {
                         firebaseAuth.signInWithEmailAndPassword(email, password)

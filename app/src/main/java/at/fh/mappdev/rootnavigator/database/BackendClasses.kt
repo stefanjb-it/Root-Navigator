@@ -24,7 +24,7 @@ data class Products(
 @JsonClass(generateAdapter = true)
 data class Line(
     val type: String, val id: String, val fahrtNr: Int, val name: String, val public: Boolean, val adminCode: String, val productName: String,
-    val mode: String, val product: String, val operator: Operator
+    val mode: String, val product: String, val operator: Operator?
 ) {
 }
 @JsonClass(generateAdapter = true)
@@ -67,16 +67,16 @@ data class Remarks(
 }
 @JsonClass(generateAdapter = true)
 data class Departure(
-    val tripId: String, val stop: Station, @Json(name="when") val whenThere: String, val plannedWhen: String, val delay: String?, val platform: String,
-    val plannedPlatform: String, val prognosisType: String?, val direction: String, val provenance: String?, val line: Line, val remarks: List<Remarks>,
+    val tripId: String, val stop: Station, @Json(name="when") val whenThere: String, val plannedWhen: String, val delay: String?, val platform: String?,
+    val plannedPlatform: String?, val prognosisType: String?, val direction: String, val provenance: String?, val line: Line, val remarks: List<Remarks>,
     val origin: String?, val destination: Station
 ) {
 }
 @JsonClass(generateAdapter = true)
 data class Arrival(
-    val tripId: String, val stop: Station, @Json(name="when") val whenThere: String, val plannedWhen: String, val delay: String?, val platform: String,
-    val plannedPlatform: String, val prognosisType: String?, val direction: String?, val provenance: String?, val line: Line, val remarks: List<Remarks>,
-    val origin: String?, val destination: Station?
+    val tripId: String, val stop: Station, @Json(name="when") val whenThere: String, val plannedWhen: String, val delay: String?, val platform: String?,
+    val plannedPlatform: String?, val prognosisType: String?, val direction: String?, val provenance: String?, val line: Line, val remarks: List<Remarks>,
+    val origin: Station?, val destination: Station?
 ) {
 }
 

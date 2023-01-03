@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.location.Location
 
 //@Deprecated("only present for testing")
 object NewBEHandler {
@@ -116,7 +117,7 @@ object NewBEHandler {
     }
 }
 
-object ClasslessNewBEHandler {
+object BackendHandler {
     private val stationMap : MutableLiveData<MutableMap<Int, SafeStationDetails>> = MutableLiveData(
             mutableMapOf()
     )
@@ -142,6 +143,7 @@ object ClasslessNewBEHandler {
 
     // get nearby stations
     fun getNearbyStations(latitude:Double, longitude:Double, distance:Int):LiveData<ResponseType>{
+        Log.i("API getNearbyStations", "$latitude $longitude $distance")
         val returnData : MutableLiveData<ResponseType> = MutableLiveData<ResponseType>()
         Backend().retrofitService.getNearbyStations(latitude, longitude, distance).enqueue(object : Callback<List<Station>>{
             override fun onResponse(
@@ -174,7 +176,7 @@ object ClasslessNewBEHandler {
             }
 
             override fun onFailure(call: Call<List<Departure>>, t: Throwable) {
-                Log.e("API Departures onFailure", t.toString())
+                Log.e("API Departures onFailure $stationId", t.toString())
             }
         }
         )
@@ -195,7 +197,7 @@ object ClasslessNewBEHandler {
             }
 
             override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
-                Log.e("API Arrivals onFailure", t.toString())
+                Log.e("API Arrivals onFailure $stationId", t.toString())
             }
         }
         )

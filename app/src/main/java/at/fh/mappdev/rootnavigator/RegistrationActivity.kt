@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
-import at.fh.mappdev.rootnavigator.database.PrefHolder
+import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class RegistrationActivity : ComponentActivity() {
@@ -429,12 +429,12 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     onClick = {
                           if (notEmpty()) {
                               if(StudentMode) {
-                                  preferences.edit().putString(PrefHolder.TYPE, "Student").apply()
+                                  preferences.edit().putString(GlobalVarHolder.TYPE, "Student").apply()
                               } else {
-                                  preferences.edit().putString(PrefHolder.TYPE, "Normal").apply()
+                                  preferences.edit().putString(GlobalVarHolder.TYPE, "Normal").apply()
                               }
-                              preferences.edit().putString(PrefHolder.PREFERREDLINE, preferredLine).apply()
-                              preferences.edit().putString(PrefHolder.ROOTPOINT, rootPoint).apply()
+                              preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
+                              preferences.edit().putString(GlobalVarHolder.ROOTPOINT, rootPoint).apply()
 
                               firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                                     .addOnCompleteListener { task ->

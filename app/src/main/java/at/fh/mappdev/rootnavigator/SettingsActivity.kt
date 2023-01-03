@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import at.fh.mappdev.rootnavigator.database.PrefHolder
+import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 
 class SettingsActivity : ComponentActivity() {
@@ -49,11 +49,11 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     var typelist = listOf("Student", "Normal")
     var expanded by remember { mutableStateOf(false) }
 
-    var type by remember { mutableStateOf(preferences.getString(PrefHolder.TYPE, "") ?: "") }
-    var degreeprogram by remember { mutableStateOf(preferences.getString(PrefHolder.PROGRAMME, "") ?: "") }
-    var group by remember { mutableStateOf(preferences.getString(PrefHolder.GROUP, "") ?: "") }
-    var preferredRootpoint by remember { mutableStateOf(preferences.getString(PrefHolder.ROOTPOINT, "") ?: "") }
-    var preferredLine by remember { mutableStateOf(preferences.getString(PrefHolder.PREFERREDLINE, "") ?: "") }
+    var type by remember { mutableStateOf(preferences.getString(GlobalVarHolder.TYPE, "") ?: "") }
+    var degreeprogram by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PROGRAMME, "") ?: "") }
+    var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
+    var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
+    var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
 
     Column(
         modifier = Modifier
@@ -257,11 +257,11 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                     onClick = {
                         if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != ""){
 
-                            preferences.edit().putString(PrefHolder.TYPE, type).apply()
-                            preferences.edit().putString(PrefHolder.PROGRAMME, degreeprogram).apply()
-                            preferences.edit().putString(PrefHolder.GROUP, group).apply()
-                            preferences.edit().putString(PrefHolder.PREFERREDLINE, preferredLine).apply()
-                            preferences.edit().putString(PrefHolder.ROOTPOINT, preferredRootpoint).apply()
+                            preferences.edit().putString(GlobalVarHolder.TYPE, type).apply()
+                            preferences.edit().putString(GlobalVarHolder.PROGRAMME, degreeprogram).apply()
+                            preferences.edit().putString(GlobalVarHolder.GROUP, group).apply()
+                            preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
+                            preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
                             Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
 
                             navController.navigate("home") {

@@ -9,16 +9,13 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.BottomNavigation
@@ -34,7 +31,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
@@ -43,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
@@ -74,10 +69,11 @@ class HomeActivity : ComponentActivity(), LocationListener {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
         }
         // ToDo change minTime and mindDistance
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 30f, this)
     }
     override fun onLocationChanged(location: Location) {
         this.location = location
+        GlobalVarHolder.location.value = location
         Toast.makeText(this, "Location updated: " + location.longitude + " " + location.latitude, Toast.LENGTH_SHORT).show()
     }
 
@@ -95,13 +91,13 @@ class HomeActivity : ComponentActivity(), LocationListener {
 }
 
 @Composable
-fun Connection(name: String) {
+fun Connection(station: SafeStationDetails) {
     Card(
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        CardContent(name)
+        CardContent(station)
     }
 }
 
@@ -110,15 +106,21 @@ fun Connections(
     modifier: Modifier = Modifier,
     connections: List<String> = List(1000) { "$it" }
 ) {
-    var stationsIdResponse =
-        ClasslessNewBEHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250)
-            .observeAsState()
-    var finalMap = ClasslessNewBEHandler.getStationMap().observeAsState()
+    var currentLocation = GlobalVarHolder.location.observeAsState()
+    val lat = 47.06727184602459
+    val long = 15.442097181893473
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: return, currentLocation.value?.longitude ?: return, 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    var finalMap = BackendHandler.getStationMap().observeAsState()
 
-    when (stationsIdResponse.value?.done) {
+    /*if (currentLocation.value != null){
+        stationsIdResponse = BackendHandler.getNearbyStations(currentLocation.value!!.latitude, currentLocation.value!!.longitude, 250).observeAsState()
+    }*/
+
+    when (stationsIdResponse?.value?.done) {
         true -> {
-            Toast.makeText(LocalContext.current, "Your data is here!", Toast.LENGTH_LONG).show()
-            ClasslessNewBEHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
+            BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
+            Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_LONG).show()
         }
         else -> Toast.makeText(
             LocalContext.current,
@@ -136,9 +138,10 @@ fun Connections(
             )
     ) {
         if (finalMap.value != null) {
+            Log.v("finalMap", finalMap.value.toString())
             finalMap.value?.forEach {
                 item {
-                    Connection(name = it.value.station.name)
+                    Connection(station = it.value)
                 }
             }
             /*connections.forEach {
@@ -148,7 +151,7 @@ fun Connections(
             }*/
         } else {
             item {
-                Connection(name = "No data yet")
+
             }
         }
 
@@ -390,7 +393,7 @@ fun MyScaffold(preferences: SharedPreferences){
 
 
 @Composable
-fun CardContent(name: String) {
+fun CardContent(station: SafeStationDetails) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(
@@ -408,14 +411,29 @@ fun CardContent(name: String) {
             .padding(12.dp)
         ) {
             Text(
-                text = "Hello, $name",
+                text = "Hello, ${station.station.name}",
                 color = MaterialTheme.colors.surface,
                 fontSize = 14.sp
             )
             if (expanded) {
                 Text(
-                    text = ("Coposem ipsum color sit lazy, " +
-                            "padding theme elit, sed do bouncy").repeat(4),
+                    text = if (station.departures.isNotEmpty()){
+                        station.departures.fold("") { acc, dep ->
+                            "$acc${dep.destination.name} ${dep.delay}\n"
+                        }
+                    } else {
+                        station.arrival.fold("") { acc, arrival ->
+                            "$acc${arrival.line} ${arrival.delay}\n"
+                        }},
+
+                    /*text = station.arrival.fold("") { acc, arrival ->
+                        "$acc${arrival.line ?: "---"} ${arrival.delay}\n"
+                    },*/
+                    /*text = station.departures.fold("") { acc, dep ->
+                        "$acc${dep.plannedPlatform ?: "---"} ${dep.destination.location}\n"
+                    },*/
+                    /*text = ("Coposem ipsum color sit lazy, " +
+                            "padding theme elit, sed do bouncy").repeat(4),*/
                     color = MaterialTheme.colors.surface,
                     fontSize = 12.sp
                 )
