@@ -30,15 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.time.DurationUnit
 
 object NewReminderActivity : ComponentActivity() {
 
@@ -63,7 +58,7 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val hour = calendar.get(Calendar.HOUR)
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
 
     calendar.time = Date()
@@ -206,7 +201,7 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                         val dateTimeToday = Calendar.getInstance()
 
                         val delayInSeconds = (selectedDateTime.timeInMillis/1000L) - (dateTimeToday.timeInMillis/1000L)
-                        createWorkRequest(description, delayInSeconds, id, context)
+
 
                         navController.navigate("reminder") {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -234,19 +229,6 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
     }
 }
 
-private fun createWorkRequest(message: String, timeDelayInSeconds: Long, id: Int, context: Context) {
-    val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-        .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
-        .setInputData(workDataOf(
-            "title" to "Reminder",
-            "id" to id,
-            "message" to message,
-            )
-        )
-        .build()
-
-    WorkManager.getInstance(context).enqueue(myWorkRequest)
-}
 
 
 

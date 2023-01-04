@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -42,7 +45,8 @@ import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.firebase.auth.FirebaseUser
 
-class LoginActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity(), LocationListener {
+    private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,13 +56,29 @@ class LoginActivity : ComponentActivity() {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
                     LoginUI(sharedPrefs)
+
                 }
             }
         }
 
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        } else {
+            getLocation()
         }
+    }
+
+    private fun getLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
+        }
+        // ToDo change minTime and mindDistance
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1f, this)
+    }
+
+    override fun onLocationChanged(location: Location) {
+        GlobalVarHolder.location.value = location
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

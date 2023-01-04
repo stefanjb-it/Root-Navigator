@@ -415,6 +415,18 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
     var expanded by remember { mutableStateOf(false) }
     val infoList: List<String> = firstPrefLine(station.departures, preferences)
 
+    val sharedLines = preferences.getString(GlobalVarHolder.PREFERREDLINE, "")
+    val prefLines : MutableList<String> = mutableListOf()
+
+    if (sharedLines?.contains(",") == true){
+        val lines = sharedLines.split(",")
+        for (line in lines){
+            prefLines.add(line.trim())
+        }
+    } else {
+        prefLines.add(sharedLines.toString())
+    }
+
     Column(
         modifier = Modifier
             .padding(
@@ -551,14 +563,23 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                 Spacer(modifier = Modifier.padding(bottom = 8.dp))
 
                 for (depature in station.departures) {
+
+                    var isPref = false
+                    for (prefLine in prefLines){
+                        if (depature.line.name.contains(prefLine)) {
+                            isPref = true
+                            break
+                        }
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         Text(
                             text = depature.line.name,
-                            color = MaterialTheme.colors.onSurface,
-                            // color = if () {MaterialTheme.colors.secondary} else { MaterialTheme.colors.onSurface},
+                            // color = MaterialTheme.colors.onSurface,
+                            color = if (isPref) {MaterialTheme.colors.secondary} else { MaterialTheme.colors.onSurface},
                             fontSize = 14.sp,
                             modifier = Modifier
                                 .weight(1.5f)
