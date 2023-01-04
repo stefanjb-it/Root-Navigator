@@ -476,7 +476,7 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                     .weight(8f)
             )
             Row(modifier = Modifier
-                .weight(2.75f),
+                .weight(3f),
             ) {
                 Text(
                     text = firstPrefLine(station.departures, preferences)[1],
@@ -556,57 +556,43 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
 
                 Spacer(modifier = Modifier.padding(bottom = 8.dp))
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                ) {
-                    Text(
-                        text = station.departures.fold("") { acc, dep ->
-                            "$acc${dep.line.name}\n"
-                        },
-                        color = MaterialTheme.colors.onSurface,
-                        fontSize = 14.sp,
+                for (depature in station.departures) {
+                    Row(
                         modifier = Modifier
-                            .weight(1.5f)
-                    )
-                    Text(
-                        text = station.departures.fold("") { acc, dep ->
-                            "$acc${dep.whenThere.substring(11,16)}\n"
-                        },
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .weight(1.25f)
-                    )
-                    Text(
-                        text = station.departures.fold("") { acc, dep ->
-                            "$acc${dep.direction}\n"
-                        },
-                        color = MaterialTheme.colors.onSurface,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .weight(5f)
-                    )
-                    
-                    Text(
-                        modifier = Modifier
-                            .weight(1.25f),
-                        text = station.departures.fold("") { acc, dep ->
-                            "$acc${if (dep.delay == null) { 0 } else { dep.delay.toInt().div(60) }.toString() + " min"}\n"
-                        },
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 14.sp,
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = depature.line.name,
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .weight(1.5f)
+                        )
+                        Text(
+                            text = depature.whenThere.substring(11, 16),
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .weight(1.25f)
+                        )
+                        Text(
+                            text = depature.direction,
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .weight(5f)
+                        )
 
-                    /*
-                    Text(
-                        text = station.departures.fold("") { acc, dep ->
-                            "$acc${dep.line.name} ${dep.direction} ${dep.delay}\n"
-                        },
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 14.sp
-                    )
-                    */
+                        Text(
+                            modifier = Modifier
+                                .weight(1.25f),
+                            text = if (depature.delay == null) { 0 } else { depature.delay.toInt().div(60) }.toString() + " min",
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
+
 
             }
         }
@@ -638,10 +624,11 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     val depmins = departure.whenThere.substring(14,16).toInt()
                     val delay = if (departure.delay.isNullOrBlank()) { 0 } else { departure.delay.toInt().div(60) }
                     val livemin = Calendar.getInstance().get(Calendar.MINUTE)
-                    val min = ((depmins + delay) - livemin).toString()
+                    var min = ((depmins + delay) - livemin)
+                    if (min < 0) { min = 0 }
 
                     result.set(0, departure.line.product)
-                    result.set(1, min)
+                    result.set(1, min.toString())
 
                     return  result
 
@@ -650,10 +637,11 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     val delay = if (departures[0].delay.isNullOrBlank()) { 0 } else {
                         departures[0].delay!!.toInt().div(60) }
                     val livemin = Calendar.getInstance().get(Calendar.MINUTE)
-                    val min = ((depmins + delay) - livemin).toString()
+                    var min = ((depmins + delay) - livemin)
+                    if (min < 0) { min = 0 }
 
                     result.set(0, departures[0].line.product)
-                    result.set(1, min)
+                    result.set(1, min.toString())
                 }
             }
         }
@@ -663,10 +651,11 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
             val delay = if (departures[0].delay.isNullOrBlank()) { 0 } else {
                 departures[0].delay!!.toInt().div(60) }
             val livemin = Calendar.getInstance().get(Calendar.MINUTE)
-            val min = ((depmins + delay) - livemin).toString()
+            var min = ((depmins + delay) - livemin)
+            if (min < 0) { min = 0 }
 
             result.set(0, departures[0].line.product)
-            result.set(1, min)
+            result.set(1, min.toString())
         }
 
         return result
