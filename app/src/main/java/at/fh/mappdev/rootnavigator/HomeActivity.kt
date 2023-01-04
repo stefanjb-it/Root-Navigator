@@ -20,8 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -30,11 +28,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.twotone.Home
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
@@ -47,6 +50,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.database.*
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import java.util.*
 
 class HomeActivity : ComponentActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
@@ -91,26 +95,28 @@ class HomeActivity : ComponentActivity(), LocationListener {
 }
 
 @Composable
-fun Connection(station: SafeStationDetails) {
+fun Connection(station: SafeStationDetails, preferences: SharedPreferences) {
     Card(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+        modifier = Modifier
+            .padding(vertical = 8.dp, /*horizontal = 16.dp*/),
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
-        CardContent(station)
+        CardContent(station, preferences)
     }
 }
 
 @Composable
 fun Connections(
     modifier: Modifier = Modifier,
-    connections: List<String> = List(1000) { "$it" }
+    connections: List<String> = List(1000) { "$it" },
+    preferences: SharedPreferences
 ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
     Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
@@ -146,7 +152,7 @@ fun Connections(
                 Log.v("finalMap", finalMap.value.toString())
                 finalMap.value?.forEach {
                     item {
-                        Connection(station = it.value)
+                        Connection(station = it.value, preferences)
                     }
                 }
                 /*connections.forEach {
@@ -168,7 +174,8 @@ fun Connections(
 fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>){
     val settingItem = BarItem(
         title = "Settings",
-        image = painterResource(R.drawable.settings),
+        // image = painterResource(R.drawable.settings),
+        image = Icons.Outlined.Settings,
         route = "settings"
     )
 
@@ -225,7 +232,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                         }
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.settings),
+                            imageVector = settingItem.image,
                             contentDescription = "Settings",
                             tint = MaterialTheme.colors.secondary,
                             modifier = Modifier
@@ -245,22 +252,26 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
     val barItems = listOf(
         BarItem(
             title = "Home",
-            image = painterResource(R.drawable.home_door),
+            //image = painterResource(R.drawable.home_door),
+            image = Icons.Outlined.Home,
             route = "home"
         ),
         BarItem(
             title = "Reminder",
-            image = painterResource(R.drawable.clipboard_notes),
+            //image = painterResource(R.drawable.clipboard_notes),
+            image = Icons.Filled.ListAlt,
             route = "reminder"
         ),
         BarItem(
             title = "Alarm",
-            image = painterResource(R.drawable.alarm_clock),
+            // image = painterResource(R.drawable.alarm_clock),
+            image = Icons.Filled.Alarm,
             route = "alarm"
         ),
         BarItem(
             title = "Timetable",
-            image = painterResource(R.drawable.calendar_days),
+            // image = painterResource(R.drawable.calendar_days),
+            image = Icons.Filled.DateRange,
             route = "timetable"
         )
     )
@@ -317,7 +328,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                         },
                         icon = {
                             Icon(
-                                painter = navItem.image,
+                                imageVector = navItem.image,
                                 contentDescription = navItem.title,
                                 tint = MaterialTheme.colors.secondary,
                                 modifier = Modifier.size(28.dp)
@@ -327,7 +338,8 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             Text(
                                 text = navItem.title,
                                 // color = MaterialTheme.colors.surface
-                                color = MaterialTheme.colors.primary
+                                color = MaterialTheme.colors.primary,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     )
@@ -347,7 +359,7 @@ fun NavigationHost(navController: NavHostController, preferences : SharedPrefere
     ) {
         composable(NavRoutes.Home.route){
             // Home Screen
-            Connections()
+            Connections(preferences = preferences)
         }
 
         composable(NavRoutes.Reminder.route) {
@@ -399,12 +411,17 @@ fun MyScaffold(preferences: SharedPreferences){
 
 
 @Composable
-fun CardContent(station: SafeStationDetails) {
+fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
     var expanded by remember { mutableStateOf(false) }
 
-    Row(
+    Column(
         modifier = Modifier
-            .padding(12.dp)
+            .padding(
+                start = 4.dp,
+                end = 4.dp,
+                top = 8.dp,
+                bottom = 8.dp
+            )
             .animateContentSize(
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -412,51 +429,250 @@ fun CardContent(station: SafeStationDetails) {
                 )
             )
     ) {
-        Column(modifier = Modifier
-            .weight(1f)
-            .padding(12.dp)
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Hello, ${station.station.name}",
-                color = MaterialTheme.colors.surface,
-                fontSize = 14.sp
-            )
-            if (expanded) {
-                Text(
-                    /*text = if (station.departures.isNotEmpty()){
-                        station.departures.fold("") { acc, dep ->
-                            "$acc${dep.destination.name} ${dep.delay}\n"
-                        }
-                    } else {
-                        station.arrival.fold("") { acc, arrival ->
-                            "$acc${arrival.line} ${arrival.delay}\n"
-                        }},*/
+            when(firstPrefLine(station.departures, preferences)[0]) {
+                "train" -> Icon(
+                    imageVector = Icons.Filled.Train,
+                    tint = MaterialTheme.colors.surface,
+                    contentDescription = "route type",
+                    modifier = Modifier
+                        .weight(2f)
+                )
+                "bus" -> Icon(
+                    imageVector = Icons.Filled.DirectionsBus,
+                    tint = MaterialTheme.colors.surface,
+                    contentDescription = "route type",
+                    modifier = Modifier
+                        .weight(2f)
+                )
+                else -> Icon(
+                    imageVector = Icons.Filled.Tram,
+                    tint = MaterialTheme.colors.surface,
+                    contentDescription = "route type",
+                    modifier = Modifier
+                        .weight(2f)
+                )
+            }
 
-                    /*text = station.arrival.fold("") { acc, arrival ->
-                        "$acc${arrival.line ?: "---"} ${arrival.delay}\n"
-                    },*/
-                    text = station.departures.fold("") { acc, dep ->
-                        "$acc${dep.line.name} ${dep.direction} ${dep.delay}\n"
-                    },
-                    /*text = ("Coposem ipsum color sit lazy, " +
-                            "padding theme elit, sed do bouncy").repeat(4),*/
+            /*
+            Icon(
+                imageVector = Icons.Filled.Train,
+                tint = MaterialTheme.colors.surface,
+                contentDescription = "route type",
+                modifier = Modifier
+                    .weight(2f)
+            )
+            */
+
+            Text(
+                text = station.station.name,
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .weight(8f)
+            )
+            Row(modifier = Modifier
+                .weight(2.75f),
+            ) {
+                Text(
+                    text = firstPrefLine(station.departures, preferences)[1],
                     color = MaterialTheme.colors.surface,
-                    fontSize = 12.sp
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = " min",
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
+            IconButton(onClick = { expanded = !expanded }) {
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    tint = MaterialTheme.colors.secondary,
+                    contentDescription = if (expanded) {
+                        stringResource(id = R.string.show_less)
+                    } else {
+                        stringResource(id = R.string.show_more)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
                 )
             }
         }
-        IconButton(onClick = { expanded = !expanded }) {
-            Icon(
-                imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                tint = MaterialTheme.colors.surface,
-                contentDescription = if (expanded) {
-                    stringResource(id = R.string.show_less)
-                } else {
-                    stringResource(id = R.string.show_more)
+        if (expanded) {
+            Column(
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Line",
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .weight(1.5f)
+                    )
+                    Text(
+                        text = "Dep.",
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .weight(1.25f)
+                    )
+                    Text(
+                        text = "Direction",
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .weight(5f)
+                    )
+                    Text(
+                        text = "Delay",
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .weight(1.25f)
+                    )
                 }
-            )
+
+                Spacer(modifier = Modifier.padding(bottom = 8.dp))
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                ) {
+                    Text(
+                        text = station.departures.fold("") { acc, dep ->
+                            "$acc${dep.line.name}\n"
+                        },
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .weight(1.5f)
+                    )
+                    Text(
+                        text = station.departures.fold("") { acc, dep ->
+                            "$acc${dep.whenThere.substring(11,16)}\n"
+                        },
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .weight(1.25f)
+                    )
+                    Text(
+                        text = station.departures.fold("") { acc, dep ->
+                            "$acc${dep.direction}\n"
+                        },
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .weight(5f)
+                    )
+                    
+                    Text(
+                        modifier = Modifier
+                            .weight(1.25f),
+                        text = station.departures.fold("") { acc, dep ->
+                            "$acc${if (dep.delay == null) { 0 } else { dep.delay.toInt().div(60) }.toString() + " min"}\n"
+                        },
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 14.sp,
+                    )
+
+                    /*
+                    Text(
+                        text = station.departures.fold("") { acc, dep ->
+                            "$acc${dep.line.name} ${dep.direction} ${dep.delay}\n"
+                        },
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 14.sp
+                    )
+                    */
+                }
+
+            }
         }
+
     }
+}
+
+fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPreferences) : List<String> {
+    val result: MutableList<String> = mutableListOf()
+    result.add("")
+    result.add("0")
+
+    val sharedlines = preferences.getString(GlobalVarHolder.PREFERREDLINE, "")
+    val preflines : MutableList<String> = mutableListOf()
+
+    if (sharedlines?.trim() != "" && departures.isNotEmpty()) {
+        if (sharedlines?.contains(",") == true){
+            val lines = sharedlines.split(",")
+            for (line in lines){
+                preflines.add(line.trim())
+            }
+        } else {
+            preflines.add(sharedlines.toString())
+        }
+
+        for (departure in departures) {
+            for (line in preflines) {
+                if (departure.line.name.contains(line)){
+                    val depmins = departure.whenThere.substring(14,16).toInt()
+                    val delay = if (departure.delay.isNullOrBlank()) { 0 } else { departure.delay.toInt().div(60) }
+                    val livemin = Calendar.getInstance().get(Calendar.MINUTE)
+                    val min = ((depmins + delay) - livemin).toString()
+
+                    result.set(0, departure.line.product)
+                    result.set(1, min)
+
+                    return  result
+
+                } else {
+                    val depmins = departures[0].whenThere.substring(14,16).toInt()
+                    val delay = if (departures[0].delay.isNullOrBlank()) { 0 } else {
+                        departures[0].delay!!.toInt().div(60) }
+                    val livemin = Calendar.getInstance().get(Calendar.MINUTE)
+                    val min = ((depmins + delay) - livemin).toString()
+
+                    result.set(0, departures[0].line.product)
+                    result.set(1, min)
+                }
+            }
+        }
+    } else {
+        if (departures.isNotEmpty()){
+            val depmins = departures[0].whenThere.substring(14,16).toInt()
+            val delay = if (departures[0].delay.isNullOrBlank()) { 0 } else {
+                departures[0].delay!!.toInt().div(60) }
+            val livemin = Calendar.getInstance().get(Calendar.MINUTE)
+            val min = ((depmins + delay) - livemin).toString()
+
+            result.set(0, departures[0].line.product)
+            result.set(1, min)
+        }
+
+        return result
+    }
+
+    return result
 }
 
 /*
