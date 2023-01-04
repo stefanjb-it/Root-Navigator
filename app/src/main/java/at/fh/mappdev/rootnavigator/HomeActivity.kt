@@ -413,6 +413,7 @@ fun MyScaffold(preferences: SharedPreferences){
 @Composable
 fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
     var expanded by remember { mutableStateOf(false) }
+    val infoList: List<String> = firstPrefLine(station.departures, preferences)
 
     Column(
         modifier = Modifier
@@ -433,39 +434,32 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
             .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            when(firstPrefLine(station.departures, preferences)[0]) {
+            when(infoList[0]) {
                 "train" -> Icon(
                     imageVector = Icons.Filled.Train,
-                    tint = MaterialTheme.colors.surface,
+                    tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
+                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
                 )
                 "bus" -> Icon(
                     imageVector = Icons.Filled.DirectionsBus,
-                    tint = MaterialTheme.colors.surface,
+                    tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
+                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
                 )
                 else -> Icon(
                     imageVector = Icons.Filled.Tram,
-                    tint = MaterialTheme.colors.surface,
+                    tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
+                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
                 )
             }
-
-            /*
-            Icon(
-                imageVector = Icons.Filled.Train,
-                tint = MaterialTheme.colors.surface,
-                contentDescription = "route type",
-                modifier = Modifier
-                    .weight(2f)
-            )
-            */
 
             Text(
                 text = station.station.name,
@@ -479,7 +473,7 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                 .weight(3f),
             ) {
                 Text(
-                    text = firstPrefLine(station.departures, preferences)[1],
+                    text = infoList[1],
                     color = MaterialTheme.colors.surface,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
@@ -564,6 +558,7 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                         Text(
                             text = depature.line.name,
                             color = MaterialTheme.colors.onSurface,
+                            // color = if () {MaterialTheme.colors.secondary} else { MaterialTheme.colors.onSurface},
                             fontSize = 14.sp,
                             modifier = Modifier
                                 .weight(1.5f)
@@ -604,6 +599,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
     val result: MutableList<String> = mutableListOf()
     result.add("")
     result.add("0")
+    result.add("false")
 
     val sharedlines = preferences.getString(GlobalVarHolder.PREFERREDLINE, "")
     val preflines : MutableList<String> = mutableListOf()
@@ -629,6 +625,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
 
                     result.set(0, departure.line.product)
                     result.set(1, min.toString())
+                    result.set(2, "true")
 
                     return  result
 
@@ -663,23 +660,3 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
 
     return result
 }
-
-/*
-@Preview(
-    showBackground = true,
-    widthDp = 320,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Darkmode"
-)
-@Preview(
-    showBackground = true,
-    widthDp = 320,
-    name = "Lightmode"
-)
-@Composable
-private fun ConnectionsPreview() {
-    RootNavigatorTheme {
-        Connections()
-    }
-}
-*/
