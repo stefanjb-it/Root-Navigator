@@ -2,7 +2,6 @@ package at.fh.mappdev.rootnavigator
 
 import android.Manifest
 import android.app.AlarmManager
-import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager

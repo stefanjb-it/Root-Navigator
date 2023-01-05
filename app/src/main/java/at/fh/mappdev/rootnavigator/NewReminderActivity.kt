@@ -9,8 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -61,7 +61,11 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
     var time by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
-    NotificationInfo.NOTIFICATIONPERMISSION = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        NotificationInfo.NOTIFICATIONPERMISSION = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    } else {
+        NotificationInfo.NOTIFICATIONPERMISSION = true
+    }
 
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
@@ -201,23 +205,16 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                             ReminderTime = time, ReminderActive = false, ReminderDescription = description)
                         ReminderRepository.newReminder(context, newReminder)
 
-                        val id = preferences.getInt("NOTIFICATIONID", kotlin.random.Random.nextInt(1, 999))
-                        preferences.edit().putInt("NOTIFICATIONID", id+1).apply()
+                        val idNoti = preferences.getInt("NOTIFICATIONID", kotlin.random.Random.nextInt(1, 999))
+                        preferences.edit().putInt("NOTIFICATIONID", idNoti+1).apply()
                         val dateArray = date.split("/")
                         val timeArray = time.split(":")
 
                         val selectedDateTime = Calendar.getInstance()
-                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt()-1, dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt())
-                        val dateTimeToday = Calendar.getInstance()
-
-                        val delayInMillis = (selectedDateTime.timeInMillis) - (dateTimeToday.timeInMillis)
-
-                        Log.i("DateSelected" , selectedDateTime.time.toString())
-                        Log.i("DateNow" , dateTimeToday.time.toString())
-                        Log.i("Delay" , delayInMillis.toString())
+                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt()-1, dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt(), 0)
 
                         if (NotificationInfo.NOTIFICATIONPERMISSION) {
-                            setAlarm(context, alarmManager, delayInMillis, id, description)
+                            setAlarm(context, alarmManager, selectedDateTime.timeInMillis, idNoti, description)
                         }
 
                         navController.navigate("reminder") {
@@ -247,10 +244,10 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
 }
 
 fun setAlarm(context: Context, alarmManager: AlarmManager, delay : Long, id : Int, description: String){
-
     val intent = Intent(context, AlarmReceiver::class.java)
+    intent.putExtra("ID", id)
     intent.putExtra("DESCRIPTION", description)
     val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-    alarmManager.setExact(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + delay, pendingIntent)
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, delay, pendingIntent)
 }
