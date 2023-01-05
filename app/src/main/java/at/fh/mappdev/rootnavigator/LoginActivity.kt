@@ -274,7 +274,10 @@ fun LoginUI(preferences: SharedPreferences){
 
             Row(modifier = Modifier.fillMaxWidth(),) {
                 ClickableText(text = AnnotatedString("Forgot Password?"),
-                    onClick = {/*TODO Implement method*/},
+                    onClick = {
+                        val intent = Intent(context, ResetPasswordActivity::class.java)
+                        context.startActivity(intent)
+                    },
                     style = TextStyle(
                         color = MaterialTheme.colors.surface,
                         fontSize = 18.sp,

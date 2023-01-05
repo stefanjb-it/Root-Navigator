@@ -43,6 +43,15 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false"
+            android:label="@string/title_activity_reset_password"
+            android:theme="@style/Theme.RootNavigator">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SessionExpiredActivity"
             android:exported="false"
             android:label="@string/title_activity_exp"

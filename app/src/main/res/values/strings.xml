@@ -12,6 +12,7 @@
     <string name="button_student">Student</string>
     <string name="button_standard">Standard</string>
     <string name="button_continue">Continue</string>
+    <string name="button_submit">Submit</string>
     <string name="button_new_reminder">Create new Reminder</string>
 
     <!-- Activity Titles -->
@@ -21,6 +22,7 @@
     <string name="title_activity_exp">SessionExpiredActivity</string>
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="title_activity_reminder_overview">ReminderOverviewActivity</string>
     <string name="title_activity_new_reminder">NewReminderActivity</string>
 </resources>

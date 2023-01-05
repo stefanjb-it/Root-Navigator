@@ -135,8 +135,10 @@ fun RegistrationUIMode(preferences: SharedPreferences){
 fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
 
     var email by remember { mutableStateOf("") }
-    var password by remember{ mutableStateOf("")}
+    var password by remember { mutableStateOf("")}
+    var passwordRepeat by remember { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var passwordRepeatVisible by rememberSaveable { mutableStateOf(false) }
     var buttonClicked by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier
@@ -240,6 +242,49 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                 )
             }
 
+            Spacer(modifier = Modifier.padding(top = 36.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Repeat Password",
+                    textAlign = TextAlign.Start,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colors.surface)
+            }
+
+            Spacer(modifier = Modifier.padding(top = 12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TextField(
+                    value = passwordRepeat,
+                    onValueChange = { passwordRepeat = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 60.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
+                    singleLine = true,
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp
+                    ),
+                    visualTransformation = if (passwordRepeatVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val image = if (passwordRepeatVisible)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        val description = if (passwordRepeatVisible) "Hide password" else "Show password"
+
+                        IconButton(onClick = {passwordRepeatVisible = !passwordRepeatVisible}){
+                            Icon(imageVector  = image, description)
+                        }
+                    }
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .padding(
@@ -263,11 +308,29 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
     }
 
     fun notEmpty(): Boolean = email.trim().isNotEmpty() &&
-            password.trim().isNotEmpty()
+            password.trim().isNotEmpty() && passwordRepeat.trim().isNotEmpty()
+
+    fun matchPasswords(): Boolean = password == passwordRepeat
+
+    // ToDo check with Regex
+    // fun checkEmail(): Boolean = email.contains("@")
+
+    fun checkEmail() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     if (buttonClicked) {
+
         if (notEmpty()) {
-            RegistrationUIAddress(studentMode, email, password, preferences)
+            if (checkEmail()) {
+                if (matchPasswords()) {
+                    RegistrationUIAddress(studentMode, email, password, preferences)
+                } else {
+                    buttonClicked = false
+                    Toast.makeText(LocalContext.current, "Passwords do not match.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                buttonClicked = false
+                Toast.makeText(LocalContext.current, "E-Mail is not valid.", Toast.LENGTH_SHORT).show()
+            }
         } else {
             buttonClicked = false
             Toast.makeText(LocalContext.current, "Please enter valid credentials.", Toast.LENGTH_SHORT).show()
