@@ -1,6 +1,8 @@
 package at.fh.mappdev.rootnavigator
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -52,15 +55,24 @@ class LoginActivity : ComponentActivity(), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(NotificationInfo.NOTIFICATIONID, NotificationInfo.NOTIFICATIONNAME, NotificationManager.IMPORTANCE_HIGH)
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
                     LoginUI(sharedPrefs)
-
+                    askPermission()
                 }
             }
         }
+    }
 
+    fun askPermission(){
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
         } else {
@@ -136,10 +148,10 @@ fun LoginUI(preferences: SharedPreferences){
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-               Text(text = "Sign In",
-                   textAlign = TextAlign.Center,
-                   color = MaterialTheme.colors.surface,
-                   fontSize = 27.sp)
+                Text(text = "Sign In",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 27.sp)
             }
 
             Spacer(modifier = Modifier.padding(top = 64.dp))
@@ -152,7 +164,7 @@ fun LoginUI(preferences: SharedPreferences){
             }
 
             Spacer(modifier = Modifier.padding(top = 12.dp))
-            
+
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(
                     value = email,
@@ -299,7 +311,7 @@ fun LoginUI(preferences: SharedPreferences){
                     )
                 )
             }
-            
+
         }
     }
 }

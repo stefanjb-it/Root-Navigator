@@ -1,9 +1,16 @@
 package at.fh.mappdev.rootnavigator
 
+import android.Manifest
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -27,9 +34,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
@@ -41,18 +48,20 @@ object NewReminderActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RootNavigatorTheme {
-                NewReminderUI(navController = rememberNavController())
+
             }
         }
     }
 }
 
 @Composable
-fun NewReminderUI(navController: NavHostController, context: Context = LocalContext.current){
+fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, preferences: SharedPreferences, context: Context = LocalContext.current){
 
     var date by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+
+    NotificationInfo.NOTIFICATIONPERMISSION = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
@@ -192,16 +201,24 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                             ReminderTime = time, ReminderActive = false, ReminderDescription = description)
                         ReminderRepository.newReminder(context, newReminder)
 
-                        val id: Int = 1
+                        val id = preferences.getInt("NOTIFICATIONID", kotlin.random.Random.nextInt(1, 999))
+                        preferences.edit().putInt("NOTIFICATIONID", id+1).apply()
                         val dateArray = date.split("/")
                         val timeArray = time.split(":")
 
                         val selectedDateTime = Calendar.getInstance()
-                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt(), dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt())
+                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt()-1, dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt())
                         val dateTimeToday = Calendar.getInstance()
 
-                        val delayInSeconds = (selectedDateTime.timeInMillis/1000L) - (dateTimeToday.timeInMillis/1000L)
+                        val delayInMillis = (selectedDateTime.timeInMillis) - (dateTimeToday.timeInMillis)
 
+                        Log.i("DateSelected" , selectedDateTime.time.toString())
+                        Log.i("DateNow" , dateTimeToday.time.toString())
+                        Log.i("Delay" , delayInMillis.toString())
+
+                        if (NotificationInfo.NOTIFICATIONPERMISSION) {
+                            setAlarm(context, alarmManager, delayInMillis, id, description)
+                        }
 
                         navController.navigate("reminder") {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -211,7 +228,7 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
                             restoreState = true
                         }
                     } else {
-                        Toast.makeText(context, "You Donkey!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Please enter some data to this reminder!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier
@@ -229,9 +246,11 @@ fun NewReminderUI(navController: NavHostController, context: Context = LocalCont
     }
 }
 
+fun setAlarm(context: Context, alarmManager: AlarmManager, delay : Long, id : Int, description: String){
 
+    val intent = Intent(context, AlarmReceiver::class.java)
+    intent.putExtra("DESCRIPTION", description)
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-
-
-
-
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + delay, pendingIntent)
+}

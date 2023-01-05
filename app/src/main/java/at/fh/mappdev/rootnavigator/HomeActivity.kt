@@ -1,6 +1,8 @@
 package at.fh.mappdev.rootnavigator
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -31,7 +33,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.twotone.Home
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
@@ -60,9 +61,10 @@ class HomeActivity : ComponentActivity(), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         setContent {
             RootNavigatorTheme {
-                MyScaffold(sharedPrefs)
+                MyScaffold(sharedPrefs, alarmManager)
                 getLocation()
             }
         }
@@ -352,7 +354,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
 
 @Composable
-fun NavigationHost(navController: NavHostController, preferences : SharedPreferences) {
+fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager, preferences : SharedPreferences) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
@@ -370,7 +372,7 @@ fun NavigationHost(navController: NavHostController, preferences : SharedPrefere
         }
 
         composable(NavRoutes.NewReminder.route){
-            NewReminderUI(navController)
+            NewReminderUI(navController, alarmManager, preferences)
         }
 
         composable(NavRoutes.Alarm.route) {
@@ -394,7 +396,7 @@ fun NavigationHost(navController: NavHostController, preferences : SharedPrefere
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyScaffold(preferences: SharedPreferences){
+fun MyScaffold(preferences: SharedPreferences, alarmManager: AlarmManager){
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val navController = rememberNavController()
 
@@ -404,7 +406,7 @@ fun MyScaffold(preferences: SharedPreferences){
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController, preferences) },
+        content = { NavigationHost(navController = navController, alarmManager, preferences) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
     )
 }

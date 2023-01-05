@@ -12,4 +12,6 @@ object GlobalVarHolder {
     val STAYLOGGEDIN = "STAYLOGGEDIN"
 
     var location : MutableLiveData<Location> = MutableLiveData()
+
+    var NOTIFICATIONID = 1
 }

@@ -1,9 +1,13 @@
 package at.fh.mappdev.rootnavigator
 
+import android.Manifest
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -61,6 +65,13 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context, list :  SnapshotStat
 @Composable
 fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            NotificationInfo.NOTIFICATIONPERMISSION = isGranted
+        }
+    )
+
     val reminders = remember { mutableStateListOf<ReminderItemRoom>() }
     reminders.swapList(ReminderRepository.getReminders(Context))
 
@@ -96,6 +107,11 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
         ) {
             Button(
                 onClick = {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+
                     navController.navigate("new_reminder") {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
@@ -166,7 +182,7 @@ private fun ReminderContent(reminder: ReminderItemRoom, Context: Context, list :
                     reminder.ReminderActive = !reminder.ReminderActive
                     ReminderRepository.updateReminder(Context, reminder)
                     isActive = !isActive
-                                  },
+                },
                 colors = CheckboxDefaults.colors(
                     uncheckedColor = MaterialTheme.colors.secondary
                 ),
