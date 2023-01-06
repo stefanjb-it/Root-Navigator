@@ -10,6 +10,7 @@ object GlobalVarHolder {
     val ROOTPOINT = "ROOTPOINT"
     val PREFERREDLINE = "PREFERREDLINE"
     val STAYLOGGEDIN = "STAYLOGGEDIN"
+    val LASTLOGGEDIN = "ITSADATE"
 
     var location : MutableLiveData<Location> = MutableLiveData()
 

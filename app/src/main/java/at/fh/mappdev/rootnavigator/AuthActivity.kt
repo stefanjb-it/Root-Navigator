@@ -1,7 +1,13 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -36,15 +42,52 @@ class AuthActivity : ComponentActivity() {
         }
 
         val timer = Timer()
-        // If authentication passes
         val intent = Intent(this, HomeActivity::class.java)
-        // else: go to Session Expired
-        // val intent = Intent(this, SessionExpiredActivity::class.java)
-        timer.schedule(timerTask { startActivity(intent) }, 0)
+        val expired = Intent(this, SessionExpiredActivity::class.java)
+        val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        val calender = Calendar.getInstance()
+
+        if (isDeviceOnline(this)){
+            sharedPrefs.edit().putLong("LASTLOGGEDIN", calender.timeInMillis).apply()
+        }
+
+        val expPoint = (calender.timeInMillis - 2592000000L)
+
+        if (sharedPrefs.getLong("LASTLOGGEDIN", calender.timeInMillis) < expPoint) {
+            timer.schedule(timerTask { startActivity(expired) }, 500)
+        } else {
+            timer.schedule(timerTask { startActivity(intent) }, 1000)
+        }
     }
 }
 
-@Preview
+
+private fun isDeviceOnline(context: Context): Boolean {
+    val connManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val networkCapabilities = connManager.getNetworkCapabilities(connManager.activeNetwork)
+        if (networkCapabilities == null) {
+            Log.d("Internet", "Device Offline")
+            return false
+        } else {
+            Log.d("Internet", "Device Online")
+            if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED)
+            ) {
+                Log.d("Internet", "Connected to Internet")
+                return true
+            } else {
+                Log.d("Internet", "Not connected to Internet")
+                return false
+            }
+        }
+    } else {
+        val activeNetwork = connManager.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true && activeNetwork.isAvailable
+    }
+}
+
 @Composable
 fun AuthUI(){
 

@@ -249,7 +249,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
 
 @ExperimentalAnimationApi
 @Composable
-fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>){
+fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>, preferences: SharedPreferences){
     val barItems = listOf(
         BarItem(
             title = "Home",
@@ -269,6 +269,7 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
             image = Icons.Filled.Alarm,
             route = "alarm"
         ),
+
         BarItem(
             title = "Timetable",
             // image = painterResource(R.drawable.calendar_days),
@@ -406,7 +407,7 @@ fun MyScaffold(preferences: SharedPreferences, alarmManager: AlarmManager){
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
         content = { NavigationHost(navController = navController, alarmManager, preferences) },
-        bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) }
+        bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState, preferences = preferences) }
     )
 }
 
