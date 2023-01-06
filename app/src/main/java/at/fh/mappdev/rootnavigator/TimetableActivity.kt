@@ -2,6 +2,7 @@ package at.fh.mappdev.rootnavigator
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
@@ -30,6 +31,11 @@ class TimetableActivity  : ComponentActivity() {
 
 @Composable
 fun TimetableUI(){
+    val baseUrl = "https://cur.tk-dev.at/"
+    // ToDo: Add Cookie URL
+    // val cookieString = "cookie_name=cookie_value; path=/"
+    // CookieManager.getInstance().setCookie(baseUrl, cookieString)
+
     Column(modifier = Modifier.fillMaxSize()) {
         AndroidView(factory = {
             WebView(it).apply {
@@ -38,12 +44,12 @@ fun TimetableUI(){
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 webViewClient = WebViewClient()
-                loadUrl("https://cur.tk-dev.at/")
+                loadUrl(baseUrl)
                 settings.javaScriptEnabled = true
                 // addJavascriptInterface()
             }
         }, update = {
-            it.loadUrl("https://cur.tk-dev.at/")
+            it.loadUrl(baseUrl)
         })
     }
 }

@@ -249,33 +249,28 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
 
 @ExperimentalAnimationApi
 @Composable
-fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>, preferences: SharedPreferences){
-    val barItems = listOf(
-        BarItem(
-            title = "Home",
-            //image = painterResource(R.drawable.home_door),
-            image = Icons.Outlined.Home,
-            route = "home"
-        ),
-        BarItem(
-            title = "Reminder",
-            //image = painterResource(R.drawable.clipboard_notes),
-            image = Icons.Filled.ListAlt,
-            route = "reminder"
-        ),
-        BarItem(
-            title = "Alarm",
-            // image = painterResource(R.drawable.alarm_clock),
-            image = Icons.Filled.Alarm,
-            route = "alarm"
-        ),
-
-        BarItem(
+fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>, preferences: SharedPreferences, Context: Context = LocalContext.current){
+    var barItems = mutableListOf(
+            BarItem(
+                title = "Home",
+                image = Icons.Outlined.Home,
+                route = "home"
+            ),
+            BarItem(
+                title = "Reminder",
+                image = Icons.Filled.ListAlt,
+                route = "reminder"
+            ),
+            BarItem(
+                title = "Alarm",
+                image = Icons.Filled.Alarm,
+                route = "alarm"
+            ),
+            BarItem(
             title = "Timetable",
-            // image = painterResource(R.drawable.calendar_days),
             image = Icons.Filled.DateRange,
             route = "timetable"
-        )
+            )
     )
 
     AnimatedVisibility(
@@ -311,40 +306,72 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                         bottomBarState.value = true
                         topBarState.value = true
                     }
+                    "new_reminder" -> {
+                        bottomBarState.value = false
+                        topBarState.value = false
+                    }
                 }
 
                 barItems.forEach { navItem ->
-                    BottomNavigationItem(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .offset(y = 3.dp),
-                        selected = currentRoute == navItem.route,
-                        onClick = {
-                            navController.navigate(navItem.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                    if(navItem.title == "Timetable" && preferences.getString("TYPE", "Student") == "Normal") {
+                        BottomNavigationItem(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .offset(y = 3.dp),
+                            selected = currentRoute == navItem.route,
+                            onClick = {
+                                Toast.makeText(Context, "Timetable is only available in Student Mode!", Toast.LENGTH_SHORT).show()
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = navItem.image,
+                                    contentDescription = navItem.title,
+                                    tint = MaterialTheme.colors.primary,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = navItem.title,
+                                    // color = MaterialTheme.colors.surface
+                                    color = MaterialTheme.colors.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = navItem.image,
-                                contentDescription = navItem.title,
-                                tint = MaterialTheme.colors.secondary,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = navItem.title,
-                                // color = MaterialTheme.colors.surface
-                                color = MaterialTheme.colors.primary,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    )
+                        )
+                    } else {
+                        BottomNavigationItem(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .offset(y = 3.dp),
+                            selected = currentRoute == navItem.route,
+                            onClick = {
+                                navController.navigate(navItem.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = navItem.image,
+                                    contentDescription = navItem.title,
+                                    tint = MaterialTheme.colors.secondary,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = navItem.title,
+                                    // color = MaterialTheme.colors.surface
+                                    color = MaterialTheme.colors.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        )
+                    }
                 }
 
             }
@@ -354,40 +381,32 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
 
 
 @Composable
-fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager, preferences : SharedPreferences) {
+fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager, preferences : SharedPreferences, bottomBarState: MutableState<Boolean>) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Home.route
     ) {
         composable(NavRoutes.Home.route){
-            // Home Screen
             Connections(preferences = preferences)
         }
 
         composable(NavRoutes.Reminder.route) {
-            // Reminder
-            // LoginUI()
-            // NewReminderUI()
             ReminderOverviewUI(navController)
         }
 
         composable(NavRoutes.NewReminder.route){
-            NewReminderUI(navController, alarmManager, preferences)
+            NewReminderUI(navController, alarmManager, preferences, bottomBarState)
         }
 
         composable(NavRoutes.Alarm.route) {
-            // Alarm
-            // RegistrationUIMode()
             AlarmUi()
         }
 
         composable(NavRoutes.Timetable.route) {
-            // Timetable
             TimetableUI()
         }
 
         composable(NavRoutes.Settings.route) {
-            // Settings
             SettingUi(navController, preferences)
         }
     }
@@ -406,7 +425,7 @@ fun MyScaffold(preferences: SharedPreferences, alarmManager: AlarmManager){
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController, alarmManager, preferences) },
+        content = { NavigationHost(navController = navController, alarmManager, preferences, bottomBarState) },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState, preferences = preferences) }
     )
 }

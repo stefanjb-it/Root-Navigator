@@ -55,7 +55,7 @@ object NewReminderActivity : ComponentActivity() {
 }
 
 @Composable
-fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, preferences: SharedPreferences, context: Context = LocalContext.current){
+fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, preferences: SharedPreferences, bottomBarState: MutableState<Boolean>,context: Context = LocalContext.current){
 
     var date by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("") }
@@ -217,6 +217,7 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                             setAlarm(context, alarmManager, selectedDateTime.timeInMillis, idNoti, description)
                         }
 
+                        bottomBarState.value = true
                         navController.navigate("reminder") {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
