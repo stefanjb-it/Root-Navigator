@@ -2,10 +2,7 @@ package at.fh.mappdev.rootnavigator
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,33 +24,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
-import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
-
-class SettingsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RootNavigatorTheme {
-                Surface(color = MaterialTheme.colors.primary) {
-                    //SettingUi()
-                }
-            }
-        }
-    }
-}
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingUi(navController: NavHostController, preferences: SharedPreferences, Context: Context = LocalContext.current) {
 
-    var typelist = listOf("Student", "Normal")
+    val typelist = listOf("Student", "Normal")
     var expanded by remember { mutableStateOf(false) }
-
     var type by remember { mutableStateOf(preferences.getString(GlobalVarHolder.TYPE, "") ?: "") }
     var degreeprogram by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PROGRAMME, "") ?: "") }
     var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
     var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
     var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
+    val user = FirebaseAuth.getInstance().currentUser
 
     Column(
         modifier = Modifier
@@ -71,7 +56,21 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                     vertical = 32.dp
                 )
         ) {
+
             // Row 1
+            Row(verticalAlignment = Alignment.CenterVertically){
+                Text(
+                    text = "Welcome ${user?.email}!",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp
+                )
+            }
+
+            Spacer(modifier = Modifier
+                .padding(bottom = 24.dp))
+
+            // Row 2
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -117,7 +116,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            // Row 2
+            // Row 3
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -151,7 +150,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            // Row 3
+            // Row 4
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -185,7 +184,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            // Row 4
+            // Row 5
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -219,7 +218,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
 
             Spacer(modifier = Modifier.padding(top = 10.dp))
 
-            // Row 5
+            // Row 6
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -264,6 +263,21 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
                             Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
 
+                            val student = (type == "Student")
+
+                            val userdata = hashMapOf(
+                                "Degree Program" to degreeprogram,
+                                "Group" to group,
+                                "Preferred Lines" to preferredLine,
+                                "Preferred Rootpoint" to preferredRootpoint,
+                                "Type" to student
+                            )
+
+                            FirebaseFirestore.getInstance().collection("USER_CONFIG")
+                                .document(user!!.uid).set(userdata)
+                                .addOnSuccessListener { preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply() }
+                                .addOnFailureListener { preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, true).apply() }
+
                             navController.navigate("home") {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
@@ -273,7 +287,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             }
 
                         } else {
-                            Toast.makeText(Context, "You Donkey! You not Gigasaal!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(Context, "Please enter data for all Fields.", Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier
@@ -290,5 +304,4 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             }
         }
     }
-
 }

@@ -311,10 +311,6 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
             password.trim().isNotEmpty() && passwordRepeat.trim().isNotEmpty()
 
     fun matchPasswords(): Boolean = password == passwordRepeat
-
-    // ToDo check with Regex
-    // fun checkEmail(): Boolean = email.contains("@")
-
     fun checkEmail() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     if (buttonClicked) {
@@ -322,7 +318,14 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
         if (notEmpty()) {
             if (checkEmail()) {
                 if (matchPasswords()) {
-                    RegistrationUIAddress(studentMode, email, password, preferences)
+                    val pwRegex = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$""".toRegex()
+
+                    if (pwRegex.matches(password)){
+                        RegistrationUIAddress(studentMode, email, password, preferences)
+                    } else {
+                        buttonClicked = false
+                        Toast.makeText(LocalContext.current, "Passwords does not have the needed complexity.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     buttonClicked = false
                     Toast.makeText(LocalContext.current, "Passwords do not match.", Toast.LENGTH_SHORT).show()
@@ -351,7 +354,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
         firebaseUser?.let {
             it.sendEmailVerification().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(context, "email sent to $Email", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Email sent to $Email", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -498,6 +501,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                               }
                               preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
                               preferences.edit().putString(GlobalVarHolder.ROOTPOINT, rootPoint).apply()
+                              preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, true).apply()
 
                               firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                                     .addOnCompleteListener { task ->

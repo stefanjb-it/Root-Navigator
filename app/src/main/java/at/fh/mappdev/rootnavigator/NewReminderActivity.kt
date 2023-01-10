@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
@@ -56,7 +57,6 @@ object NewReminderActivity : ComponentActivity() {
 
 @Composable
 fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, preferences: SharedPreferences, bottomBarState: MutableState<Boolean>,context: Context = LocalContext.current){
-
     var date by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -205,8 +205,8 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                             ReminderTime = time, ReminderActive = false, ReminderDescription = description)
                         ReminderRepository.newReminder(context, newReminder)
 
-                        val idNoti = preferences.getInt("NOTIFICATIONID", kotlin.random.Random.nextInt(1, 999))
-                        preferences.edit().putInt("NOTIFICATIONID", idNoti+1).apply()
+                        val idNoti = preferences.getInt(GlobalVarHolder.NOTIFICATIONID, 1)
+                        preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, idNoti+1).apply()
                         val dateArray = date.split("/")
                         val timeArray = time.split(":")
 

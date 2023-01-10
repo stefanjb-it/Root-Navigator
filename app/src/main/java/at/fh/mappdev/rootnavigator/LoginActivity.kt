@@ -311,7 +311,6 @@ fun LoginUI(preferences: SharedPreferences){
                     )
                 )
             }
-
         }
     }
 }

@@ -145,25 +145,6 @@ fun AlarmUi(context: Context = LocalContext.current) {
                                 fontSize = 14.sp
                             )
                         }
-                        /*TextField(
-                            value = wakeUpTime,
-                            onValueChange = { wakeUpTime = it },
-                            modifier = Modifier
-                                .height(height = 60.dp)
-                                .width(width = 150.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.secondaryVariant
-                            ),
-                            label = { Text(text = "X min before") },
-                            textStyle = TextStyle(
-                                fontFamily = FontFamily.SansSerif,
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colors.surface
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text
-                            )
-                        )*/
                     }
                 })
 

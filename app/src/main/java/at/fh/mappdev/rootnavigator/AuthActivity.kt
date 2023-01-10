@@ -23,10 +23,12 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -48,19 +50,60 @@ class AuthActivity : ComponentActivity() {
         val calender = Calendar.getInstance()
 
         if (isDeviceOnline(this)){
-            sharedPrefs.edit().putLong("LASTLOGGEDIN", calender.timeInMillis).apply()
+            sharedPrefs.edit().putLong(GlobalVarHolder.LASTLOGGEDIN, calender.timeInMillis).apply()
+
+            if (sharedPrefs.getBoolean(GlobalVarHolder.TOBESAVED, false)){
+                val user = FirebaseAuth.getInstance().currentUser
+                val type = sharedPrefs.getString(GlobalVarHolder.TYPE, "Student")
+                val preferredLine = sharedPrefs.getString(GlobalVarHolder.PREFERREDLINE, "")
+                val preferredRootpoint = sharedPrefs.getString(GlobalVarHolder.ROOTPOINT, "")
+                val student = (type == "Student")
+
+                val userdata = hashMapOf(
+                    "Degree Program" to "",
+                    "Group" to "",
+                    "Preferred Lines" to preferredLine,
+                    "Preferred Rootpoint" to preferredRootpoint,
+                    "Type" to student
+                )
+
+                FirebaseFirestore.getInstance().collection("USER_CONFIG")
+                    .document(user!!.uid).set(userdata)
+                    .addOnSuccessListener { sharedPrefs.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply() }
+                    .addOnFailureListener { sharedPrefs.edit().putBoolean(GlobalVarHolder.TOBESAVED, true).apply() }
+
+            } else {
+
+                val reference = FirebaseFirestore.getInstance()
+                    .collection("USER_CONFIG")
+                    .document(FirebaseAuth.getInstance().currentUser!!.uid)
+
+                reference.get().addOnSuccessListener { document ->
+                    if (document != null) {
+                        val type = document.getBoolean("Type")
+                        if (type == true){
+                            sharedPrefs.edit().putString(GlobalVarHolder.TYPE, "Student").apply()
+                        } else {
+                            sharedPrefs.edit().putString(GlobalVarHolder.TYPE, "Normal").apply()
+                        }
+                        sharedPrefs.edit().putString(GlobalVarHolder.PROGRAMME, document.getString("Degree Program")).apply()
+                        sharedPrefs.edit().putString(GlobalVarHolder.GROUP, document.getString("Group")).apply()
+                        sharedPrefs.edit().putString(GlobalVarHolder.ROOTPOINT, document.getString("Preferred Rootpoint")).apply()
+                        sharedPrefs.edit().putString(GlobalVarHolder.PREFERREDLINE, document.getString("Preferred Lines")).apply()
+                    }
+                }
+            }
         }
 
         val expPoint = (calender.timeInMillis - 2592000000L)
 
-        if (sharedPrefs.getLong("LASTLOGGEDIN", calender.timeInMillis) < expPoint) {
+        if (sharedPrefs.getLong(GlobalVarHolder.LASTLOGGEDIN, calender.timeInMillis) < expPoint) {
             timer.schedule(timerTask { startActivity(expired) }, 500)
         } else {
             timer.schedule(timerTask { startActivity(intent) }, 1000)
         }
     }
 }
-
 
 private fun isDeviceOnline(context: Context): Boolean {
     val connManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -90,7 +133,6 @@ private fun isDeviceOnline(context: Context): Boolean {
 
 @Composable
 fun AuthUI(){
-
     Column(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.primary)

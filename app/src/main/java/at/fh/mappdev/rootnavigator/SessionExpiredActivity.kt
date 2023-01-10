@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class SessionExpiredActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,10 @@ class SessionExpiredActivity : ComponentActivity() {
 @Composable
 fun SessionExpiredUI(){
     val context = LocalContext.current
+
+    if (FirebaseAuth.getInstance().currentUser != null){
+        FirebaseAuth.getInstance().signOut()
+    }
 
     Column(
         modifier = Modifier

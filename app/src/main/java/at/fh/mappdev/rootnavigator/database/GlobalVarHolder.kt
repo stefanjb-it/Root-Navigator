@@ -11,8 +11,9 @@ object GlobalVarHolder {
     val PREFERREDLINE = "PREFERREDLINE"
     val STAYLOGGEDIN = "STAYLOGGEDIN"
     val LASTLOGGEDIN = "ITSADATE"
+    val TOBESAVED = "BOOLI"
 
     var location : MutableLiveData<Location> = MutableLiveData()
 
-    var NOTIFICATIONID = 1
+    var NOTIFICATIONID = "NOTIFICATIONID"
 }

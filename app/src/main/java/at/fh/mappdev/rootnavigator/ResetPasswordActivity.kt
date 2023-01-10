@@ -1,7 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,9 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.ktx.actionCodeSettings
 
 class ResetPasswordActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +37,6 @@ class ResetPasswordActivity : ComponentActivity() {
 
 @Composable
 fun ResetPasswordUI(){
-
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     fun notEmpty(): Boolean = email.trim().isNotEmpty()

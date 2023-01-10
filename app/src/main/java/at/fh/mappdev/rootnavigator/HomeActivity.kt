@@ -68,18 +68,17 @@ class HomeActivity : ComponentActivity(), LocationListener {
             }
         }
     }
+
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
         }
-        // ToDo change minTime and mindDistance
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 5f, this)
     }
     override fun onLocationChanged(location: Location) {
         this.location = location
         GlobalVarHolder.location.value = location
-        Toast.makeText(this, "Location updated: " + location.longitude + " " + location.latitude, Toast.LENGTH_SHORT).show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -99,7 +98,7 @@ class HomeActivity : ComponentActivity(), LocationListener {
 fun Connection(station: SafeStationDetails, preferences: SharedPreferences) {
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp, /*horizontal = 16.dp*/),
+            .padding(vertical = 8.dp),
         backgroundColor = MaterialTheme.colors.primaryVariant,
         shape = RoundedCornerShape(25.dp)
     ) {
@@ -108,11 +107,7 @@ fun Connection(station: SafeStationDetails, preferences: SharedPreferences) {
 }
 
 @Composable
-fun Connections(
-    modifier: Modifier = Modifier,
-    connections: List<String> = List(1000) { "$it" },
-    preferences: SharedPreferences
-) {
+fun Connections( preferences: SharedPreferences ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
@@ -156,11 +151,6 @@ fun Connections(
                         Connection(station = it.value, preferences)
                     }
                 }
-                /*connections.forEach {
-                item {
-                    Connection(name = it)
-                }
-            }*/
             } else {
                 item {
 
@@ -175,7 +165,6 @@ fun Connections(
 fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolean>, topBarState: MutableState<Boolean>){
     val settingItem = BarItem(
         title = "Settings",
-        // image = painterResource(R.drawable.settings),
         image = Icons.Outlined.Settings,
         route = "settings"
     )
@@ -203,7 +192,6 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                         Text(
                             text = "Navigator",
                             color = MaterialTheme.colors.primary,
-                            // color = MaterialTheme.colors.primaryVariant,
                             style = MaterialTheme.typography.h1,
                             modifier = Modifier
                                 .offset(y = 2.dp)
@@ -212,7 +200,6 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                 },
 
                 backgroundColor = MaterialTheme.colors.primaryVariant,
-                // backgroundColor = MaterialTheme.colors.onSurface,
                 navigationIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.logo_no_text),
@@ -280,7 +267,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
         content = {
             BottomNavigation(
                 backgroundColor = MaterialTheme.colors.primaryVariant
-                // backgroundColor = MaterialTheme.colors.onSurface
             ){
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
@@ -333,7 +319,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    // color = MaterialTheme.colors.surface
                                     color = MaterialTheme.colors.primary,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -365,7 +350,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    // color = MaterialTheme.colors.surface
                                     color = MaterialTheme.colors.primary,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -471,7 +455,6 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                 "train" -> Icon(
                     imageVector = Icons.Filled.Train,
                     tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
-                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
@@ -479,7 +462,6 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                 "bus" -> Icon(
                     imageVector = Icons.Filled.DirectionsBus,
                     tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
-                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
@@ -487,7 +469,6 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                 else -> Icon(
                     imageVector = Icons.Filled.Tram,
                     tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
-                    // tint = MaterialTheme.colors.surface,
                     contentDescription = "route type",
                     modifier = Modifier
                         .weight(2f)
@@ -599,7 +580,6 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
                     ) {
                         Text(
                             text = depature.line.name,
-                            // color = MaterialTheme.colors.onSurface,
                             color = if (isPref) {MaterialTheme.colors.secondary} else { MaterialTheme.colors.onSurface},
                             fontSize = 14.sp,
                             modifier = Modifier
@@ -696,9 +676,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
             result.set(0, departures[0].line.product)
             result.set(1, min.toString())
         }
-
         return result
     }
-
     return result
 }
