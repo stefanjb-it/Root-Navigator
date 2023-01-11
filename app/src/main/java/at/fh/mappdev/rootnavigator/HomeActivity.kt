@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -41,53 +41,110 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.fh.mappdev.rootnavigator.database.*
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import at.fh.mappdev.rootnavigator.database.*
+import com.google.android.gms.location.*
 import java.util.*
 
-class HomeActivity : ComponentActivity(), LocationListener {
-    private lateinit var locationManager: LocationManager
-    private val locationPermissionCode = 2
-    var location: Location? = null
+class HomeActivity : ComponentActivity() {
+    private var fusedLocationProviderClient: FusedLocationProviderClient? = null
+    private val interval: Long = 15000
+    private val fastestInterval: Long = 5000
+    private var location: Location? = null
+    private lateinit var mLocationRequest: LocationRequest
+    private val requestPermissionCode = 999
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sharedPrefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        mLocationRequest = LocationRequest.create()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
+        }
+        checkForPermission(this)
+        startLocationUpdates()
+
         setContent {
             RootNavigatorTheme {
                 MyScaffold(sharedPrefs, alarmManager)
-                getLocation()
             }
         }
     }
 
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2)
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 5f, this)
+    override fun onPause() {
+        super.onPause()
+        fusedLocationProviderClient?.removeLocationUpdates(mLocationCallback)
     }
-    override fun onLocationChanged(location: Location) {
+
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult.lastLocation
+            location?.let { locationChanged(it) }
+        }
+    }
+
+    private fun startLocationUpdates() {
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = interval
+        mLocationRequest.fastestInterval = fastestInterval
+
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest)
+        val locationSettingsRequest = builder.build()
+        val settingsClient = LocationServices.getSettingsClient(this)
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+        fusedLocationProviderClient!!.requestLocationUpdates(
+            mLocationRequest,
+            mLocationCallback,
+            Looper.myLooper()!!)
+    }
+
+    private fun checkForPermission(context: Context) {
+        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED) {
+            return
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                requestPermissionCode)
+            return
+        }
+    }
+
+    fun locationChanged(location: Location) {
         this.location = location
-        GlobalVarHolder.location.value = location
+        GlobalVarHolder.location.value = this.location
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == locationPermissionCode) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-            }
-            else {
+        if (requestCode == requestPermissionCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates()
+            } else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
@@ -111,8 +168,8 @@ fun Connections( preferences: SharedPreferences ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
     Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
@@ -409,7 +466,8 @@ fun MyScaffold(preferences: SharedPreferences, alarmManager: AlarmManager){
     Scaffold (
         scaffoldState = scaffoldState,
         topBar = { TopBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState) },
-        content = { NavigationHost(navController = navController, alarmManager, preferences, bottomBarState) },
+        content = { padding -> Column(modifier = Modifier.padding(padding))
+        {NavigationHost(navController = navController, alarmManager, preferences, bottomBarState)} },
         bottomBar = { BottomBar(navController = navController, bottomBarState = bottomBarState, topBarState = topBarState, preferences = preferences) }
     )
 }

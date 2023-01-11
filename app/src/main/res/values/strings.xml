@@ -17,7 +17,7 @@
 
     <!-- Activity Titles -->
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">RootNavigator</string>
     <string name="title_activity_auth">AuthActivity</string>
     <string name="title_activity_exp">SessionExpiredActivity</string>
     <string name="title_activity_alarm">AlarmActivity</string>

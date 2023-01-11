@@ -90,47 +90,52 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        LazyColumn(
+        Column (
             modifier = Modifier
-                .height(530.dp)
-                .padding(top = 12.dp)
-        ) {
-            reminders.map { item {Reminder(it, Context, reminders)} }
-        }
-
-        Row(
-            modifier = Modifier
-                .weight(1f, false)
-                .padding(
-                    bottom = 90.dp
-                )
-        ) {
-            Button(
-                onClick = {
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-
-                    navController.navigate("new_reminder") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
+                .fillMaxSize()
+        ){
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                    .padding(top = 18.dp)
+                    .weight(1f)
             ) {
-                Text(
-                    text = stringResource(id = R.string.button_new_reminder),
-                    color = MaterialTheme.colors.surface,
-                    fontSize = 18.sp
-                )
+                reminders.map { item { Reminder(it, Context, reminders) } }
+            }
+
+            Spacer(modifier = Modifier.padding(bottom = 18.dp))
+
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+            ) {
+                Button(
+                    onClick = {
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+
+                        navController.navigate("new_reminder") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_new_reminder),
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp
+                    )
+                }
             }
         }
+
     }
 }
 
