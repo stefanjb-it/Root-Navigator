@@ -55,13 +55,24 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                     horizontal = 32.dp,
                     vertical = 32.dp
                 )
+                .weight(1f),
+            verticalArrangement = Arrangement.Center
         ) {
 
             // Row 1
             Row(verticalAlignment = Alignment.CenterVertically){
                 Text(
-                    text = "Welcome ${user?.email}!",
-                    textAlign = TextAlign.Center,
+                    text = "Welcome ",
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "${user?.email} ",
+                    color = MaterialTheme.colors.secondary,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "!",
                     color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
@@ -105,7 +116,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             DropdownMenuItem(
                                 onClick = {
                                     type = it
-                                expanded = false}
+                                    expanded = false}
                             ) {
                                 Text(text = it)
                             }

@@ -123,8 +123,9 @@ fun LoginUI(preferences: SharedPreferences){
             modifier = Modifier
                 .padding(
                     horizontal = 32.dp,
-                    vertical = 32.dp
                 )
+                .weight(1f),
+            verticalArrangement = Arrangement.Center
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -134,7 +135,7 @@ fun LoginUI(preferences: SharedPreferences){
                     fontSize = 27.sp)
             }
 
-            Spacer(modifier = Modifier.padding(top = 64.dp))
+            Spacer(modifier = Modifier.padding(top = 48.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "E-Mail",
@@ -209,7 +210,7 @@ fun LoginUI(preferences: SharedPreferences){
                 )
             }
 
-            Spacer(modifier = Modifier.padding(top = 76.dp))
+            Spacer(modifier = Modifier.padding(top = 64.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Stay Logged In?",
