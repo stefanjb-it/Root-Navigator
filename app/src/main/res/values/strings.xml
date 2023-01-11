@@ -8,6 +8,7 @@
     <!-- Button Labels -->
     <string name="button_save">Save</string>
     <string name="button_sign_in">Sign In</string>
+    <string name="button_sign_out">Log out</string>
     <string name="button_back">Back to Login</string>
     <string name="button_student">Student</string>
     <string name="button_standard">Standard</string>

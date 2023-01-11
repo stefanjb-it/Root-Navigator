@@ -25,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.fh.mappdev.rootnavigator.NewReminderActivity.finish
+import at.fh.mappdev.rootnavigator.NewReminderActivity.startActivity
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +41,7 @@ class AuthActivity : ComponentActivity() {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
                     AuthUI()
+                    checkUser(this)
                 }
             }
         }
@@ -103,7 +106,26 @@ class AuthActivity : ComponentActivity() {
             timer.schedule(timerTask { startActivity(intent) }, 1000)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        checkUser(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        checkUser(this)
+    }
+
 }
+
+fun checkUser(context: Context){
+    if (FirebaseAuth.getInstance().currentUser == null){
+        val intent = Intent(context, LoginActivity::class.java)
+        startActivity(intent)
+    }
+}
+
 
 private fun isDeviceOnline(context: Context): Boolean {
     val connManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager

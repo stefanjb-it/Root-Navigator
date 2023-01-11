@@ -1,5 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
@@ -62,17 +63,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             // Row 1
             Row(verticalAlignment = Alignment.CenterVertically){
                 Text(
-                    text = "Welcome ",
-                    color = MaterialTheme.colors.surface,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "${user?.email} ",
-                    color = MaterialTheme.colors.secondary,
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "!",
+                    text = "Welcome ${user?.email}!",
+                    textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.surface,
                     fontSize = 18.sp
                 )
@@ -308,6 +300,42 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_save),
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp
+                    )
+                }
+            }
+
+            // Logout Button Row
+            Row(modifier = Modifier.padding(top = 32.dp)) {
+                Button(
+                    onClick = {
+                        if (FirebaseAuth.getInstance().currentUser != null) {
+                            FirebaseAuth.getInstance().signOut()
+                            preferences.edit().putString(GlobalVarHolder.TYPE, "").apply()
+                            preferences.edit().putString(GlobalVarHolder.PROGRAMME, "").apply()
+                            preferences.edit().putString(GlobalVarHolder.GROUP, "").apply()
+                            preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, "").apply()
+                            preferences.edit().putString(GlobalVarHolder.ROOTPOINT, "").apply()
+                            preferences.edit().putString(GlobalVarHolder.TYPE, "").apply()
+                            preferences.edit().putLong(GlobalVarHolder.LASTLOGGEDIN, 0L).apply()
+                            preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply()
+                            preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, 0).apply()
+                            GlobalVarHolder.location.value?.altitude = 0.0
+                            GlobalVarHolder.location.value?.latitude = 0.0
+
+                            navController.popBackStack()
+                            val activity = (Context as? Activity)
+                            activity?.finish()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 60.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_sign_out),
                         color = MaterialTheme.colors.surface,
                         fontSize = 18.sp
                     )
