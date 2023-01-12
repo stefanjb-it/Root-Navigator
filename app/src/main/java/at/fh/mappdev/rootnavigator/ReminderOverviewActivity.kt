@@ -106,7 +106,7 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
 
             Column(
                 modifier = Modifier
-                    .padding(bottom = 24.dp)
+                    .padding(bottom = 32.dp)
             ) {
                 Button(
                     onClick = {
@@ -124,7 +124,8 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
                         }
                     },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(60.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(

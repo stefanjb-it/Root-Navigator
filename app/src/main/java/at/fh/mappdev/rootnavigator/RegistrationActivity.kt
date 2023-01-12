@@ -67,8 +67,8 @@ fun RegistrationUIMode(preferences: SharedPreferences){
             modifier = Modifier
                 .padding(
                     horizontal = 32.dp,
-                    vertical = 32.dp
-                ),
+                )
+                .weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -79,7 +79,7 @@ fun RegistrationUIMode(preferences: SharedPreferences){
                     color = MaterialTheme.colors.surface)
             }
 
-            Spacer(modifier = Modifier.padding(top = 80.dp))
+            Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row {
                 Button(
@@ -153,8 +153,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
             modifier = Modifier
                 .padding(
                     horizontal = 32.dp,
-                    vertical = 32.dp
-                ),
+                )
+                .weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -199,7 +199,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                 )
             }
 
-            Spacer(modifier = Modifier.padding(top = 36.dp))
+            Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Password",
@@ -242,7 +242,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                 )
             }
 
-            Spacer(modifier = Modifier.padding(top = 36.dp))
+            Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Repeat Password",
@@ -288,14 +288,16 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
             Row(
                 modifier = Modifier
                     .padding(
-                        top = 50.dp
+                        top = 60.dp
                     )
             ) {
                 Button(
                     onClick = { buttonClicked = true },
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                        .fillMaxWidth()
+                        .height(height = 60.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_continue),
@@ -375,8 +377,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
             modifier = Modifier
                 .padding(
                     horizontal = 32.dp,
-                    vertical = 32.dp
-                ),
+                )
+                .weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -488,7 +490,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
             Row(
                 modifier = Modifier
                     .padding(
-                        top = 50.dp
+                        top = 60.dp
                     )
             ) {
                 Button(
@@ -519,7 +521,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                           }
                     },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(height = 60.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(

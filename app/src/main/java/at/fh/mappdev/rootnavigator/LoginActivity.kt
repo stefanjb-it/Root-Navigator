@@ -128,7 +128,10 @@ fun LoginUI(preferences: SharedPreferences){
             verticalArrangement = Arrangement.Center
         ) {
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(text = "Sign In",
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.surface,
@@ -253,7 +256,8 @@ fun LoginUI(preferences: SharedPreferences){
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 60.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_sign_in),

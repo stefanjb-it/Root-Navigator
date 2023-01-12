@@ -77,9 +77,12 @@ fun AlarmUi(context: Context = LocalContext.current) {
         Column(
             modifier = Modifier
                 .padding(
-                    horizontal = 32.dp,
-                    vertical = 32.dp
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp
                 )
+                .weight(1f),
+            verticalArrangement = Arrangement.Center
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -92,9 +95,11 @@ fun AlarmUi(context: Context = LocalContext.current) {
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = switchStateOn.value,
-                    onCheckedChange = {switchStateOn.value = it},
+                    onCheckedChange = { switchStateOn.value = it },
                 )
             }
+
+            Spacer(modifier = Modifier.padding(top = 8.dp))
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = switchStateOn.value,
@@ -117,7 +122,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                     }
                 })
 
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = Modifier.padding(top = 24.dp))
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = switchStateOn.value,
@@ -133,7 +138,8 @@ fun AlarmUi(context: Context = LocalContext.current) {
                             fontSize = 18.sp,
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Button(onClick = { timePickerDialog.show() },
+                        Button(
+                            onClick = { timePickerDialog.show() },
                             modifier = Modifier
                                 .width(width = 150.dp)
                                 .height(height = 35.dp),
@@ -148,7 +154,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                     }
                 })
 
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = Modifier.padding(top = 24.dp))
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = switchStateOn.value,
@@ -186,7 +192,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                     }
                 })
 
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = Modifier.padding(top = 24.dp))
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = switchStateOn.value,
@@ -224,7 +230,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                     }
                 })
 
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = Modifier.padding(top = 24.dp))
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = switchStateOn.value,
@@ -261,19 +267,23 @@ fun AlarmUi(context: Context = LocalContext.current) {
                         )
                     }
                 })
+        }
 
-                    Row(
-                        modifier = Modifier
-                            .padding(
-                                top = 50.dp
-                            )
-                    ) {
+            Column(
+                modifier = Modifier
+                    .padding(
+                        bottom = 32.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+            ) {
                         Button(
                             onClick = {
                                 Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
                             },
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .height(60.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                         ) {
                             Text(
@@ -282,8 +292,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                                 fontSize = 18.sp
                             )
                         }
-                    }
-                }
+            }
 
     }
 }
