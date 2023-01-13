@@ -122,13 +122,12 @@ object BackendHandler {
         mutableMapOf()
     )
 
-    private var newMap : MutableMap<Int, SafeStationDetails> = mutableMapOf()
     private val safeNewMap : SafeSwitchMap = SafeSwitchMap(0, mutableMapOf())
 
     private val switchMaps = {
-        //stationMap.value = newMap.toMutableMap()
         stationMap.value = safeNewMap.map.toMutableMap()
-        finishedActionCount = 0}
+        finishedActionCount = 0
+    }
 
     private var finishedActionCount :Int = 0
     private fun lowerActionCount(allowedId:Int){
@@ -149,18 +148,12 @@ object BackendHandler {
 
     private fun departureToMap(id:Int, dp : List<Departure>, allowedId:Int){
         if (safeNewMap.id != allowedId) return
-        //stationMap.value?.get(id)?.departures?.addAll(dp)
-        //stationMap.value = stationMap.value
-        //newMap[id]?.departures?.addAll(dp)
         safeNewMap.map[id]?.departures?.addAll(dp)
         lowerActionCount(allowedId)
     }
 
     private fun arrivalToMap(id:Int, ar : List<Arrival>, allowedId: Int){
         if (safeNewMap.id != allowedId) return
-        //stationMap.value?.get(id)?.arrival?.addAll(ar)
-        //stationMap.value = stationMap.value
-        //newMap[id]?.arrival?.addAll(ar)
         safeNewMap.map[id]?.arrival?.addAll(ar)
         lowerActionCount(allowedId)
     }
@@ -239,7 +232,7 @@ object BackendHandler {
 
     // handle all requests for station details
     fun loadStationDetails(stations : List<Station>){
-        newMap = mutableMapOf()
+        safeNewMap.map = mutableMapOf()
         safeNewMap.id++
         val allowedId = safeNewMap.id
         finishedActionCount = 3 * stations.size

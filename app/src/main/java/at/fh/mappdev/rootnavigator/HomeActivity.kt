@@ -50,6 +50,9 @@ import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import at.fh.mappdev.rootnavigator.database.*
 import com.google.android.gms.location.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeActivity : ComponentActivity() {
@@ -168,13 +171,15 @@ fun Connections( preferences: SharedPreferences ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
-    Log.e("StationsList", stationsIdResponse.value?.content.toString())
+    //Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
     when (stationsIdResponse.value?.done) {
         true -> {
+            //Log.e("finalMap", stationsIdResponse.value?.content?.map { it.name }.toString())
+            //Log.e("StationsList", stationsIdResponse.value?.content?.size.toString())
             BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
             Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_LONG).show()
         }
@@ -202,7 +207,8 @@ fun Connections( preferences: SharedPreferences ) {
         LazyColumn()
         {
             if (finalMap.value != null) {
-                Log.v("finalMap", finalMap.value.toString())
+                //Log.v("finalMap", finalMap.value?.map { it.value.station.name }.toString())
+                //Log.v("finalMap", finalMap.value?.size.toString())
                 finalMap.value?.forEach {
                     item {
                         Connection(station = it.value, preferences)
