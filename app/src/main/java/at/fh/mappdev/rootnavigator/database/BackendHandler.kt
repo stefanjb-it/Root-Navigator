@@ -11,112 +11,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.location.Location
 
-@Deprecated("only present for testing")
-object NewBEHandler {
-    private val stationMap : MutableLiveData<UIReturnType> = MutableLiveData(
-        UIReturnType(
-            mutableMapOf())
-    )
-
-    private fun stationToMap(newStation:Station){
-        stationMap.value?.contentMap?.put(newStation.id, SafeStationDetails(newStation, mutableListOf(), mutableListOf()))
-    }
-
-    private fun departureToMap(id:Int, dp : List<Departure>){
-        stationMap.value?.contentMap?.get(id)?.departures?.addAll(dp)
-        stationMap.value = stationMap.value
-    }
-
-    private fun arrivalToMap(id:Int, ar : List<Arrival>){
-        stationMap.value?.contentMap?.get(id)?.arrival?.addAll(ar)
-        stationMap.value = stationMap.value
-    }
-
-    // PUBLIC ACCESS
-    public fun getStationMap() : LiveData<UIReturnType> {
-        return stationMap
-    }
-
-    // get nearby stations
-    fun getNearbyStations(latitude:Double, longitude:Double, distance:Int): LiveData<ResponseType> {
-        val returnData : MutableLiveData<ResponseType> = MutableLiveData<ResponseType>()
-        Backend().retrofitService.getNearbyStations(latitude, longitude, distance).enqueue(object :
-            Callback<List<Station>> {
-            override fun onResponse(
-                call: Call<List<Station>>,
-                response: Response<List<Station>>
-            ) {
-                Log.v("API Nearby onResponse", response.body().toString())
-                returnData.value = ResponseType(true, response.body())
-                response.body()?.forEach {
-                    stationToMap(it)
-                }
-            }
-
-            override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                Log.e("API Nearby onFailure", t.toString())
-            }
-        })
-        return returnData
-    }
-
-    // add departures of station to map
-    private fun getDepartures(stationId : Int){
-        Backend().retrofitService.getStationDeparture(
-            stationId
-        ).enqueue(object :
-            Callback<List<Departure>> {
-            override fun onResponse(
-                call: Call<List<Departure>>,
-                response: Response<List<Departure>>
-            ) {
-                Log.v("API Departures onResponse", response.body().toString())
-                departureToMap(stationId, response.body() ?: return)
-            }
-
-            override fun onFailure(call: Call<List<Departure>>, t: Throwable) {
-                Log.e("API Departures onFailure", t.toString())
-            }
-        }
-        )
-    }
-
-    // add arrivals of station to map
-    private fun getArrivals(stationId : Int){
-        Backend().retrofitService.getStationArrival(
-            stationId
-        ).enqueue(object :
-            Callback<List<Arrival>> {
-            override fun onResponse(
-                call: Call<List<Arrival>>,
-                response: Response<List<Arrival>>
-            ) {
-                Log.v("API Arrivals onResponse", response.body().toString())
-                arrivalToMap(stationId, response.body() ?: return)
-            }
-
-            override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
-                Log.e("API Arrivals onFailure", t.toString())
-            }
-        }
-        )
-    }
-
-    // handle all requests for station details
-    fun loadStationDetails(stations : List<Station>){
-        stations.forEach {
-            stationToMap(it)
-            getDepartures(it.id)
-            getArrivals(it.id)
-        }
-        GlobalScope.launch {
-            // wait for all requests to finish
-            delay(1000)
-            Log.i("API", getStationMap().value?.contentMap.toString())
-        }
-    }
-}
-
 object BackendHandler {
     private val stationMap : MutableLiveData<MutableMap<Int, SafeStationDetails>> = MutableLiveData(
         mutableMapOf()
@@ -140,8 +34,6 @@ object BackendHandler {
 
     private fun stationToMap(newStation:Station, allowedId:Int){
         if (safeNewMap.id != allowedId) return
-        //stationMap.value?.put(newStation.id, SafeStationDetails(newStation, mutableListOf(), mutableListOf()))
-        //newMap[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
         safeNewMap.map[newStation.id] = SafeStationDetails(newStation, mutableListOf(), mutableListOf())
         lowerActionCount(allowedId)
     }
@@ -170,7 +62,7 @@ object BackendHandler {
             return MutableLiveData(ResponseType(false, null))
         }
         val returnData : MutableLiveData<ResponseType> = MutableLiveData<ResponseType>()
-        Backend().retrofitService.getNearbyStations(latitude, longitude, distance).enqueue(object : Callback<List<Station>>{
+        Backend().retrofitService.getNearbyStations(GlobalVarHolder.uidPrefix+GlobalVarHolder.userIdToken, latitude, longitude, distance).enqueue(object : Callback<List<Station>>{
             override fun onResponse(
                 call: Call<List<Station>>,
                 response: Response<List<Station>>
@@ -189,7 +81,9 @@ object BackendHandler {
     // add departures of station to map
     private fun getDepartures(stationId : Int, allowedId:Int){
         Backend().retrofitService.getStationDeparture(
-            stationId
+            GlobalVarHolder.uidPrefix+GlobalVarHolder.userIdToken,
+            stationId,
+            GlobalVarHolder.requestTime
         ).enqueue(object :
             Callback<List<Departure>> {
             override fun onResponse(
@@ -211,7 +105,9 @@ object BackendHandler {
     // add arrivals of station to map
     private fun getArrivals(stationId : Int, allowedId:Int){
         Backend().retrofitService.getStationArrival(
-            stationId
+            GlobalVarHolder.uidPrefix+GlobalVarHolder.userIdToken,
+            stationId,
+            GlobalVarHolder.requestTime
         ).enqueue(object :
             Callback<List<Arrival>> {
             override fun onResponse(

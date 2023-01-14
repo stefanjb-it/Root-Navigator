@@ -48,6 +48,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseUser
 
+
 class LoginActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val locationPermissionCode = 999
@@ -92,6 +93,9 @@ class LoginActivity : ComponentActivity() {
             val user: FirebaseUser? = firebaseAuth.currentUser
             user?.let {
                 Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show()
+                user.getIdToken(true).addOnSuccessListener { result ->
+                    GlobalVarHolder.userIdToken = result.token ?: ""
+                }
                 val intent = Intent(this, AuthActivity::class.java)
                 this.startActivity(intent)
             }
@@ -235,29 +239,44 @@ fun LoginUI(preferences: SharedPreferences){
             Spacer(modifier = Modifier.padding(top = 36.dp))
 
             Row(modifier = Modifier.fillMaxWidth()){
-                Button(onClick = {
-                    preferences.edit().putBoolean(GlobalVarHolder.STAYLOGGEDIN, stayLoggedIn).apply()
+                Button(
+                    onClick = {
+                        preferences.edit().putBoolean(GlobalVarHolder.STAYLOGGEDIN, stayLoggedIn)
+                            .apply()
 
-                    if (notEmpty()) {
-                        firebaseAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { signIn ->
-                                if (signIn.isSuccessful) {
-                                    Toast.makeText(context, "Signed in successfully!", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(context, AuthActivity::class.java)
-                                    context.startActivity(intent)
-                                } else {
-                                    Toast.makeText(context, "Sign in failed!", Toast.LENGTH_SHORT).show()
+                        if (notEmpty()) {
+                            firebaseAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { signIn ->
+                                    if (signIn.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Signed in successfully!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        val intent = Intent(context, AuthActivity::class.java)
+                                        context.startActivity(intent)
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Sign in failed!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                            }
-                    } else {
-                        Toast.makeText(context, "Please enter your user credentials.", Toast.LENGTH_SHORT).show()
-                    }
-                },
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please enter your user credentials.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(height = 60.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.secondary),
+                        backgroundColor = MaterialTheme.colors.secondary
+                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_sign_in),
@@ -269,7 +288,7 @@ fun LoginUI(preferences: SharedPreferences){
 
             Spacer(modifier = Modifier.padding(top = 76.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(),) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 ClickableText(text = AnnotatedString("Forgot Password?"),
                     onClick = {
                         val intent = Intent(context, ResetPasswordActivity::class.java)

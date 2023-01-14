@@ -171,8 +171,8 @@ fun Connections( preferences: SharedPreferences ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
     val lat = 47.06727184602459
     val long = 15.442097181893473
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
     //Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
@@ -450,7 +450,7 @@ fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager,
         }
 
         composable(NavRoutes.Timetable.route) {
-            TimetableUI()
+            TimetableUI(preferences)
         }
 
         composable(NavRoutes.Settings.route) {
