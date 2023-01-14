@@ -55,11 +55,15 @@ object NewReminderActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, preferences: SharedPreferences, bottomBarState: MutableState<Boolean>,context: Context = LocalContext.current){
+    val priolist = listOf("High", "Medium", "Low")
+    var expanded by remember { mutableStateOf(false) }
     var date by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var priority by remember { mutableStateOf("") }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         NotificationInfo.NOTIFICATIONPERMISSION = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
@@ -105,7 +109,8 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(start = 32.dp, top = 32.dp, end = 32.dp),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
 
         ) {
             Button(onClick = { datePickerDialog.show() },
@@ -123,6 +128,24 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
 
             Spacer(modifier = Modifier.weight(1f))
 
+            Text(
+                text = date,
+                color = MaterialTheme.colors.surface,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
+
+        }
+
+        Spacer(modifier = Modifier.padding(top = 12.dp))
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 32.dp, end = 32.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
             Button(onClick = { timePickerDialog.show() },
                 modifier = Modifier
                     .width(width = 150.dp)
@@ -135,22 +158,6 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                     fontSize = 14.sp
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.padding(top = 12.dp))
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp),
-            horizontalArrangement = Arrangement.Center
-
-        ) {
-            Text(
-                text = date,
-                color = MaterialTheme.colors.surface,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -160,6 +167,57 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
+        }
+
+        Spacer(modifier = Modifier.padding(top = 12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Select Priority",
+                color = MaterialTheme.colors.surface,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier
+                    .height(height = 60.dp)
+                    .width(150.dp)
+            ) {
+                TextField(
+                    readOnly = true,
+                    value = priority ,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
+                    onValueChange = { priority = it },
+                    label = { Text("Priority") })
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {expanded = false},
+                    modifier = Modifier.background(MaterialTheme.colors.primaryVariant)
+                ) {
+                    priolist.forEach {
+                        DropdownMenuItem(
+                            onClick = {
+                                priority = it
+                                expanded = false}
+                        ) {
+                            Text(text = it)
+                        }
+                    }
+                }
+            }
         }
 
         Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -202,7 +260,7 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                         Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
 
                         val newReminder = ReminderItemRoom(ReminderDate = date,
-                            ReminderTime = time, ReminderActive = false, ReminderDescription = description)
+                            ReminderTime = time, ReminderActive = false, ReminderDescription = description, ReminderPriority = priority)
                         ReminderRepository.newReminder(context, newReminder)
 
                         val idNoti = preferences.getInt(GlobalVarHolder.NOTIFICATIONID, 1)

@@ -25,8 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.fh.mappdev.rootnavigator.NewReminderActivity.finish
-import at.fh.mappdev.rootnavigator.NewReminderActivity.startActivity
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -101,9 +99,25 @@ class AuthActivity : ComponentActivity() {
         val expPoint = (calender.timeInMillis - 2592000000L)
 
         if (sharedPrefs.getLong(GlobalVarHolder.LASTLOGGEDIN, calender.timeInMillis) < expPoint) {
-            timer.schedule(timerTask { startActivity(expired) }, 500)
+            timer.schedule(timerTask {
+                expired.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(expired)
+                finishAndRemoveTask()
+            }, 500)
+
         } else {
-            timer.schedule(timerTask { startActivity(intent) }, 1000)
+            timer.schedule(timerTask {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finishAndRemoveTask()
+            }, 1000)
+        }
+    }
+
+    private fun checkUser(context: Context){
+        if (FirebaseAuth.getInstance().currentUser == null){
+            val intent = Intent(context, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -116,16 +130,7 @@ class AuthActivity : ComponentActivity() {
         super.onPause()
         checkUser(this)
     }
-
 }
-
-fun checkUser(context: Context){
-    if (FirebaseAuth.getInstance().currentUser == null){
-        val intent = Intent(context, LoginActivity::class.java)
-        startActivity(intent)
-    }
-}
-
 
 private fun isDeviceOnline(context: Context): Boolean {
     val connManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager

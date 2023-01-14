@@ -39,6 +39,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
     var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
     var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
+    var duration by remember { mutableStateOf(preferences.getInt(GlobalVarHolder.requestTime.toString(), 30)) }
     val user = FirebaseAuth.getInstance().currentUser
 
     Column(
@@ -253,6 +254,40 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 )
             }
 
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+
+            // Row 7
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Duration:",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                TextField(
+                    value = duration.toString(),
+                    onValueChange = { duration = it.toInt() },
+                    modifier = Modifier
+                        .height(height = 60.dp)
+                        .width(150.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                    ),
+                    label = { Text(text = "Seconds") },
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colors.surface
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    )
+                )
+            }
+
             // Button Row
             Row(modifier = Modifier.padding(top = 32.dp)) {
                 Button(
@@ -264,6 +299,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putString(GlobalVarHolder.GROUP, group).apply()
                             preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
                             preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
+                            preferences.edit().putString("requestTime", duration.toString()).apply()
                             Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
 
                             val student = (type == "Student")

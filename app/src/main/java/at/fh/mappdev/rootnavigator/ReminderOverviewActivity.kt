@@ -1,13 +1,13 @@
 package at.fh.mappdev.rootnavigator
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -34,6 +34,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.database.ReminderItemRoom
 import at.fh.mappdev.rootnavigator.database.ReminderRepository
 
@@ -56,6 +58,11 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context, list :  SnapshotStat
             vertical = 12.dp
         ),
         backgroundColor = MaterialTheme.colors.primaryVariant,
+        /*backgroundColor = when (reminder.ReminderPriority) {
+            "High" -> Color(R.color.light_red)
+            "Medium" -> Color(R.color.light_yellow)
+            else -> Color(R.color.light_green)
+        },*/
         shape = RoundedCornerShape(25.dp)
     ) {
         ReminderContent(reminder, Context, list)
@@ -65,12 +72,6 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context, list :  SnapshotStat
 @Composable
 fun ReminderOverviewUI(navController: NavHostController, Context: Context = LocalContext.current) {
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            NotificationInfo.NOTIFICATIONPERMISSION = isGranted
-        }
-    )
 
     val reminders = remember { mutableStateListOf<ReminderItemRoom>() }
     reminders.swapList(ReminderRepository.getReminders(Context))
@@ -112,7 +113,11 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
                     onClick = {
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            if ((ContextCompat.checkSelfPermission(Context, Manifest.permission.POST_NOTIFICATIONS ) != PackageManager.PERMISSION_GRANTED)) {
+                                ActivityCompat.requestPermissions(Context as Activity, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 999)
+                            }
+                        } else {
+                            NotificationInfo.NOTIFICATIONPERMISSION = true
                         }
 
                         navController.navigate("new_reminder") {

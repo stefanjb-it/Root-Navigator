@@ -16,6 +16,9 @@ data class ReminderItemRoom(
     @ColumnInfo(name = "time")
     var ReminderTime: String,
 
+    @ColumnInfo(name = "priority")
+    var ReminderPriority : String,
+
     @ColumnInfo(name = "description")
     var ReminderDescription : String,
 

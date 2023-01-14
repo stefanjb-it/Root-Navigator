@@ -60,7 +60,7 @@ fun SessionExpiredUI(){
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Your Offline Session has expired!",
+                text = "Your Offline Session\nhas expired!",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.surface,
                 fontSize = 48.sp,
@@ -70,6 +70,7 @@ fun SessionExpiredUI(){
         Button(
             onClick = {
                 val intent = Intent(context, LoginActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(intent)
             },
             modifier = Modifier
