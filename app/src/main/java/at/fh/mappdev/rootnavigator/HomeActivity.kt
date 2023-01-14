@@ -166,8 +166,10 @@ fun Connection(station: SafeStationDetails, preferences: SharedPreferences) {
 @Composable
 fun Connections( preferences: SharedPreferences ) {
     var currentLocation = GlobalVarHolder.location.observeAsState()
-    val lat = 47.06727184602459
-    val long = 15.442097181893473
+    //val lat = 47.06727184602459
+    val lat = 47.0727551
+    //val long = 15.442097181893473
+    val long = 15.4140822
     // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
     var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
@@ -513,7 +515,7 @@ fun CardContent(station: SafeStationDetails, preferences: SharedPreferences) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             when(infoList[0]) {
-                "train" -> Icon(
+                "suburban" -> Icon(
                     imageVector = Icons.Filled.Train,
                     tint = if (infoList[2].toBoolean()) { MaterialTheme.colors.secondary } else { MaterialTheme.colors.surface },
                     contentDescription = "route type",
@@ -707,6 +709,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     if (min < 0) { min = 0 }
 
                     result.set(0, departure.line.product)
+                    Log.i("Type", departure.line.product)
                     result.set(1, min.toString())
                     result.set(2, "true")
 
@@ -721,6 +724,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     if (min < 0) { min = 0 }
 
                     result.set(0, departures[0].line.product)
+                    //Log.i("Type", departures[0].line.product)
                     result.set(1, min.toString())
                 }
             }
@@ -736,6 +740,7 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
 
             result.set(0, departures[0].line.product)
             result.set(1, min.toString())
+            //Log.i("Type", departures[0].line.product)
         }
         return result
     }

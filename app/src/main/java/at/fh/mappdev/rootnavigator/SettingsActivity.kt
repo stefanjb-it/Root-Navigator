@@ -39,7 +39,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
     var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
     var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
-    var duration by remember { mutableStateOf(preferences.getInt(GlobalVarHolder.requestTime.toString(), 30)) }
+    var duration by remember { mutableStateOf(preferences.getString("requestTime", "30")) }
     val user = FirebaseAuth.getInstance().currentUser
 
     Column(
@@ -269,14 +269,14 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 Spacer(modifier = Modifier.weight(1f))
                 TextField(
                     value = duration.toString(),
-                    onValueChange = { duration = it.toInt() },
+                    onValueChange = { duration = it },
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
                     ),
-                    label = { Text(text = "Seconds") },
+                    label = { Text(text = "Minutes") },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -292,7 +292,15 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             Row(modifier = Modifier.padding(top = 32.dp)) {
                 Button(
                     onClick = {
-                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != ""){
+                        var numericString = true
+                        var numericInt = 0
+                        try {
+                            numericInt = Integer.parseInt(duration)
+                        } catch (e: java.lang.NumberFormatException){
+                            numericString = false
+                        }
+
+                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && numericString){
 
                             preferences.edit().putString(GlobalVarHolder.TYPE, type).apply()
                             preferences.edit().putString(GlobalVarHolder.PROGRAMME, degreeprogram).apply()

@@ -54,7 +54,8 @@ fun ResetPasswordUI(){
                 .padding(
                     horizontal = 32.dp,
                     vertical = 32.dp
-                ),
+                )
+                .weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -97,36 +98,39 @@ fun ResetPasswordUI(){
                     )
                 )
             }
+        }
 
-            Row(
+        Column(
+            modifier = Modifier
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = 32.dp
+                )
+        ) {
+            Button(
+                onClick = {
+                    if(notEmpty()) {
+                        firebaseAuth.sendPasswordResetEmail(email)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "E-Mail was sent successfully.", Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Toast.makeText(context, "E-Mail could not be sent!", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(context, "Please enter your E-Mail address.", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier
-                    .padding(
-                        top = 50.dp
-                    )
+                    .fillMaxWidth()
+                    .height(height = 60.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
             ) {
-                Button(
-                    onClick = {
-                        if(notEmpty()) {
-                            firebaseAuth.sendPasswordResetEmail(email)
-                                .addOnSuccessListener {
-                                    Toast.makeText(context, "E-Mail was sent successfully.", Toast.LENGTH_SHORT).show()
-                                }.addOnFailureListener {
-                                    Toast.makeText(context, "E-Mail could not be sent!", Toast.LENGTH_SHORT).show()
-                                }
-                        } else {
-                            Toast.makeText(context, "Please enter your E-Mail address.", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.button_submit),
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
-                    )
-                }
+                Text(
+                    text = stringResource(id = R.string.button_submit),
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp
+                )
             }
         }
     }
