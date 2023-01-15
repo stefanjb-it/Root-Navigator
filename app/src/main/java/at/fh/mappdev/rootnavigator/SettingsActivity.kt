@@ -293,9 +293,12 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 Button(
                     onClick = {
                         var numericString = true
-                        var numericInt = 0
+                        val numericInt : Int
                         try {
                             numericInt = Integer.parseInt(duration)
+                            if (numericInt < 1 || numericInt > 60){
+                                numericString = false
+                            }
                         } catch (e: java.lang.NumberFormatException){
                             numericString = false
                         }
@@ -307,8 +310,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putString(GlobalVarHolder.GROUP, group).apply()
                             preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
                             preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
-                            preferences.edit().putString("requestTime", duration.toString()).apply()
-                            Toast.makeText(Context, "Saved", Toast.LENGTH_SHORT).show()
+                            preferences.edit().putInt("requestTime", duration!!.toInt()).apply()
+                            Toast.makeText(Context, "Saved successfully", Toast.LENGTH_SHORT).show()
 
                             val student = (type == "Student")
 
@@ -334,7 +337,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             }
 
                         } else {
-                            Toast.makeText(Context, "Please enter data for all Fields.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(Context, "Please enter valid data for all parameters.", Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier
@@ -365,6 +368,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putLong(GlobalVarHolder.LASTLOGGEDIN, 0L).apply()
                             preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply()
                             preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, 0).apply()
+                            preferences.edit().putInt("requestTime", 30).apply()
                             GlobalVarHolder.location.value?.altitude = 0.0
                             GlobalVarHolder.location.value?.latitude = 0.0
 
