@@ -2,10 +2,13 @@ package at.fh.mappdev.rootnavigator
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -16,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import at.fh.mappdev.rootnavigator.NewReminderActivity.startActivity
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,7 +44,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
     var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
     var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
-    var duration by remember { mutableStateOf(preferences.getString("requestTime", "30")) }
+    var duration by remember { mutableStateOf(preferences.getInt("requestTime", 30).toString()) }
     val user = FirebaseAuth.getInstance().currentUser
 
     Column(
@@ -71,8 +76,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 )
             }
 
-            Spacer(modifier = Modifier
-                .padding(bottom = 24.dp))
+            Spacer(modifier = Modifier.padding(bottom = 10.dp))
 
             // Row 2
             Row(
@@ -289,7 +293,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             }
 
             // Button Row
-            Row(modifier = Modifier.padding(top = 32.dp)) {
+            Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     onClick = {
                         var numericString = true
@@ -354,7 +358,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             }
 
             // Logout Button Row
-            Row(modifier = Modifier.padding(top = 32.dp)) {
+            Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     onClick = {
                         if (FirebaseAuth.getInstance().currentUser != null) {
@@ -388,6 +392,24 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         fontSize = 18.sp
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.padding(top = 18.dp))
+
+            Column(modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally){
+                ClickableText(text = AnnotatedString("If you like this Project, click here!"),
+                    onClick = {
+                        val openURL = Intent(Intent.ACTION_VIEW)
+                        openURL.data = Uri.parse("https://www.buymeacoffee.com/rootnavigator")
+                        Context.startActivity(openURL)
+                    },
+                    style = TextStyle(
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start
+                    )
+                )
             }
         }
     }
