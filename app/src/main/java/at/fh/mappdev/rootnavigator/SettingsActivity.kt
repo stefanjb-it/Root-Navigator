@@ -66,7 +66,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                     horizontal = 32.dp,
                     vertical = 32.dp
                 )
-                .weight(1f),
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
 

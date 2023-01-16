@@ -31,6 +31,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -175,8 +176,8 @@ fun Connections( preferences: SharedPreferences ) {
     val lat = 47.0727551
     //val long = 15.4420971
     val long = 15.4140822
-    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
     //Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
@@ -275,6 +276,22 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                     )
                 },
                 actions = {
+                    /* Logout Button
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Logout,
+                            contentDescription = "Logout",
+                            tint = MaterialTheme.colors.secondary,
+                            modifier = Modifier
+                                .size(28.dp)
+                        )
+                    }
+                    */
+
                     IconButton(
                         onClick = {
                             navController.navigate(settingItem.route) {
@@ -294,6 +311,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                                 .size(28.dp)
                         )
                     }
+
                 }
             )
 
