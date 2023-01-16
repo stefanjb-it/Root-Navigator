@@ -7,9 +7,13 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -100,7 +104,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         readOnly = true,
                         value = type ,
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = MaterialTheme.colors.secondaryVariant
+                            backgroundColor = MaterialTheme.colors.secondaryVariant,
+                            textColor = MaterialTheme.colors.surface
                         ),
                         onValueChange = { type = it },
                         label = { Text("Type") })
@@ -138,6 +143,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 TextField(
                     value = degreeprogram,
                     onValueChange = { degreeprogram = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
@@ -172,6 +178,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 TextField(
                     value = group,
                     onValueChange = { group = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
@@ -206,6 +213,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 TextField(
                     value = preferredRootpoint,
                     onValueChange = { preferredRootpoint = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
@@ -240,6 +248,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 TextField(
                     value = preferredLine,
                     onValueChange = { preferredLine = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),
@@ -272,8 +281,9 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 TextField(
-                    value = duration.toString(),
+                    value = duration,
                     onValueChange = { duration = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .width(150.dp),

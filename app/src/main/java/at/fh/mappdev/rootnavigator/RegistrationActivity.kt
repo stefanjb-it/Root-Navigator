@@ -182,6 +182,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                 TextField(
                     value = email,
                     onValueChange = { email = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),
@@ -406,6 +407,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                 TextField(
                     value = rootPoint,
                     onValueChange = { rootPoint = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),
@@ -438,6 +440,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                 TextField(
                     value = preferredLine,
                     onValueChange = { preferredLine = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),
@@ -470,6 +473,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                 TextField(
                     value = preferredDestination,
                     onValueChange = { preferredDestination = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),

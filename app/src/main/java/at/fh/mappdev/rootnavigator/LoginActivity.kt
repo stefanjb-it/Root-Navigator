@@ -158,6 +158,7 @@ fun LoginUI(preferences: SharedPreferences){
                 TextField(
                     value = email,
                     onValueChange = { email = it },
+                    singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
                         .fillMaxWidth(),

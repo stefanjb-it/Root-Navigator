@@ -198,7 +198,8 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                     readOnly = true,
                     value = priority ,
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.secondaryVariant,
+                        textColor = MaterialTheme.colors.surface
                     ),
                     onValueChange = { priority = it },
                     label = { Text("Priority") })

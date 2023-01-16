@@ -173,6 +173,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                         TextField(
                             value = numberOfAlarms,
                             onValueChange = { numberOfAlarms = it },
+                            singleLine = true,
                             modifier = Modifier
                                 .height(height = 60.dp)
                                 .width(width = 150.dp),
@@ -211,6 +212,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                         TextField(
                             value = interval,
                             onValueChange = { interval = it },
+                            singleLine = true,
                             modifier = Modifier
                                 .height(height = 60.dp)
                                 .width(width = 150.dp),
@@ -249,6 +251,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
                         TextField(
                             value = wakeUpSound,
                             onValueChange = { wakeUpSound = it },
+                            singleLine = true,
                             modifier = Modifier
                                 .height(height = 60.dp)
                                 .width(width = 150.dp),
@@ -275,24 +278,23 @@ fun AlarmUi(context: Context = LocalContext.current) {
                         bottom = 32.dp,
                         start = 16.dp,
                         end = 16.dp
-                    )
+                    ))
+            {
+            Button(
+                onClick = {
+                    Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
             ) {
-                        Button(
-                            onClick = {
-                                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.button_save),
-                                color = MaterialTheme.colors.surface,
-                                fontSize = 18.sp
-                            )
-                        }
+                Text(
+                    text = stringResource(id = R.string.button_save),
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp
+                )
             }
-
+        }
     }
 }
