@@ -7,8 +7,6 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -48,7 +46,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     var group by remember { mutableStateOf(preferences.getString(GlobalVarHolder.GROUP, "") ?: "") }
     var preferredRootpoint by remember { mutableStateOf(preferences.getString(GlobalVarHolder.ROOTPOINT, "") ?: "") }
     var preferredLine by remember { mutableStateOf(preferences.getString(GlobalVarHolder.PREFERREDLINE, "") ?: "") }
-    var duration by remember { mutableStateOf(preferences.getInt("requestTime", 30).toString()) }
+    var duration by remember { mutableStateOf(preferences.getString(GlobalVarHolder.REQUESTTIME, "30") ?: "30") }
     val user = FirebaseAuth.getInstance().currentUser
 
     Column(
@@ -307,25 +305,14 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     onClick = {
-                        var numericString = true
-                        val numericInt : Int
-                        try {
-                            numericInt = Integer.parseInt(duration)
-                            if (numericInt < 1 || numericInt > 60){
-                                numericString = false
-                            }
-                        } catch (e: java.lang.NumberFormatException){
-                            numericString = false
-                        }
-
-                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && numericString){
+                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && duration.toIntOrNull() != null && duration.toInt() > 0 && duration.toInt() < 60){
 
                             preferences.edit().putString(GlobalVarHolder.TYPE, type).apply()
                             preferences.edit().putString(GlobalVarHolder.PROGRAMME, degreeprogram).apply()
                             preferences.edit().putString(GlobalVarHolder.GROUP, group).apply()
                             preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
                             preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
-                            preferences.edit().putInt("requestTime", duration!!.toInt()).apply()
+                            preferences.edit().putString(GlobalVarHolder.REQUESTTIME, duration).apply()
                             Toast.makeText(Context, "Saved successfully", Toast.LENGTH_SHORT).show()
 
                             val student = (type == "Student")

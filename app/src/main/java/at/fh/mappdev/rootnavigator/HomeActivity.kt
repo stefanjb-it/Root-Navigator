@@ -179,10 +179,12 @@ fun Connections( preferences: SharedPreferences ) {
     var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
     // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     var finalMap = BackendHandler.getStationMap().observeAsState()
+    Log.v("OUT", GlobalVarHolder.userIdToken)
     //Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
     when (stationsIdResponse.value?.done) {
         true -> {
+            Log.v("IN", GlobalVarHolder.userIdToken)
             //Log.e("finalMap", stationsIdResponse.value?.content?.map { it.name }.toString())
             //Log.e("StationsList", stationsIdResponse.value?.content?.size.toString())
             BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
@@ -732,7 +734,6 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     if (min < 0) { min = 0 }
 
                     result.set(0, departure.line.product)
-                    Log.i("Type", departure.line.product)
                     result.set(1, min.toString())
                     result.set(2, "true")
 
@@ -747,7 +748,6 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
                     if (min < 0) { min = 0 }
 
                     result.set(0, departures[0].line.product)
-                    //Log.i("Type", departures[0].line.product)
                     result.set(1, min.toString())
                 }
             }
@@ -763,7 +763,6 @@ fun firstPrefLine(departures: MutableList<Departure>, preferences: SharedPrefere
 
             result.set(0, departures[0].line.product)
             result.set(1, min.toString())
-            //Log.i("Type", departures[0].line.product)
         }
         return result
     }

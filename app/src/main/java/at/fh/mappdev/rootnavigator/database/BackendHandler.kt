@@ -81,7 +81,7 @@ object BackendHandler {
         Backend().retrofitService.getStationDeparture(
             GlobalVarHolder.uidPrefix+GlobalVarHolder.userIdToken,
             stationId,
-            GlobalVarHolder.requestTime
+            GlobalVarHolder.REQUESTTIME
         ).enqueue(object :
             Callback<List<Departure>> {
             override fun onResponse(
@@ -105,7 +105,7 @@ object BackendHandler {
         Backend().retrofitService.getStationArrival(
             GlobalVarHolder.uidPrefix+GlobalVarHolder.userIdToken,
             stationId,
-            GlobalVarHolder.requestTime
+            GlobalVarHolder.REQUESTTIME
         ).enqueue(object :
             Callback<List<Arrival>> {
             override fun onResponse(

@@ -25,10 +25,10 @@ interface BackendService {
     fun getNearbyStations(@Header("Cookie") tokenId:String, @Query("latitude") latitude: Double, @Query("longitude") longitude: Double, @Query("distance") distance: Int):Call<List<Station>>
     @GET("/api/hafas/v1/stops/{id}/departures")
     @Headers("Cookie: {tokenId}")
-    fun getStationDeparture(@Header("Cookie") tokenId:String,@Path("id") id:Int, @Query("duration") duration:Int): Call<List<Departure>>
+    fun getStationDeparture(@Header("Cookie") tokenId:String,@Path("id") id:Int, @Query("duration") duration:String): Call<List<Departure>>
     @GET("/api/hafas/v1/stops/{id}/arrivals")
     @Headers("Cookie: {tokenId}")
-    fun getStationArrival(@Header("Cookie") tokenId:String,@Path("id") id:Int, @Query("duration") duration:Int): Call<List<Arrival>>
+    fun getStationArrival(@Header("Cookie") tokenId:String,@Path("id") id:Int, @Query("duration") duration:String): Call<List<Arrival>>
     @GET("/api/hafas/v1/locations")
     @Headers("Cookie: {tokenId}")
     fun getLocations(@Header("Cookie") tokenId:String, @Query("query") query:String, @Query("results") results:Int, @Query("addresses") addresses:Boolean, @Query("poi") poi:Boolean):Call<List<Station>>

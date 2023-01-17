@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
+import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -97,7 +98,6 @@ class LoginActivity : ComponentActivity() {
                     GlobalVarHolder.userIdToken = result.token ?: ""
                 }
                 val intent = Intent(this, AuthActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 this.startActivity(intent)
             }
         }
@@ -250,6 +250,9 @@ fun LoginUI(preferences: SharedPreferences){
                             firebaseAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { signIn ->
                                     if (signIn.isSuccessful) {
+                                        signIn.result.user?.getIdToken(true)?.addOnSuccessListener { result ->
+                                            GlobalVarHolder.userIdToken = result.token ?: ""
+                                        }
                                         Toast.makeText(
                                             context,
                                             "Signed in successfully!",
