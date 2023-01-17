@@ -27,6 +27,7 @@ jobs:
         run: |
           gcloud run deploy ${{ secrets.GCP_APPLICATION_BACKEND }} --image gcr.io/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_APPLICATION_BACKEND }} \
             --set-env-vars FIREBASE_CONFIG_BASE64=${{ secrets.FIREBASE_CONFIG_BASE64 }} \
+            --set-env-vars URI=${{ secrets.BACKEND_URI }} \
             --platform managed \
             --max-instances 100 \
             --timeout 30s \
