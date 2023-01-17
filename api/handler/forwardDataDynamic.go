@@ -15,9 +15,9 @@ func ForwardDataDynamic(c *fiber.Ctx) error {
 	userId := c.Cookies("userId")
 
 	if !recogniseTestUser(userId) {
-		return c.Status(http.StatusUnauthorized).JSON(nil)
-	} else if !authenticateIdToken(userId) {
-		return c.Status(http.StatusUnauthorized).JSON(nil)
+		if !authenticateIdToken(userId) {
+			return c.Status(http.StatusUnauthorized).JSON(nil)
+		}
 	}
 
 	queryString := c.Request().URI().QueryArgs()
