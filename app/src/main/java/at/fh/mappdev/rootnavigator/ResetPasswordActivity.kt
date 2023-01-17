@@ -1,5 +1,6 @@
 package at.fh.mappdev.rootnavigator
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
+import at.fh.mappdev.rootnavigator.NewReminderActivity.startActivity
 
 class ResetPasswordActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ class ResetPasswordActivity : ComponentActivity() {
 @Composable
 fun ResetPasswordUI(){
     val context = LocalContext.current
+    val login = Intent(context, LoginActivity::class.java)
     var email by remember { mutableStateOf("") }
     fun notEmpty(): Boolean = email.trim().isNotEmpty()
 
@@ -115,6 +118,7 @@ fun ResetPasswordUI(){
                         firebaseAuth.sendPasswordResetEmail(email)
                             .addOnSuccessListener {
                                 Toast.makeText(context, "E-Mail was sent successfully.", Toast.LENGTH_SHORT).show()
+                                startActivity(login)
                             }.addOnFailureListener {
                                 Toast.makeText(context, "E-Mail could not be sent!", Toast.LENGTH_SHORT).show()
                             }
