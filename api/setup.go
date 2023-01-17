@@ -29,8 +29,13 @@ func SetupGateway(proc *fiber.App) {
 		log.Fatal(err)
 	}
 
+	// Setting URI for Forwarding
+	handler.URI = os.Getenv("URI")
+
+	// Setting Firebase Config
 	os.Setenv("FIREBASE_CONFIG", string(plainText))
 
+	// Creating Firebase App Instance
 	opt := option.WithCredentialsJSON([]byte(plainText))
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {

@@ -8,7 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-const URI = "https://oebb-hafas.fastcloud-it.net"
+var URI string
+
 const TESTAPIKEY = "_iouwozhAOPJUWz821jpiUpo&ai2woz1442hjpoijhwpqujjqpWAFR"
 
 func ForwardDataDynamic(c *fiber.Ctx) error {
