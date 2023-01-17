@@ -305,7 +305,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     onClick = {
-                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && duration.toIntOrNull() != null && duration.toInt() > 0 && duration.toInt() < 61){
+                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && duration.toIntOrNull() != null && duration.toInt() > 0 && duration.toInt() < 69){
 
                             preferences.edit().putString(GlobalVarHolder.TYPE, type).apply()
                             preferences.edit().putString(GlobalVarHolder.PROGRAMME, degreeprogram).apply()
@@ -313,6 +313,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putString(GlobalVarHolder.PREFERREDLINE, preferredLine).apply()
                             preferences.edit().putString(GlobalVarHolder.ROOTPOINT, preferredRootpoint).apply()
                             preferences.edit().putString(GlobalVarHolder.REQUESTTIME, duration).apply()
+                            GlobalVarHolder.localReqTime = duration
                             Toast.makeText(Context, "Saved successfully", Toast.LENGTH_SHORT).show()
 
                             val student = (type == "Student")
@@ -370,7 +371,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putLong(GlobalVarHolder.LASTLOGGEDIN, 0L).apply()
                             preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply()
                             preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, 0).apply()
-                            preferences.edit().putInt("requestTime", 30).apply()
+                            preferences.edit().putString(GlobalVarHolder.REQUESTTIME, "30").apply()
+                            GlobalVarHolder.localReqTime = "0"
                             GlobalVarHolder.location.value?.altitude = 0.0
                             GlobalVarHolder.location.value?.latitude = 0.0
 

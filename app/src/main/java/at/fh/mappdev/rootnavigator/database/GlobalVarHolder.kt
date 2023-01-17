@@ -16,7 +16,8 @@ object GlobalVarHolder {
     var location : MutableLiveData<Location> = MutableLiveData()
     var userIdToken : String = ""
     val uidPrefix = "userId="
-    val REQUESTTIME = "30"
+    var localReqTime = "30"
+    val REQUESTTIME = "REQUESTTIME"
 
     var NOTIFICATIONID = "NOTIFICATIONID"
 }
