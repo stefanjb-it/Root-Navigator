@@ -305,7 +305,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     onClick = {
-                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && duration.toIntOrNull() != null && duration.toInt() > 0 && duration.toInt() < 60){
+                        if (type != "" && degreeprogram != "" && group != "" && preferredRootpoint != "" && duration.toIntOrNull() != null && duration.toInt() > 0 && duration.toInt() < 61){
 
                             preferences.edit().putString(GlobalVarHolder.TYPE, type).apply()
                             preferences.edit().putString(GlobalVarHolder.PROGRAMME, degreeprogram).apply()
