@@ -62,7 +62,7 @@ data class Alternative(
 }
 @JsonClass(generateAdapter = true)
 data class Remarks(
-    val type: String, val code: String, val text: String
+    val type: String, val code: String?, val text: String
 ) {
 }
 @JsonClass(generateAdapter = true)

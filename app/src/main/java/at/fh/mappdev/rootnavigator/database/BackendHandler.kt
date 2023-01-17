@@ -57,7 +57,6 @@ object BackendHandler {
 
     // get nearby stations
     fun getNearbyStations(latitude:Double, longitude:Double, distance:Int):LiveData<ResponseType>{
-        Log.i("API getNearbyStations", "$latitude $longitude $distance")
         if (latitude < 0 || longitude < 0 || distance < 0){
             return MutableLiveData(ResponseType(false, null))
         }
@@ -67,12 +66,11 @@ object BackendHandler {
                 call: Call<List<Station>>,
                 response: Response<List<Station>>
             ) {
-                println(response.body())
                 returnData.value = ResponseType(true, response.body())
             }
 
             override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                println("Cannot get location")
+                returnData.value = ResponseType(false, null)
             }
         })
         return returnData
