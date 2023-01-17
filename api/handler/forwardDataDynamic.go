@@ -9,10 +9,14 @@ import (
 )
 
 const URI = "https://oebb-hafas.fastcloud-it.net"
+const TESTAPIKEY = "_iouwozhAOPJUWz821jpiUpo&ai2woz1442hjpoijhwpqujjqpWAFR"
 
 func ForwardDataDynamic(c *fiber.Ctx) error {
 	userId := c.Cookies("userId")
-	if !authenticateIdToken(userId) {
+
+	if !recogniseTestUser(userId) {
+		return c.Status(http.StatusUnauthorized).JSON(nil)
+	} else if !authenticateIdToken(userId) {
 		return c.Status(http.StatusUnauthorized).JSON(nil)
 	}
 

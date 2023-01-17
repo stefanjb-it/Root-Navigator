@@ -13,3 +13,7 @@ func authenticateIdToken(idToken string) bool {
 	_, err := FbClient.VerifyIDTokenAndCheckRevoked(context.Background(), idToken)
 	return err == nil
 }
+
+func recogniseTestUser(idToken string) bool {
+	return idToken == TESTAPIKEY
+}
