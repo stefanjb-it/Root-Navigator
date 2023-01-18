@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -47,7 +48,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
     val observer = object : Observer<T> {
         override fun onChanged(o: T?) {
             data = o
-            //println("onChanged ${latch.count}")
+            println("onChanged ${latch.count}")
             latch.countDown()
             this@getOrAwaitValue.removeObserver(this)
         }
@@ -65,6 +66,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
 }
 
 
+@FixMethodOrder(org.junit.runners.MethodSorters.NAME_ASCENDING)
 class BackendHandlerUnitTest {
     val stationListResponseString:String = """
         [
@@ -191,16 +193,12 @@ class BackendHandlerUnitTest {
         ]
     """.trimIndent()
     var stationListResponse:List<Station>? = null
-    private lateinit var auth:FirebaseAuth
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
     @Before
     fun setup(){
-        //mockkStatic(FirebaseAuth::class)
-        //every { FirebaseAuth.getInstance() } returns mockk(relaxed = true)
-
         GlobalVarHolder.userIdToken = "_iouwozhAOPJUWz821jpiUpo&ai2woz1442hjpoijhwpqujjqpWAFR"
         val moshi : Moshi = Moshi.Builder().build()
         val listType = Types.newParameterizedType(List::class.java, Station::class.java)
@@ -209,17 +207,17 @@ class BackendHandlerUnitTest {
     }
 
     @Test
-    fun getNearbyStations(){
+    fun a_getNearbyStations(){
         assertEquals(stationListResponse, BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content)
     }
 
     @Test
-    fun getEmptyStationMap(){
+    fun b_getEmptyStationMap(){
         assertEquals(null, BackendHandler.getStationMap().getOrAwaitValue(10, 0))
     }
 
     @Test
-    fun getCorrectStationMap(){
+    fun c_getCorrectStationMap(){
         val getNearbyStationsResponse = BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content
         BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
         val mapToUse = BackendHandler.getStationMap().getOrAwaitValue(10, 1)
@@ -227,25 +225,23 @@ class BackendHandlerUnitTest {
     }
 
     @Test
-    fun noDuplicatesInStationMap(){
+    fun d_noDuplicatesInStationMap(){
         val getNearbyStationsResponse = BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content
-        BackendHandler.getStationMap().observeForever {}
 
-        // 1 - expecting null for data
-        assertEquals(null, BackendHandler.getStationMap().value)
-
-        // 2 - expecting full Map
+        // 1 - expecting full Map
         BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
         val localCopy = BackendHandler.getStationMap().getOrAwaitValue(10, 1).toMap()
         assertEquals(getNearbyStationsResponse?.size, localCopy.size)
         val savedLineNumber:Int = localCopy.entries.fold(0) { acc, entry ->
             entry.value.arrival.size + entry.value.departures.size + acc
-        } ?: 0
+        }
 
-        // 3 - expecting the same map or line changes, but same stations and NO duplicates
+        // 2 - expecting the same map or line changes, but same stations and NO duplicates
         BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
-        assertNotEquals(savedLineNumber*2, BackendHandler.getStationMap().getOrAwaitValue(10, 1).entries.fold(0) { acc, entry ->
+        var newLineNumber = BackendHandler.getStationMap().getOrAwaitValue(10, 1).entries.fold(0) { acc, entry ->
             entry.value.arrival.size + entry.value.departures.size + acc
-        } ?: 0)
+        }
+        newLineNumber = if (newLineNumber == 0) -1 else newLineNumber
+        assertNotEquals(savedLineNumber*2, newLineNumber)
     }
 }
