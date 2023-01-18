@@ -5,7 +5,7 @@ import androidx.room.*
 @Dao
 interface ReminderDatabaseDao {
     @Query("SELECT * FROM Reminders")
-    fun getAllReminders(): MutableList<ReminderItemRoom>?
+    suspend fun getAllReminders(): MutableList<ReminderItemRoom>?
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun newReminder(reminder: ReminderItemRoom)

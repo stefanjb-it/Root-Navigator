@@ -3,6 +3,7 @@ package at.fh.mappdev.rootnavigator
 import android.content.Context
 import android.os.Looper
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import at.fh.mappdev.rootnavigator.database.BackendHandler
@@ -17,6 +18,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.junit.Assert.*
@@ -36,7 +38,7 @@ import java.util.concurrent.TimeoutException
    SPDX-License-Identifier: Apache-2.0 */
 fun <T> LiveData<T>.getOrAwaitValue(
     time: Long = 2,
-    // 0 = value as soon as returned, 1 = value on first change, 2 = value on second change, ...
+    // 0 = null or existing one, 1 = value on first change (also if init value != null used!!!), 2 = value on second change, ...
     useThisUpdate : Int = 1,
     timeUnit: TimeUnit = TimeUnit.SECONDS
 ): T {
@@ -45,6 +47,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
     val observer = object : Observer<T> {
         override fun onChanged(o: T?) {
             data = o
+            //println("onChanged ${latch.count}")
             latch.countDown()
             this@getOrAwaitValue.removeObserver(this)
         }
@@ -206,8 +209,43 @@ class BackendHandlerUnitTest {
     }
 
     @Test
-    fun getNearbyStationsUnauthorized(){
+    fun getNearbyStations(){
         assertEquals(stationListResponse, BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content)
     }
 
+    @Test
+    fun getEmptyStationMap(){
+        assertEquals(null, BackendHandler.getStationMap().getOrAwaitValue(10, 0))
+    }
+
+    @Test
+    fun getCorrectStationMap(){
+        val getNearbyStationsResponse = BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content
+        BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
+        val mapToUse = BackendHandler.getStationMap().getOrAwaitValue(10, 1)
+        assertEquals(getNearbyStationsResponse?.size, mapToUse.size)
+    }
+
+    @Test
+    fun noDuplicatesInStationMap(){
+        val getNearbyStationsResponse = BackendHandler.getNearbyStations(47.06727184602459, 15.442097181893473, 250).getOrAwaitValue(10, 1).content
+        BackendHandler.getStationMap().observeForever {}
+
+        // 1 - expecting null for data
+        assertEquals(null, BackendHandler.getStationMap().value)
+
+        // 2 - expecting full Map
+        BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
+        val localCopy = BackendHandler.getStationMap().getOrAwaitValue(10, 1).toMap()
+        assertEquals(getNearbyStationsResponse?.size, localCopy.size)
+        val savedLineNumber:Int = localCopy.entries.fold(0) { acc, entry ->
+            entry.value.arrival.size + entry.value.departures.size + acc
+        } ?: 0
+
+        // 3 - expecting the same map or line changes, but same stations and NO duplicates
+        BackendHandler.loadStationDetails(getNearbyStationsResponse ?: listOf())
+        assertNotEquals(savedLineNumber*2, BackendHandler.getStationMap().getOrAwaitValue(10, 1).entries.fold(0) { acc, entry ->
+            entry.value.arrival.size + entry.value.departures.size + acc
+        } ?: 0)
+    }
 }

@@ -1,8 +1,7 @@
 package at.fh.mappdev.rootnavigator.database
 
 import android.content.Context
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 object ReminderRepository {
     var allReminders : MutableList<ReminderItemRoom>? = mutableListOf()

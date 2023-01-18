@@ -13,7 +13,7 @@ import android.location.Location
 
 object BackendHandler {
     private val stationMap : MutableLiveData<MutableMap<Int, SafeStationDetails>> = MutableLiveData(
-        mutableMapOf()
+        //mutableMapOf()
     )
 
     private val safeNewMap : SafeSwitchMap = SafeSwitchMap(0, mutableMapOf())
@@ -88,12 +88,12 @@ object BackendHandler {
                 call: Call<List<Departure>>,
                 response: Response<List<Departure>>
             ) {
-                Log.v("API Departures onResponse", response.body().toString())
+                //Log.v("API Departures onResponse", response.body().toString())
                 departureToMap(stationId, response.body() ?: return, allowedId)
             }
 
             override fun onFailure(call: Call<List<Departure>>, t: Throwable) {
-                Log.e("API Departures onFailure $stationId", t.toString())
+                //Log.e("API Departures onFailure $stationId", t.toString())
                 lowerActionCount(allowedId)
             }
         }
@@ -112,12 +112,12 @@ object BackendHandler {
                 call: Call<List<Arrival>>,
                 response: Response<List<Arrival>>
             ) {
-                Log.v("API Arrivals onResponse", response.body().toString())
+                //Log.v("API Arrivals onResponse", response.body().toString())
                 arrivalToMap(stationId, response.body() ?: return, allowedId)
             }
 
             override fun onFailure(call: Call<List<Arrival>>, t: Throwable) {
-                Log.e("API Arrivals onFailure $stationId", t.toString())
+                //Log.e("API Arrivals onFailure $stationId", t.toString())
                 lowerActionCount(allowedId)
             }
         }
@@ -135,10 +135,10 @@ object BackendHandler {
             getDepartures(it.id, allowedId)
             getArrivals(it.id, allowedId)
         }
-        GlobalScope.launch {
+        /*GlobalScope.launch {
             // wait for all requests to finish
             delay(1000)
             Log.i("API", getStationMap().value.toString())
-        }
+        }*/
     }
 }
