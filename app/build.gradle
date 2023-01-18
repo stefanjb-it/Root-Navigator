@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.room:room-paging:2.4.3")
     implementation("androidx.room:room-ktx:2.4.3")
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     kapt("androidx.room:room-compiler:2.4.3")
     annotationProcessor("androidx.room:room-compiler:2.4.3")
     testImplementation("androidx.room:room-testing:2.4.3")
@@ -94,7 +95,9 @@ dependencies {
 
     // TESTING
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-
     testImplementation "io.mockk:mockk-android:1.13.3"
     testImplementation "io.mockk:mockk-agent:1.13.3"
+
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_ui_version")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_ui_version")
 }
