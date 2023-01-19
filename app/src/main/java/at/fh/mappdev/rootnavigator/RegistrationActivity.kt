@@ -57,7 +57,8 @@ fun RegistrationUIMode(preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.primary)
+        //.background(MaterialTheme.colors.primary)
+        .background(MaterialTheme.colors.onSurface)
         .paint(
             painter = painterResource(R.drawable.threelines),
             contentScale = ContentScale.FillWidth
@@ -143,7 +144,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.primary)
+        //.background(MaterialTheme.colors.primary)
+        .background(MaterialTheme.colors.onSurface)
         .paint(
             painter = painterResource(R.drawable.threelines),
             contentScale = ContentScale.FillWidth
@@ -368,7 +370,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.primary)
+        //.background(MaterialTheme.colors.primary)
+        .background(MaterialTheme.colors.onSurface)
         .paint(
             painter = painterResource(R.drawable.threelines),
             contentScale = ContentScale.FillWidth

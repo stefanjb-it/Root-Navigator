@@ -403,7 +403,8 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                                 Icon(
                                     imageVector = navItem.image,
                                     contentDescription = navItem.title,
-                                    tint = MaterialTheme.colors.primary,
+                                    //tint = MaterialTheme.colors.primary,
+                                    tint = MaterialTheme.colors.surface,
                                     modifier = Modifier.size(28.dp)
                                 )
                             },

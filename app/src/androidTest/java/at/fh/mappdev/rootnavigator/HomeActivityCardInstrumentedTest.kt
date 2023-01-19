@@ -14,8 +14,26 @@ class HomeActivityCardInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
+    val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
+    val loginButton = hasText("Sign In") and hasClickAction()
+
     @Test
     fun clickCard_Dropdown() {
+
+        composeTestRule.onNode(emailTextfield).assertExists()
+        composeTestRule.onNode(emailTextfield).performClick()
+        composeTestRule.onNode(emailTextfield).performTextClearance()
+        composeTestRule.onNode(emailTextfield).performTextInput("test@test.test")
+
+        composeTestRule.onNode(passwordTextfield).assertExists()
+        composeTestRule.onNode(passwordTextfield).performClick()
+        composeTestRule.onNode(passwordTextfield).performTextClearance()
+        composeTestRule.onNode(passwordTextfield).performTextInput("Tester123!")
+
+        composeTestRule.onNode(loginButton).assertExists()
+        composeTestRule.onNode(loginButton).performClick()
+
         composeTestRule.waitUntil(timeoutMillis = 10000) {
             composeTestRule
                 .onAllNodesWithContentDescription("route type")

@@ -97,7 +97,8 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+            //.background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.onSurface)
             .paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
@@ -257,24 +258,55 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
         ) {
             Button(
                 onClick = {
-                    if (date != "" && time != "" && description != ""){
-                        Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
+                    if (date == ""){
+                        date = calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH)+ 1).toString() + "/" + calendar.get(Calendar.YEAR).toString()
+                    }
 
-                        val newReminder = ReminderItemRoom(ReminderDate = date,
-                            ReminderTime = time, ReminderActive = false, ReminderDescription = description, ReminderPriority = priority)
+                    if (time == "") {
+                        time =
+                            (calendar.get(Calendar.HOUR_OF_DAY) + 1).toString() + ":" + calendar.get(
+                                Calendar.MINUTE
+                            ).toString()
+                    }
+
+                    if(priority != "") {
+
+                        val newReminder = ReminderItemRoom(
+                            ReminderDate = date,
+                            ReminderTime = time,
+                            ReminderActive = false,
+                            ReminderDescription = description,
+                            ReminderPriority = priority
+                        )
                         ReminderRepository.newReminder(context, newReminder)
 
                         val idNoti = preferences.getInt(GlobalVarHolder.NOTIFICATIONID, 1)
-                        preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, idNoti+1).apply()
+                        preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, idNoti + 1)
+                            .apply()
                         val dateArray = date.split("/")
                         val timeArray = time.split(":")
 
                         val selectedDateTime = Calendar.getInstance()
-                        selectedDateTime.set(dateArray[2].toInt(), dateArray[1].toInt()-1, dateArray[0].toInt(), timeArray[0].toInt(), timeArray[1].toInt(), 0)
+                        selectedDateTime.set(
+                            dateArray[2].toInt(),
+                            dateArray[1].toInt() - 1,
+                            dateArray[0].toInt(),
+                            timeArray[0].toInt(),
+                            timeArray[1].toInt(),
+                            0
+                        )
 
                         if (NotificationInfo.NOTIFICATIONPERMISSION) {
-                            setAlarm(context, alarmManager, selectedDateTime.timeInMillis, idNoti, description)
+                            setAlarm(
+                                context,
+                                alarmManager,
+                                selectedDateTime.timeInMillis,
+                                idNoti,
+                                description
+                            )
                         }
+
+                        Toast.makeText(context, "Reminder saved", Toast.LENGTH_SHORT).show()
 
                         bottomBarState.value = true
                         navController.navigate("reminder") {
@@ -285,7 +317,7 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                             restoreState = true
                         }
                     } else {
-                        Toast.makeText(context, "Please enter some data to this reminder!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Please select a Priority!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier

@@ -46,7 +46,8 @@ fun ResetPasswordUI(){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.primary)
+        //.background(MaterialTheme.colors.primary)
+        .background(MaterialTheme.colors.onSurface)
         .paint(
             painter = painterResource(R.drawable.threelines),
             contentScale = ContentScale.FillWidth
@@ -109,7 +110,7 @@ fun ResetPasswordUI(){
                 .padding(
                     start = 32.dp,
                     end = 32.dp,
-                    bottom = 32.dp
+                    bottom = 80.dp
                 )
         ) {
             Button(

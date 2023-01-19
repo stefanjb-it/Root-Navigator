@@ -17,7 +17,11 @@ class SettingsActivityInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
+    val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
+    val loginButton = hasText("Sign In") and hasClickAction()
     val dropDownType = hasText("Type") and hasClickAction()
+    val typeValue = hasText("Normal") and hasClickAction()
     val textFieldDegreeProgram = hasText("Degree Program") and hasClickAction()
     val textFieldGroup = hasText("Group") and hasClickAction()
     val textFieldRootpoint = hasText("Rootpoint") and hasClickAction()
@@ -29,14 +33,34 @@ class SettingsActivityInstrumentedTest {
         // Settings, edit settings and save
         // composeTestRule.onRoot().printToLog("TAG")
 
+        composeTestRule.onNode(emailTextfield).assertExists()
+        composeTestRule.onNode(emailTextfield).performClick()
+        composeTestRule.onNode(emailTextfield).performTextClearance()
+        composeTestRule.onNode(emailTextfield).performTextInput("test@test.test")
+
+        composeTestRule.onNode(passwordTextfield).assertExists()
+        composeTestRule.onNode(passwordTextfield).performClick()
+        composeTestRule.onNode(passwordTextfield).performTextClearance()
+        composeTestRule.onNode(passwordTextfield).performTextInput("Tester123!")
+
+        composeTestRule.onNode(loginButton).assertExists()
+        composeTestRule.onNode(loginButton).performClick()
+
+        composeTestRule.waitUntil(timeoutMillis = 10000) {
+            composeTestRule
+                .onAllNodesWithContentDescription("Setting")
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+
         composeTestRule.onNodeWithContentDescription("Settings").assertExists()
         composeTestRule.onNodeWithContentDescription("Settings").performClick()
 
         composeTestRule.onNode(dropDownType).assertExists()
         composeTestRule.onNode(dropDownType).performClick()
-        //Espresso.onView(withText("Student")).perform(click())
-        //Espresso.onData(withText(containsString("Student"))).perform(click())
-        // Todo: select Type
+        composeTestRule.onAllNodes(typeValue)[0].performClick()
+
+        composeTestRule.onAllNodes(isRoot()).onFirst().printToLog("TAG")
+        composeTestRule.onAllNodes(isRoot()).onLast().printToLog("TAG")
 
         composeTestRule.onNode(textFieldDegreeProgram).assertExists()
         composeTestRule.onNode(textFieldDegreeProgram).performClick()
@@ -65,6 +89,7 @@ class SettingsActivityInstrumentedTest {
 
         composeTestRule.onNodeWithText("Save").assertExists()
         composeTestRule.onNodeWithText("Save").performClick()
+
     }
 
 }

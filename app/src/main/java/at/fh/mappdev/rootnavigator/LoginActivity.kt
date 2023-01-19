@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -118,7 +119,8 @@ fun LoginUI(preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.primary)
+        //.background(MaterialTheme.colors.primary)
+        .background(MaterialTheme.colors.onSurface)
         .paint(
             painter = painterResource(R.drawable.threelines),
             contentScale = ContentScale.FillWidth
@@ -161,7 +163,8 @@ fun LoginUI(preferences: SharedPreferences){
                     singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("UserEmail"),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
                     ),
@@ -193,7 +196,8 @@ fun LoginUI(preferences: SharedPreferences){
                     onValueChange = { password = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(height = 60.dp),
+                        .height(height = 60.dp)
+                        .testTag("UserPassword"),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.secondaryVariant
                     ),

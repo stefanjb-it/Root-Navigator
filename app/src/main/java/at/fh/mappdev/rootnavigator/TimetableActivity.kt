@@ -48,7 +48,7 @@ fun TimetableUI(preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .testTag("TimetableTag")
+        //.testTag("TimetableTag")
     ) {
         AndroidView(factory = {
             WebView(it).apply {

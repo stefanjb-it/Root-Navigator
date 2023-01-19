@@ -52,7 +52,8 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+            //.background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.onSurface)
             .paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
