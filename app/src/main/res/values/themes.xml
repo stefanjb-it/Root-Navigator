@@ -3,7 +3,7 @@
 
     <style name="Theme.RootNavigator" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/dark_gray</item>
-        <item name="android:windowBackground">@color/dark_gray</item>
+        <item name="android:windowBackground">@color/stripe_gray</item>
     </style>
     <!-- Dark mode? -->
 </resources>

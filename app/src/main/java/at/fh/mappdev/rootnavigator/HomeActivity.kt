@@ -176,8 +176,8 @@ fun Connections( preferences: SharedPreferences ) {
     val lat = 47.0727551
     //val long = 15.4420971
     val long = 15.4140822
-    val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    //var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    //val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
     val finalMap = BackendHandler.getStationMap().observeAsState()
     Log.v("OUT", GlobalVarHolder.userIdToken)
     //Log.e("StationsList", stationsIdResponse.value?.content.toString())
@@ -200,7 +200,8 @@ fun Connections( preferences: SharedPreferences ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+            //.background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.onSurface)
             .paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
@@ -261,7 +262,8 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                         )
                         Text(
                             text = "Navigator",
-                            color = MaterialTheme.colors.primary,
+                            //color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colors.surface,
                             style = MaterialTheme.typography.h1,
                             modifier = Modifier
                                 .offset(y = 2.dp)
@@ -269,7 +271,8 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                     }
                 },
 
-                backgroundColor = MaterialTheme.colors.primaryVariant,
+                backgroundColor = MaterialTheme.colors.primary,
+                //backgroundColor = MaterialTheme.colors.primaryVariant,
                 navigationIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.logo_no_text),
@@ -353,7 +356,8 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
         exit = slideOutVertically(targetOffsetY = { it }),
         content = {
             BottomNavigation(
-                backgroundColor = MaterialTheme.colors.primaryVariant
+                //backgroundColor = MaterialTheme.colors.primaryVariant
+                backgroundColor = MaterialTheme.colors.primary
             ){
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
@@ -406,7 +410,8 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    color = MaterialTheme.colors.primary,
+                                    //color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colors.surface,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -437,7 +442,8 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    color = MaterialTheme.colors.primary,
+                                    //color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colors.surface,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
