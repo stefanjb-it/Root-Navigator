@@ -2,11 +2,7 @@ package at.fh.mappdev.rootnavigator
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.hamcrest.CoreMatchers.containsString
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,8 +26,6 @@ class SettingsActivityInstrumentedTest {
 
     @Test
     fun click_saveSettings() {
-        // Settings, edit settings and save
-        // composeTestRule.onRoot().printToLog("TAG")
 
         composeTestRule.onNode(emailTextfield).assertExists()
         composeTestRule.onNode(emailTextfield).performClick()
@@ -48,7 +42,7 @@ class SettingsActivityInstrumentedTest {
 
         composeTestRule.waitUntil(timeoutMillis = 10000) {
             composeTestRule
-                .onAllNodesWithContentDescription("Setting")
+                .onAllNodesWithContentDescription("Settings")
                 .fetchSemanticsNodes().isNotEmpty()
         }
 
@@ -89,7 +83,5 @@ class SettingsActivityInstrumentedTest {
 
         composeTestRule.onNodeWithText("Save").assertExists()
         composeTestRule.onNodeWithText("Save").performClick()
-
     }
-
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -234,7 +235,8 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                 onValueChange = { description = it },
                 modifier = Modifier
                     .height(height = 150.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("Description"),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.secondaryVariant
                 ),
@@ -269,7 +271,7 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                             ).toString()
                     }
 
-                    if(priority != "") {
+                    if(priority != "" && description != "") {
 
                         val newReminder = ReminderItemRoom(
                             ReminderDate = date,

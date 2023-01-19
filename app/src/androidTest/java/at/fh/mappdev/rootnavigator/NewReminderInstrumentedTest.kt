@@ -18,6 +18,7 @@ class NewReminderInstrumentedTest {
     val loginButton = hasText("Sign In") and hasClickAction()
     val dropDownPriority = hasText("Priority") and hasClickAction()
     val priorityValue = hasText("High") and hasClickAction()
+    val descriptionTextfield = hasTestTag("Description") and hasClickAction()
 
     @Test
     fun create_newReminder() {
@@ -48,27 +49,20 @@ class NewReminderInstrumentedTest {
         composeTestRule.onNodeWithText("Create new Reminder").performClick()
 
         composeTestRule.onNodeWithText("Pick Date").assertExists()
-        //composeTestRule.onNodeWithText("Pick Date").performClick()
-        //Todo: pick date
-
         composeTestRule.onNodeWithText("Pick Time").assertExists()
-        //composeTestRule.onNodeWithText("Pick Time").performClick()
-        //Todo: pick time
-
-        composeTestRule.onNodeWithContentDescription("Dropdown menu").assertExists()
-        composeTestRule.onNodeWithContentDescription("Dropdown menu").performClick()
 
         composeTestRule.onNode(dropDownPriority).assertExists()
         composeTestRule.onNode(dropDownPriority).performClick()
-        //composeTestRule.onAllNodes(priorityValue)[0].performClick()
+        composeTestRule.onAllNodes(priorityValue)[0].performClick()
 
-        composeTestRule.onAllNodes(isRoot()).onFirst().printToLog("TAG")
-        composeTestRule.onAllNodes(isRoot()).onLast().printToLog("TAG")
+        composeTestRule.onNode(descriptionTextfield).assertExists()
+        composeTestRule.onNode(descriptionTextfield).performClick()
+        composeTestRule.onNode(descriptionTextfield).performTextClearance()
+        composeTestRule.onNode(descriptionTextfield).performTextInput("Test")
 
-        //composeTestRule.onNodeWithText("Save").assertExists()
-        //composeTestRule.onNodeWithText("Save").performClick()
+        composeTestRule.onNodeWithText("Save").assertExists()
+        composeTestRule.onNodeWithText("Save").performClick()
 
         //composeTestRule.onRoot().printToLog("TAG")
     }
-
 }
