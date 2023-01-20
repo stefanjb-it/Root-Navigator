@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -121,207 +122,233 @@ fun LoginUI(preferences: SharedPreferences){
 
         Column(
             modifier = Modifier
-                .padding(
+                /*.padding(
                     horizontal = 32.dp,
-                )
+                )*/
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colors.background)
+                .paint(
+                    painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
+                    contentScale = ContentScale.FillWidth
+                ),
             verticalArrangement = Arrangement.Center
         ) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 32.dp,
+                    )
             ) {
-                Text(text = "Sign In",
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.secondary,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 27.sp
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 48.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "E-Mail",
-                    textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.surface,
-                    fontSize = 18.sp)
-            }
-
-            Spacer(modifier = Modifier.padding(top = 12.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    singleLine = true,
+                Row(
                     modifier = Modifier
-                        .height(height = 60.dp)
-                        .fillMaxWidth()
-                        .testTag("UserEmail"),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.primary
-                    ),
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 36.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Password",
-                    textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.surface,
-                    fontSize = 18.sp)
-            }
-
-            Spacer(modifier = Modifier.padding(top = 12.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(height = 60.dp)
-                        .testTag("UserPassword"),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.primary
-                    ),
-                    singleLine = true,
-                    textStyle = TextStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp
-                    ),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    trailingIcon = {
-                        val image = if (passwordVisible)
-                            Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff
-
-                        val description = if (passwordVisible) "Hide password" else "Show password"
-
-                        IconButton(onClick = {passwordVisible = !passwordVisible}){
-                            Icon(imageVector  = image, description)
-                        }
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 64.dp))
-
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Stay Logged In?",
-                    textAlign=TextAlign.Start,
-                    color = MaterialTheme.colors.surface
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Checkbox(
-                    checked = stayLoggedIn,
-                    onCheckedChange = {stayLoggedIn = !stayLoggedIn},
-                    colors = CheckboxDefaults.colors(
-                        uncheckedColor = MaterialTheme.colors.secondary,
-                        checkedColor = MaterialTheme.colors.secondary
-                    ),
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 36.dp))
-
-            Row(modifier = Modifier.fillMaxWidth()){
-                Button(
-                    onClick = {
-                        preferences.edit().putBoolean(GlobalVarHolder.STAYLOGGEDIN, stayLoggedIn)
-                            .apply()
-
-                        if (notEmpty()) {
-                            firebaseAuth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { signIn ->
-                                    if (signIn.isSuccessful) {
-                                        signIn.result.user?.getIdToken(true)?.addOnSuccessListener { result ->
-                                            GlobalVarHolder.userIdToken = result.token ?: ""
-                                        }
-                                        Toast.makeText(
-                                            context,
-                                            "Signed in successfully!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        val intent = Intent(context, AuthActivity::class.java)
-                                        context.startActivity(intent)
-                                    } else {
-                                        Toast.makeText(
-                                            context,
-                                            "Sign in failed!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Please enter your user credentials.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(height = 60.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.secondary
-                    ),
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = stringResource(id = R.string.button_sign_in),
-                        color = MaterialTheme.colors.onSurface,
+                        text = "Sign In",
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.secondary,
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 27.sp
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(top = 48.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "E-Mail",
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colors.surface,
                         fontSize = 18.sp
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.padding(top = 76.dp))
+                Spacer(modifier = Modifier.padding(top = 12.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ClickableText(text = AnnotatedString("Forgot Password?"),
-                    onClick = {
-                        val intent = Intent(context, ResetPasswordActivity::class.java)
-                        context.startActivity(intent)
-                    },
-                    style = TextStyle(
-                        color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        singleLine = true,
+                        modifier = Modifier
+                            .height(height = 60.dp)
+                            .fillMaxWidth()
+                            .testTag("UserEmail"),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.primary
+                        ),
+                        textStyle = TextStyle(
+                            fontFamily = FontFamily.SansSerif,
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 18.sp
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text
+                        )
                     )
-                )
+                }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.padding(top = 36.dp))
 
-                ClickableText(text = AnnotatedString("Sign Up"),
-                    onClick = {
-                        val intent = Intent(context, RegistrationActivity::class.java)
-                        context.startActivity(intent)
-                    },
-                    style = TextStyle(
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Password",
+                        textAlign = TextAlign.Start,
                         color = MaterialTheme.colors.surface,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.End
+                        fontSize = 18.sp
                     )
-                )
+                }
+
+                Spacer(modifier = Modifier.padding(top = 12.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(height = 60.dp)
+                            .testTag("UserPassword"),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.primary
+                        ),
+                        singleLine = true,
+                        textStyle = TextStyle(
+                            fontFamily = FontFamily.SansSerif,
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 18.sp
+                        ),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        trailingIcon = {
+                            val image = if (passwordVisible)
+                                Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff
+
+                            val description =
+                                if (passwordVisible) "Hide password" else "Show password"
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(imageVector = image, description)
+                            }
+                        }
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(top = 64.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Stay Logged In?",
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colors.surface
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Checkbox(
+                        checked = stayLoggedIn,
+                        onCheckedChange = { stayLoggedIn = !stayLoggedIn },
+                        colors = CheckboxDefaults.colors(
+                            uncheckedColor = MaterialTheme.colors.secondary,
+                            checkedColor = MaterialTheme.colors.secondary
+                        ),
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(top = 36.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        onClick = {
+                            preferences.edit()
+                                .putBoolean(GlobalVarHolder.STAYLOGGEDIN, stayLoggedIn)
+                                .apply()
+
+                            if (notEmpty()) {
+                                firebaseAuth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { signIn ->
+                                        if (signIn.isSuccessful) {
+                                            signIn.result.user?.getIdToken(true)
+                                                ?.addOnSuccessListener { result ->
+                                                    GlobalVarHolder.userIdToken = result.token ?: ""
+                                                }
+                                            Toast.makeText(
+                                                context,
+                                                "Signed in successfully!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            val intent = Intent(context, AuthActivity::class.java)
+                                            context.startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Sign in failed!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Please enter your user credentials.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(height = 60.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.secondary
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.button_sign_in),
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 18.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(top = 76.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    ClickableText(
+                        text = AnnotatedString("Forgot Password?"),
+                        onClick = {
+                            val intent = Intent(context, ResetPasswordActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        style = TextStyle(
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    ClickableText(
+                        text = AnnotatedString("Sign Up"),
+                        onClick = {
+                            val intent = Intent(context, RegistrationActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        style = TextStyle(
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.End
+                        )
+                    )
+                }
             }
         }
 

@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -55,10 +56,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
             .fillMaxSize()
             //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
-            /*.paint(
-                painter = painterResource(R.drawable.threelines),
+            .paint(
+                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
                 contentScale = ContentScale.FillWidth
-            )*/
+            )
     ) {
         Column(
             modifier = Modifier

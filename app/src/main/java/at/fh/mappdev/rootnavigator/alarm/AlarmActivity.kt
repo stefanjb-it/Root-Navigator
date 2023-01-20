@@ -71,10 +71,10 @@ fun AlarmUi(context: Context = LocalContext.current) {
             .fillMaxSize()
             //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
-            /*.paint(
-                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),
+            .paint(
+                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
                 contentScale = ContentScale.FillWidth
-            )*/
+            )
     ) {
 
         Column(
