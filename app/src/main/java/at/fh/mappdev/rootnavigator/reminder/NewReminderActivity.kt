@@ -19,6 +19,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -126,7 +127,7 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
             ) {
                 Text(
-                    text = "Pick Date",
+                    text = if (date == "") "Pick Date" else date,
                     color = MaterialTheme.colors.onSurface,
                     fontSize = 14.sp
                 )
@@ -134,24 +135,6 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = date,
-                color = MaterialTheme.colors.surface,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
-
-        }
-
-        Spacer(modifier = Modifier.padding(top = 12.dp))
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-
-        ) {
             Button(onClick = { timePickerDialog.show() },
                 modifier = Modifier
                     .width(width = 150.dp)
@@ -159,72 +142,76 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
             ) {
                 Text(
-                    text = "Pick Time",
+                    text = if (time=="") "Pick Time" else time,
                     color = MaterialTheme.colors.onSurface,
                     fontSize = 14.sp
                 )
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = time,
-                color = MaterialTheme.colors.surface,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
         }
 
         Spacer(modifier = Modifier.padding(top = 12.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Select Priority",
-                color = MaterialTheme.colors.surface,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
+            Card(
                 modifier = Modifier
-                    .height(height = 60.dp)
-                    .width(150.dp)
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+                backgroundColor = MaterialTheme.colors.primary,
+                shape = RoundedCornerShape(25.dp),
+                elevation = 10.dp
             ) {
-                TextField(
-                    readOnly = true,
-                    value = priority ,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.primary,
-                        textColor = MaterialTheme.colors.surface
-                    ),
-                    onValueChange = { priority = it },
-                    label = { Text(text = "Priority", color = MaterialTheme.colors.surface) })
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {expanded = false},
-                    modifier = Modifier.background(MaterialTheme.colors.primaryVariant),
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, end = 32.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    priolist.forEach {
-                        DropdownMenuItem(
-                            onClick = {
-                                priority = it
-                                expanded = false}
-                        ) {
-                            Text(text = it, color = MaterialTheme.colors.onSurface)
+                Text(
+                    text = "Select Priority",
+                    color = MaterialTheme.colors.surface,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier
+                        .height(height = 60.dp)
+                        .width(100.dp)
+                ) {
+                    TextField(
+                        readOnly = true,
+                        value = priority ,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.primary,
+                            textColor = MaterialTheme.colors.surface
+                        ),
+                        onValueChange = { priority = it },
+                        label = { Text(text = "Priority", color = MaterialTheme.colors.surface) })
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {expanded = false},
+                        modifier = Modifier.background(MaterialTheme.colors.primaryVariant),
+                    ) {
+                        priolist.forEach {
+                            DropdownMenuItem(
+                                onClick = {
+                                    priority = it
+                                    expanded = false}
+                            ) {
+                                Text(text = it, color = MaterialTheme.colors.onSurface)
+                            }
                         }
                     }
                 }
             }
+
+
+
         }
 
         Spacer(modifier = Modifier.padding(top = 12.dp))

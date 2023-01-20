@@ -127,11 +127,11 @@ fun RegistrationUIMode(preferences: SharedPreferences){
                         .fillMaxWidth()
                         .height(150.dp),
                     shape = RoundedCornerShape(30.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_standard),
-                        color = MaterialTheme.colors.onSurface,
+                        color = MaterialTheme.colors.secondary,
                         fontSize = 27.sp
                     )
                 }
@@ -563,6 +563,9 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                               firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
+                                            task.result.user?.getIdToken(true)?.addOnSuccessListener { result ->
+                                                GlobalVarHolder.userIdToken = result.token ?: ""
+                                            }
                                             Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
                                             sendEmailVerification()
                                             val intent = Intent(context, AuthActivity::class.java)

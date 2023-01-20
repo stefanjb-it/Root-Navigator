@@ -11,7 +11,7 @@ private val DarkColorPalette = darkColors(
     primaryVariant = LightGray,
     secondary = Orange,
     surface = TextWhite, // NAVIGATOR, Settings-Info, Home Con-Time
-    onSurface = StripeGray,
+    onSurface = TextWhite,
     secondaryVariant = TextWhiteTrans,
     background = StripeGray // = old onSurface
 )

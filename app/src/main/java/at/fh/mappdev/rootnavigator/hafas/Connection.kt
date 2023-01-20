@@ -16,7 +16,8 @@ fun Connection(station: SafeStationDetails, preferences: SharedPreferences) {
         modifier = Modifier
             .padding(vertical = 8.dp),
         backgroundColor = MaterialTheme.colors.primary,
-        shape = RoundedCornerShape(25.dp)
+        shape = RoundedCornerShape(25.dp),
+        elevation = 10.dp
     ) {
         CardContent(station, preferences)
     }
