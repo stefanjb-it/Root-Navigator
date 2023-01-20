@@ -26,11 +26,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import at.fh.mappdev.rootnavigator.NewReminderActivity.startActivity
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -53,11 +54,11 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
         modifier = Modifier
             .fillMaxSize()
             //.background(MaterialTheme.colors.primary)
-            .background(MaterialTheme.colors.onSurface)
-            .paint(
+            .background(MaterialTheme.colors.background)
+            /*.paint(
                 painter = painterResource(R.drawable.threelines),
                 contentScale = ContentScale.FillWidth
-            )
+            )*/
     ) {
         Column(
             modifier = Modifier
@@ -104,15 +105,15 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         readOnly = true,
                         value = type ,
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = MaterialTheme.colors.secondaryVariant,
+                            backgroundColor = MaterialTheme.colors.primary,
                             textColor = MaterialTheme.colors.surface
                         ),
                         onValueChange = { type = it },
-                        label = { Text("Type") })
+                        label = { Text("Type", color = MaterialTheme.colors.secondary) })
                     ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = {expanded = false},
-                        modifier = Modifier.background(MaterialTheme.colors.primaryVariant)
+                        modifier = Modifier.background(MaterialTheme.colors.primary)
                     ) {
                         typelist.forEach {
                             DropdownMenuItem(
@@ -120,7 +121,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                                     type = it
                                     expanded = false}
                             ) {
-                                Text(text = it)
+                                Text(text = it, color = MaterialTheme.colors.surface)
                             }
                         }
                     }
@@ -148,9 +149,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.primary,
+                        textColor = MaterialTheme.colors.surface
                     ),
-                    label = { Text(text = "Degree Program") },
+                    label = { Text(text = "Degree Program", color = MaterialTheme.colors.secondary) },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -183,9 +185,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.primary,
+                        textColor = MaterialTheme.colors.surface
                     ),
-                    label = { Text(text = "Group") },
+                    label = { Text(text = "Group", color = MaterialTheme.colors.secondary) },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -218,9 +221,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.primary,
+                        textColor = MaterialTheme.colors.surface
                     ),
-                    label = { Text(text = "Rootpoint") },
+                    label = { Text(text = "Rootpoint", color = MaterialTheme.colors.secondary) },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -253,9 +257,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.primary,
+                        textColor = MaterialTheme.colors.surface
                     ),
-                    label = { Text(text = "Line") },
+                    label = { Text(text = "Line", color = MaterialTheme.colors.secondary) },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -288,9 +293,10 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                         .height(height = 60.dp)
                         .width(150.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.secondaryVariant
+                        backgroundColor = MaterialTheme.colors.primary,
+                        textColor = MaterialTheme.colors.surface
                     ),
-                    label = { Text(text = "Minutes") },
+                    label = { Text(text = "Minutes", color = MaterialTheme.colors.secondary) },
                     textStyle = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 18.sp,
@@ -351,7 +357,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_save),
-                        color = MaterialTheme.colors.surface,
+                        color = MaterialTheme.colors.onSurface,
                         fontSize = 18.sp
                     )
                 }
@@ -389,7 +395,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                 ) {
                     Text(
                         text = stringResource(id = R.string.button_sign_out),
-                        color = MaterialTheme.colors.surface,
+                        color = MaterialTheme.colors.onSurface,
                         fontSize = 18.sp
                     )
                 }

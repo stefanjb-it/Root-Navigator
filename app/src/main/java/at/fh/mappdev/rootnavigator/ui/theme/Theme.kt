@@ -10,18 +10,31 @@ private val DarkColorPalette = darkColors(
     primary = DarkGray,
     primaryVariant = LightGray,
     secondary = Orange,
-    surface = TextWhite,
+    surface = TextWhite, // NAVIGATOR, Settings-Info, Home Con-Time
     onSurface = StripeGray,
-    secondaryVariant = TextWhiteTrans
+    secondaryVariant = TextWhiteTrans,
+    background = StripeGray // = old onSurface
 )
 
+/*
+    primary             Boxes / Components
+    primaryVariant      Contrast to Boxes / Components in those
+    secondary           Accent Color (Orange)
+    secondaryVariant    ---
+    surface             primary Font color
+    onSurface           button Font color
+    background          Background
+ */
+
 private val LightColorPalette = lightColors(
-    primary = DarkGray,
-    primaryVariant = TextWhite,
+    primary = TextWhite,
+    primaryVariant = LightGray,
     secondary = Orange,
-    surface = LightGray,
-    onSurface = DarkGray,
-    secondaryVariant = TextWhiteTrans
+    surface = DarkGray,
+    onSurface = TextWhite,
+    secondaryVariant = TestGreen,
+    background = FullWhite, // = old onSurface
+
     // surface = TextWhite
 
     /* Other default colors to override
