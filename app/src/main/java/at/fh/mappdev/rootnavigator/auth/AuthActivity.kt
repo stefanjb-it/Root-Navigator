@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -167,10 +168,10 @@ fun AuthUI(){
         .fillMaxSize()
         //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
-        /*.paint(
-            painter = painterResource(R.drawable.threelines),
+        .paint(
+            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
             contentScale = ContentScale.FillWidth
-        )*/
+        )
     ){ Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -65,7 +65,7 @@ fun RegistrationUIMode(preferences: SharedPreferences){
         //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
-            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),
+            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
             contentScale = ContentScale.FillWidth
         )
     ){
@@ -160,9 +160,9 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
     Column(modifier = Modifier
         .fillMaxSize()
         //.background(MaterialTheme.colors.primary)
-        .background(MaterialTheme.colors.onSurface)
+        .background(MaterialTheme.colors.background)
         .paint(
-            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),
+            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
             contentScale = ContentScale.FillWidth
         )
     ) {
@@ -441,7 +441,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
         //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
-            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),
+            painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
             contentScale = ContentScale.FillWidth
         )
     ) {

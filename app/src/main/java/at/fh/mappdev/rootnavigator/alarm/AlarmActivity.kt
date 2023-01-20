@@ -20,11 +20,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -79,6 +83,10 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .paint(
+                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
+                contentScale = ContentScale.FillWidth
+            )
     ) {
 
         Column(

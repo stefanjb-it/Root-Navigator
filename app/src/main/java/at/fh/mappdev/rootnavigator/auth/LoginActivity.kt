@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -123,6 +124,16 @@ fun LoginUI(preferences: SharedPreferences){
 
     fun notEmpty(): Boolean = email.trim().isNotEmpty() && password.trim().isNotEmpty()
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .paint(
+                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
+                contentScale = ContentScale.FillWidth
+            ),
+        verticalArrangement = Arrangement.Center
+    ){
         Column(
             modifier = Modifier
                 .padding(
@@ -329,5 +340,5 @@ fun LoginUI(preferences: SharedPreferences){
                 )
             }
         }
-
+    }
 }
