@@ -300,7 +300,13 @@ fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numbe
     val intent = Intent(context, AlarmReceiver::class.java)
     intent.putExtra("TYPE", false)
     intent.putExtra("ID", id)
-    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    intent.putExtra("DESCRIPTION", "")
+
+    val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_MUTABLE)
+    } else {
+        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
     if (numberOfAlarms > 1){
         Log.i("Alarm", "Function called.")
@@ -309,3 +315,21 @@ fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numbe
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, setTime, pendingIntent)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
