@@ -251,15 +251,15 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
                         val selectedDateTime = Calendar.getInstance()
                         selectedDateTime.set(
                             calendar.get(Calendar.YEAR),
-                            (calendar.get(Calendar.MONTH)+1),
+                            calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH),
                             timeArray[0].toInt(),
                             timeArray[1].toInt(),
                             0
                         )
 
-                        if (selectedDateTime < Calendar.getInstance()){
-                            selectedDateTime.add(Calendar.DATE, 1)
+                        if (selectedDateTime.timeInMillis < Calendar.getInstance().timeInMillis){
+                            selectedDateTime.timeInMillis += 86400000L
                         }
 
                         if (NotificationInfo.NOTIFICATIONPERMISSION) {
@@ -294,11 +294,8 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
 }
 
 fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numberOfAlarms: Int, interval: Long, id : Int){
-
-    Log.i("Alarm", setTime.toString() + " | " + numberOfAlarms.toString() + " | " + interval.toString() + " | " + id.toString())
-    Log.i("Alarm", "current Time " + Calendar.getInstance().timeInMillis.toString())
     val intent = Intent(context, AlarmReceiver::class.java)
-    intent.putExtra("TYPE", false)
+    intent.putExtra("TYPE", true)
     intent.putExtra("ID", id)
     intent.putExtra("DESCRIPTION", "")
 
@@ -309,7 +306,6 @@ fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numbe
     }
 
     if (numberOfAlarms > 1){
-        Log.i("Alarm", "Function called.")
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, setTime, interval, pendingIntent)
     } else {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, setTime, pendingIntent)
