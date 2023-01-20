@@ -329,11 +329,12 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
     }
 }
 
-fun setAlarm(context: Context, alarmManager: AlarmManager, delay : Long, id : Int, description: String){
+fun setAlarm(context: Context, alarmManager: AlarmManager, time : Long, id : Int, description: String){
     val intent = Intent(context, AlarmReceiver::class.java)
     intent.putExtra("ID", id)
     intent.putExtra("DESCRIPTION", description)
+    intent.putExtra("TYPE", false)
     val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-    alarmManager.setExact(AlarmManager.RTC_WAKEUP, delay, pendingIntent)
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
 }

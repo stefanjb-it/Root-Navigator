@@ -1,8 +1,16 @@
 package at.fh.mappdev.rootnavigator.alarm
 
+import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,15 +20,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -28,6 +32,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import at.fh.mappdev.rootnavigator.NotificationInfo
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
@@ -46,18 +52,21 @@ class AlarmActivity : ComponentActivity() {
 }
 
 @Composable
-fun AlarmUi(context: Context = LocalContext.current) {
+fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager, preferences : SharedPreferences,) {
     val switchStateOn = remember {mutableStateOf(false)}
-    val switchStateAutomatic = remember {mutableStateOf(false)}
-
     var wakeUpTime by remember { mutableStateOf("") }
     var numberOfAlarms by remember { mutableStateOf("") }
     var interval by remember { mutableStateOf("") }
-    var wakeUpSound by remember { mutableStateOf("") }
 
     val calendar = Calendar.getInstance()
-    val hour = calendar.get(Calendar.HOUR)
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        NotificationInfo.NOTIFICATIONPERMISSION = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    } else {
+        NotificationInfo.NOTIFICATIONPERMISSION = true
+    }
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -69,12 +78,7 @@ fun AlarmUi(context: Context = LocalContext.current) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
-            /*.paint(
-                painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),
-                contentScale = ContentScale.FillWidth
-            )*/
     ) {
 
         Column(
@@ -234,7 +238,45 @@ fun AlarmUi(context: Context = LocalContext.current) {
             {
             Button(
                 onClick = {
-                    Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                    if (switchStateOn.value && wakeUpTime != "" &&
+                        numberOfAlarms.toIntOrNull() != null && numberOfAlarms.toInt() >= 0
+                        && interval.toIntOrNull() != null && interval.toInt() > 0){
+
+                        val timeArray = wakeUpTime.split(":")
+                        val intervalforAlarm =  interval.toLong() * 60 * 1000
+                        val id = preferences.getInt("ALARMID", 1)
+
+                        preferences.edit().putInt("ALARMID",(id+1)).apply()
+
+                        val selectedDateTime = Calendar.getInstance()
+                        selectedDateTime.set(
+                            calendar.get(Calendar.YEAR),
+                            (calendar.get(Calendar.MONTH)+1),
+                            calendar.get(Calendar.DAY_OF_MONTH),
+                            timeArray[0].toInt(),
+                            timeArray[1].toInt(),
+                            0
+                        )
+
+                        if (selectedDateTime < Calendar.getInstance()){
+                            selectedDateTime.add(Calendar.DATE, 1)
+                        }
+
+                        if (NotificationInfo.NOTIFICATIONPERMISSION) {
+                            setAlarm(
+                                context,
+                                alarmManager,
+                                selectedDateTime.timeInMillis,
+                                numberOfAlarms.toInt(),
+                                intervalforAlarm,
+                                id
+                            )
+                        }
+
+                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Please select or enter valid values!", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -248,5 +290,22 @@ fun AlarmUi(context: Context = LocalContext.current) {
                 )
             }
         }
+    }
+}
+
+fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numberOfAlarms: Int, interval: Long, id : Int){
+
+    Log.i("Alarm", setTime.toString() + " | " + numberOfAlarms.toString() + " | " + interval.toString() + " | " + id.toString())
+    Log.i("Alarm", "current Time " + Calendar.getInstance().timeInMillis.toString())
+    val intent = Intent(context, AlarmReceiver::class.java)
+    intent.putExtra("TYPE", false)
+    intent.putExtra("ID", id)
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+    if (numberOfAlarms > 1){
+        Log.i("Alarm", "Function called.")
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, setTime, interval, pendingIntent)
+    } else {
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, setTime, pendingIntent)
     }
 }

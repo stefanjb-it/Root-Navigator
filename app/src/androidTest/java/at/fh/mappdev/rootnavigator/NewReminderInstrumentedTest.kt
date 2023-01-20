@@ -3,6 +3,7 @@ package at.fh.mappdev.rootnavigator
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,12 +14,12 @@ class NewReminderInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
-    val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
-    val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
-    val loginButton = hasText("Sign In") and hasClickAction()
-    val dropDownPriority = hasText("Priority") and hasClickAction()
-    val priorityValue = hasText("High") and hasClickAction()
-    val descriptionTextfield = hasTestTag("Description") and hasClickAction()
+    private val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
+    private val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
+    private val loginButton = hasText("Sign In") and hasClickAction()
+    private val dropDownPriority = hasText("Priority") and hasClickAction()
+    private val priorityValue = hasText("High") and hasClickAction()
+    private val descriptionTextfield = hasTestTag("Description") and hasClickAction()
 
     @Test
     fun create_newReminder() {

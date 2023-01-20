@@ -3,6 +3,7 @@ package at.fh.mappdev.rootnavigator
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,16 +14,16 @@ class SettingsActivityInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
-    val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
-    val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
-    val loginButton = hasText("Sign In") and hasClickAction()
-    val dropDownType = hasText("Type") and hasClickAction()
-    val typeValue = hasText("Normal") and hasClickAction()
-    val textFieldDegreeProgram = hasText("Degree Program") and hasClickAction()
-    val textFieldGroup = hasText("Group") and hasClickAction()
-    val textFieldRootpoint = hasText("Rootpoint") and hasClickAction()
-    val textFieldLine= hasText("Line") and hasClickAction()
-    val textFieldMinutes = hasText("Minutes") and hasClickAction()
+    private val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
+    private val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
+    private val loginButton = hasText("Sign In") and hasClickAction()
+    private val dropDownType = hasText("Type") and hasClickAction()
+    private val typeValue = hasText("Normal") and hasClickAction()
+    private val textFieldDegreeProgram = hasText("Degree Program") and hasClickAction()
+    private val textFieldGroup = hasText("Group") and hasClickAction()
+    private val textFieldRootpoint = hasText("Rootpoint") and hasClickAction()
+    private val textFieldLine= hasText("Line") and hasClickAction()
+    private val textFieldMinutes = hasText("Minutes") and hasClickAction()
 
     @Test
     fun click_saveSettings() {

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -102,7 +103,8 @@ fun RegistrationUIMode(preferences: SharedPreferences){
                               },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp),
+                        .height(150.dp)
+                        .testTag("StudentButton"),
                     shape = RoundedCornerShape(30.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
@@ -125,7 +127,8 @@ fun RegistrationUIMode(preferences: SharedPreferences){
 
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp),
+                        .height(150.dp)
+                        .testTag("StandardButton"),
                     shape = RoundedCornerShape(30.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 ) {
@@ -216,7 +219,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                             singleLine = true,
                             modifier = Modifier
                                 .height(height = 60.dp)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .testTag("UserEmail"),
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = MaterialTheme.colors.primary
                             ),
@@ -261,7 +265,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                                 onValueChange = { password = it },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(height = 60.dp),
+                                    .height(height = 60.dp)
+                                    .testTag("UserPassword"),
                                 colors = TextFieldDefaults.textFieldColors(
                                     backgroundColor = MaterialTheme.colors.primary
                                 ),
@@ -318,7 +323,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                                 onValueChange = { passwordRepeat = it },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(height = 60.dp),
+                                    .height(height = 60.dp)
+                                    .testTag("UserPasswordRepeat"),
                                 colors = TextFieldDefaults.textFieldColors(
                                     backgroundColor = MaterialTheme.colors.primary
                                 ),
@@ -359,7 +365,8 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     onClick = { buttonClicked = true },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(height = 60.dp),
+                        .height(height = 60.dp)
+                        .testTag("RegistrationScreenTwoButton"),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary),
                 ) {
@@ -475,7 +482,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("RootPoint"),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.primary
                     ),
@@ -502,7 +510,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("Lines"),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.primary
                     ),
@@ -527,7 +536,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     singleLine = true,
                     modifier = Modifier
                         .height(height = 60.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("Destination"),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = MaterialTheme.colors.primary
                     ),
@@ -580,7 +590,8 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(height = 60.dp),
+                        .height(height = 60.dp)
+                        .testTag("RegistrationFinishButton"),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(

@@ -66,6 +66,10 @@ class LoginActivity : ComponentActivity() {
             val notificationChannel = NotificationChannel(NotificationInfo.NOTIFICATIONID, NotificationInfo.NOTIFICATIONNAME, NotificationManager.IMPORTANCE_HIGH)
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
+
+            val alarmChannel = NotificationChannel(NotificationInfo.ALARMID, NotificationInfo.ALARMNAME, NotificationManager.IMPORTANCE_HIGH)
+            val alarmManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            alarmManager.createNotificationChannel(alarmChannel)
         }
 
         setContent {
@@ -312,6 +316,7 @@ fun LoginUI(preferences: SharedPreferences){
                 Spacer(modifier = Modifier.weight(1f))
 
                 ClickableText(text = AnnotatedString("Sign Up"),
+                    modifier = Modifier.testTag("SignUp"),
                     onClick = {
                         val intent = Intent(context, RegistrationActivity::class.java)
                         context.startActivity(intent)

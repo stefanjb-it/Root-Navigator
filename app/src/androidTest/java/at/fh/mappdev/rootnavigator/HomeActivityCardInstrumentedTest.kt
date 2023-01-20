@@ -3,6 +3,7 @@ package at.fh.mappdev.rootnavigator
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,9 +15,9 @@ class HomeActivityCardInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
-    val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
-    val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
-    val loginButton = hasText("Sign In") and hasClickAction()
+    private val emailTextfield = hasTestTag("UserEmail") and hasClickAction()
+    private val passwordTextfield = hasTestTag("UserPassword") and hasClickAction()
+    private val loginButton = hasText("Sign In") and hasClickAction()
 
     @Test
     fun clickCard_Dropdown() {

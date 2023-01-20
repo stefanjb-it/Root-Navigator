@@ -20,4 +20,5 @@ object GlobalVarHolder {
     val REQUESTTIME = "REQUESTTIME"
 
     var NOTIFICATIONID = "NOTIFICATIONID"
+    var ALARMID = "ALARMID"
 }

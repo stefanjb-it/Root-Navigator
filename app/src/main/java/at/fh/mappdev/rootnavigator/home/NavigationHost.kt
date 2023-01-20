@@ -33,7 +33,7 @@ fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager,
         }
 
         composable(NavRoutes.Alarm.route) {
-            AlarmUi()
+            AlarmUi(alarmManager = alarmManager, preferences = preferences)
         }
 
         composable(NavRoutes.Timetable.route) {
