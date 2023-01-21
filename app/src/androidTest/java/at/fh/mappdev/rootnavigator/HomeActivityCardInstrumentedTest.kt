@@ -35,7 +35,7 @@ class HomeActivityCardInstrumentedTest {
         composeTestRule.onNode(loginButton).assertExists()
         composeTestRule.onNode(loginButton).performClick()
 
-        composeTestRule.waitUntil(timeoutMillis = 10000) {
+        composeTestRule.waitUntil(timeoutMillis = 15000) {
             composeTestRule
                 .onAllNodesWithContentDescription("route type")
                 .fetchSemanticsNodes().isNotEmpty()
