@@ -52,7 +52,6 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                         )
                         Text(
                             text = "Navigator",
-                            //color = MaterialTheme.colors.primary,
                             color = MaterialTheme.colors.surface,
                             style = MaterialTheme.typography.h1,
                             modifier = Modifier
@@ -62,7 +61,6 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                 },
 
                 backgroundColor = MaterialTheme.colors.primary,
-                //backgroundColor = MaterialTheme.colors.primaryVariant,
                 navigationIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.logo_no_text),
@@ -71,6 +69,7 @@ fun TopBar(navController: NavHostController, bottomBarState: MutableState<Boolea
                     )
                 },
                 actions = {
+                    // Additional Buttons for Top App Bar
                     /* Logout Button
                     IconButton(
                         onClick = {

@@ -103,7 +103,6 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
             .paint(
                 painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_light else R.drawable.threelines),

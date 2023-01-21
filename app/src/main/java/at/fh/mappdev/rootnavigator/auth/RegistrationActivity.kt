@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -77,17 +78,19 @@ fun RegistrationUIMode(preferences: SharedPreferences){
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
-                ) {
-                    Text(modifier = Modifier.padding(16.dp),
+                ) {*/
+                    Text(modifier = Modifier
+                        .padding(16.dp),
                         text = "Choose your mode",
+                        fontWeight = Bold,
                         textAlign = TextAlign.Center,
                         fontSize = 27.sp,
-                        color = MaterialTheme.colors.secondary)
-                }
+                        color = MaterialTheme.colors.surface)
+                //}
 
             }
 
@@ -173,26 +176,27 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
-                ) {
+                ) {*/
                     Text(
                         modifier = Modifier.padding(16.dp),
                         text = "Enter Account Data",
+                        fontWeight = Bold,
                         textAlign = TextAlign.Center,
                         fontSize = 27.sp,
-                        color = MaterialTheme.colors.secondary
+                        color = MaterialTheme.colors.surface
                     )
-                }
+                //}
 
             }
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
@@ -231,13 +235,37 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                             )
                         }
                     }
+                }*/
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextField(
+                        value = email,
+                        label = { Text(text = "E-Mail", color = MaterialTheme.colors.secondary) },
+                        onValueChange = { email = it },
+                        singleLine = true,
+                        modifier = Modifier
+                            .height(height = 60.dp)
+                            .fillMaxWidth()
+                            .testTag("UserEmail"),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.primary
+                        ),
+                        textStyle = TextStyle(
+                            fontFamily = FontFamily.SansSerif,
+                            color = MaterialTheme.colors.surface,
+                            fontSize = 18.sp
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text
+                        )
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
@@ -288,13 +316,47 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                             )
                         }
                     }
-                }
+                }*/
+
+                TextField(
+                    value = password,
+                    label = { Text(text = "Password", color = MaterialTheme.colors.secondary) },
+                    onValueChange = { password = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 60.dp)
+                        .testTag("UserPassword"),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.primary
+                    ),
+                    singleLine = true,
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp,
+                        //textAlign = TextAlign.Center
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val image = if (passwordVisible)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        val description =
+                            if (passwordVisible) "Hide password" else "Show password"
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, description, tint = MaterialTheme.colors.secondary)
+                        }
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
@@ -345,7 +407,41 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                             )
                         }
                     }
-                }
+                }*/
+
+                TextField(
+                    value = passwordRepeat,
+                    label = { Text(text = "Repeat Password", color = MaterialTheme.colors.secondary) },
+                    onValueChange = { passwordRepeat = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 60.dp)
+                        .testTag("UserPasswordRepeat"),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.primary
+                    ),
+                    singleLine = true,
+                    textStyle = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        color = MaterialTheme.colors.surface,
+                        fontSize = 18.sp,
+                        //textAlign = TextAlign.Center
+                    ),
+                    visualTransformation = if (passwordRepeatVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val image = if (passwordRepeatVisible)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        val description =
+                            if (passwordRepeatVisible) "Hide password" else "Show password"
+
+                        IconButton(onClick = { passwordRepeatVisible = !passwordRepeatVisible }) {
+                            Icon(imageVector = image, description, tint = MaterialTheme.colors.secondary)
+                        }
+                    }
+                )
             }
 
             Row(
@@ -455,20 +551,21 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Card(
+                /*Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
-                ) {
+                ) {*/
                     Text(
                         modifier = Modifier
                             .padding(16.dp),
                         text = "Enter Address Data",
+                        fontWeight = Bold,
                         textAlign = TextAlign.Center,
                         fontSize = 27.sp,
-                        color = MaterialTheme.colors.secondary
+                        color = MaterialTheme.colors.surface
                     )
-                }
+                //}
 
             }
 
@@ -500,7 +597,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
-            Spacer(modifier = Modifier.padding(top = 12.dp))
+            //Spacer(modifier = Modifier.padding(top = 12.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(

@@ -60,7 +60,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
         exit = slideOutVertically(targetOffsetY = { it }),
         content = {
             BottomNavigation(
-                //backgroundColor = MaterialTheme.colors.primaryVariant
                 backgroundColor = MaterialTheme.colors.primary
             ){
                 val backStackEntry by navController.currentBackStackEntryAsState()
@@ -107,7 +106,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                                 Icon(
                                     imageVector = navItem.image,
                                     contentDescription = navItem.title,
-                                    //tint = MaterialTheme.colors.primary,
                                     tint = MaterialTheme.colors.surface,
                                     modifier = Modifier.size(28.dp)
                                 )
@@ -115,7 +113,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    //color = MaterialTheme.colors.primary,
                                     color = MaterialTheme.colors.surface,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -147,7 +144,6 @@ fun BottomBar(navController: NavHostController, bottomBarState: MutableState<Boo
                             label = {
                                 Text(
                                     text = navItem.title,
-                                    //color = MaterialTheme.colors.primary,
                                     color = MaterialTheme.colors.surface,
                                     fontWeight = FontWeight.Bold
                                 )
