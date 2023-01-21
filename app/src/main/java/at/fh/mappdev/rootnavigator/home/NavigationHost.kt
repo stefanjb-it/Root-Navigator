@@ -37,7 +37,7 @@ fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager,
         }
 
         composable(NavRoutes.Timetable.route) {
-            TimetableUI(preferences)
+            TimetableUI()
         }
 
         composable(NavRoutes.Settings.route) {

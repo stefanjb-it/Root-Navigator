@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
 import at.fh.mappdev.rootnavigator.R
-import at.fh.mappdev.rootnavigator.hafas.CardContent
 import at.fh.mappdev.rootnavigator.reminder.NewReminderActivity.startActivity
 
 class ResetPasswordActivity : ComponentActivity() {
@@ -52,7 +50,6 @@ fun ResetPasswordUI(){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
             painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
@@ -69,15 +66,6 @@ fun ResetPasswordUI(){
             verticalArrangement = Arrangement.Center
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                /*Text(
-                    text = "Reset Password",
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.secondary,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 27.sp
-                    )
-                )*/
                 Card(
                     backgroundColor = MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(25.dp),
@@ -98,15 +86,6 @@ fun ResetPasswordUI(){
             }
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
-
-            /*Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Please enter your E-Mail address",
-                    textAlign = TextAlign.Start,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colors.surface)
-            }*/
-
-            //Spacer(modifier = Modifier.padding(top = 12.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(

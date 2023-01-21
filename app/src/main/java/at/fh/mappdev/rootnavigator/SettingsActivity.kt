@@ -27,8 +27,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -54,7 +52,6 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
             .paint(
                 painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),

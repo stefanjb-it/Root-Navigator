@@ -61,11 +61,6 @@ fun Reminder(reminder : ReminderItemRoom, Context: Context, list :  SnapshotStat
             vertical = 12.dp
         ),
         backgroundColor = MaterialTheme.colors.primary,
-        /*backgroundColor = when (reminder.ReminderPriority) {
-            "High" -> Color(R.color.light_red)
-            "Medium" -> Color(R.color.light_yellow)
-            else -> Color(R.color.light_green)
-        },*/
         shape = RoundedCornerShape(25.dp)
     ) {
         ReminderContent(reminder, Context, list)
@@ -81,7 +76,6 @@ fun ReminderOverviewUI(navController: NavHostController, Context: Context = Loca
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
             .paint(
                 painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),

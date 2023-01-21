@@ -11,6 +11,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -40,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import at.fh.mappdev.rootnavigator.alarm.AlarmReceiver
 import at.fh.mappdev.rootnavigator.NotificationInfo
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
@@ -209,9 +209,6 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
                     }
                 }
             }
-
-
-
         }
 
         Spacer(modifier = Modifier.padding(top = 12.dp))
@@ -330,11 +327,12 @@ fun NewReminderUI(navController: NavHostController, alarmManager: AlarmManager, 
 }
 
 fun setAlarm(context: Context, alarmManager: AlarmManager, time : Long, id : Int, description: String){
-    val intent = Intent(context, AlarmReceiver::class.java)
+    val intent = Intent(context, NotificationReceiver::class.java)
     intent.putExtra("ID", id)
     intent.putExtra("DESCRIPTION", description)
-    intent.putExtra("TYPE", false)
     val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
+    Log.i("Notification", "Alarm set for $time with id $id and description $description")
+    Log.i("Notification", "Function Start")
     alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
 }

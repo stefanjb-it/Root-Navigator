@@ -29,34 +29,24 @@ fun Connections(preferences: SharedPreferences, bottomBarState: MutableState<Boo
     topBarState.value = true
     var currentLocation = GlobalVarHolder.location.observeAsState()
     //val lat = 47.0672718
-    val lat = 47.0727551
+    val latHbf = 47.0727551
     //val long = 15.4420971
-    val long = 15.4140822
-    //val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(lat, long, 1000).observeAsState()
+    val longHbf = 15.4140822
+    val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(latHbf, longHbf, 1000).observeAsState()
     val finalMap = BackendHandler.getStationMap().observeAsState()
-    Log.v("OUT", GlobalVarHolder.userIdToken)
-    //Log.e("StationsList", stationsIdResponse.value?.content.toString())
 
     when (stationsIdResponse.value?.done) {
         true -> {
-            Log.v("IN", GlobalVarHolder.userIdToken)
-            //Log.e("finalMap", stationsIdResponse.value?.content?.map { it.name }.toString())
-            //Log.e("StationsList", stationsIdResponse.value?.content?.size.toString())
             BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
             Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_LONG).show()
         }
-        else -> Toast.makeText(
-            LocalContext.current,
-            "Data is being retrieved...",
-            Toast.LENGTH_SHORT
-        ).show()
+        else -> Log.i("Data", "Data is being retrieved")
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            //.background(MaterialTheme.colors.primary)
             .background(MaterialTheme.colors.background)
             .paint(
                 painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
@@ -73,17 +63,13 @@ fun Connections(preferences: SharedPreferences, bottomBarState: MutableState<Boo
         )
         {
             if (finalMap.value != null) {
-                //Log.v("finalMap", finalMap.value?.map { it.value.station.name }.toString())
-                //Log.v("finalMap", finalMap.value?.size.toString())
                 finalMap.value?.forEach {
                     item {
                         Connection(station = it.value, preferences)
                     }
                 }
             } else {
-                item {
-
-                }
+                item {}
             }
 
         }

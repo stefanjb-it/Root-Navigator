@@ -46,7 +46,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.*
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
-import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme

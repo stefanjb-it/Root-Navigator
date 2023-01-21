@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
 import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
-import at.fh.mappdev.rootnavigator.*
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
@@ -62,7 +60,6 @@ fun RegistrationUIMode(preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
             painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
@@ -159,7 +156,6 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
 
     Column(modifier = Modifier
         .fillMaxSize()
-        //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
             painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),
@@ -200,45 +196,42 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
                 ) {
-                    Column() {
-                    //Row(modifier = Modifier
-                        //.fillMaxWidth()) {
+                    Column {
                         Text(modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 3.dp),
                             text = "E-Mail",
                             textAlign = TextAlign.Center,
                             fontSize = 18.sp,
-                            color = MaterialTheme.colors.secondary)
-                    //}
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        TextField(
-                            value = email,
-                            onValueChange = { email = it },
-                            singleLine = true,
-                            modifier = Modifier
-                                .height(height = 60.dp)
-                                .fillMaxWidth()
-                                .testTag("UserEmail"),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.primary
-                            ),
-                            textStyle = TextStyle(
-                                fontFamily = FontFamily.SansSerif,
-                                color = MaterialTheme.colors.surface,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text
-                            )
+                            color = MaterialTheme.colors.secondary
                         )
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            TextField(
+                                value = email,
+                                onValueChange = { email = it },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .height(height = 60.dp)
+                                    .fillMaxWidth()
+                                    .testTag("UserEmail"),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    backgroundColor = MaterialTheme.colors.primary
+                                ),
+                                textStyle = TextStyle(
+                                    fontFamily = FontFamily.SansSerif,
+                                    color = MaterialTheme.colors.surface,
+                                    fontSize = 18.sp,
+                                    textAlign = TextAlign.Center
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text
+                                )
+                            )
+                        }
                     }
-                }}
-
+                }
             }
-
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
@@ -248,7 +241,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
                 ) {
-                    Column() {
+                    Column{
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -297,7 +290,6 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                 }
             }
 
-
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -306,7 +298,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                     shape = RoundedCornerShape(25.dp),
                     elevation = 10.dp
                 ) {
-                    Column() {
+                    Column{
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -438,7 +430,6 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
 
     Column(modifier = Modifier
         .fillMaxSize()
-        //.background(MaterialTheme.colors.primary)
         .background(MaterialTheme.colors.background)
         .paint(
             painter = painterResource(if (!isSystemInDarkTheme()) R.drawable.threelines_new_light else R.drawable.threelines_new),

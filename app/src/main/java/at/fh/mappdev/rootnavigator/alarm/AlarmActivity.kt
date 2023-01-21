@@ -10,7 +10,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -48,7 +47,6 @@ class AlarmActivity : ComponentActivity() {
         setContent {
             RootNavigatorTheme {
                 Surface(color = MaterialTheme.colors.primary) {
-                    // SettingUi()
                 }
             }
         }
@@ -303,7 +301,6 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
 
 fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numberOfAlarms: Int, interval: Long, id : Int){
     val intent = Intent(context, AlarmReceiver::class.java)
-    intent.putExtra("TYPE", true)
     intent.putExtra("ID", id)
     intent.putExtra("DESCRIPTION", "")
 
