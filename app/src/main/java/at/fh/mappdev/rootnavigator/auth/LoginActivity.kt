@@ -138,8 +138,7 @@ fun LoginUI(preferences: SharedPreferences){
                 .padding(
                     horizontal = 32.dp,
                 )
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -229,7 +228,7 @@ fun LoginUI(preferences: SharedPreferences){
                         val description = if (passwordVisible) "Hide password" else "Show password"
 
                         IconButton(onClick = {passwordVisible = !passwordVisible}){
-                            Icon(imageVector  = image, description)
+                            Icon(imageVector  = image, description, tint = MaterialTheme.colors.secondary)
                         }
                     }
                 )

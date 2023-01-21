@@ -38,6 +38,7 @@ import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseUser
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
+import java.util.regex.Pattern
 
 class RegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -281,7 +282,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                                         if (passwordVisible) "Hide password" else "Show password"
 
                                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                        Icon(imageVector = image, description)
+                                        Icon(imageVector = image, description, tint = MaterialTheme.colors.secondary)
                                     }
                                 }
                             )
@@ -383,9 +384,17 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
         if (notEmpty()) {
             if (checkEmail()) {
                 if (matchPasswords()) {
-                    val pwRegex = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$""".toRegex()
+                    val passwordREGEX = Pattern.compile("^" +
+                            "(?=.*[0-9])" +         //at least 1 digit
+                            "(?=.*[a-z])" +         //at least 1 lower case letter
+                            "(?=.*[A-Z])" +         //at least 1 upper case letter
+                            "(?=.*[a-zA-Z])" +      //any letter
+                            "(?=.*[@#!$%^&+=])" +   //at least 1 special character
+                            "(?=\\S+$)" +           //no white spaces
+                            ".{8,}" +               //at least 8 characters
+                            "$")
 
-                    if (pwRegex.matches(password)){
+                    if (passwordREGEX.matcher(password).matches()){
                         RegistrationUIAddress(studentMode, email, password, preferences)
                     } else {
                         buttonClicked = false
