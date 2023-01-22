@@ -1,4 +1,5 @@
 # Root-Navigator Backend
+[![force-push-main](https://github.com/stefanjb-it/Root-Navigator/actions/workflows/force-push-main.yml/badge.svg)](https://github.com/stefanjb-it/Root-Navigator/actions/workflows/force-push-main.yml)
 
 ## Purpose
 This part of our backend is responsible for the authentication and forwarding of data requests.
