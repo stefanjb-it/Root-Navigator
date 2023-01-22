@@ -14,7 +14,7 @@ There are also some additional packages for testing:
 - [chai-http](https://www.npmjs.com/package/chai-http)
 
 The Hafas backend is running in Google Cloud via Cloud Run. Also CI/CD pipelines/actions are
-configured for the backend. These can be find in the .github/workflows folder in the Github repo
+configured for the backend. These can be found in the .github/workflows folder in the Github repo
 under the hafas-oebb branch.
 
 **G-Unit Workflow:**
@@ -61,10 +61,8 @@ and then installing our required packages.
 2. Unzip it
 3. Open a terminal or cmd
 4. Navigate into the project folder
-5. Now run `docker build -t oebb-hafas .` (This will build an image with the name oebb-hafas)
+5. Now run `docker build -t oebb-hafas . --no-cache` (This will build an image with the name oebb-hafas)
 6. After the build succeeded you should see the image via `docker images` command
-7. Now run `docker run -d [NAME FOR YOUR CONTAINER] -e PORT=[YOUR PREFERRED PORT] -p [EXTERNAL ACCESS PORT FOR API]:[YOUR PREFERRED PORT (SAME AS BEFORE)]`
+7. Now run `docker run -d oebb-hafas -p [EXTERNAL ACCESS PORT FOR API]:8080`
 8. With `docker ps` you can check if your container is running
 9. Now the API should be available under http://localhost:[EXTERNAL_ACCESS_PORT]
-
-
