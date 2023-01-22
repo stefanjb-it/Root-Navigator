@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.concurrent.timerTask
 
+// transition to home activity
 class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,6 +162,7 @@ private fun isDeviceOnline(context: Context): Boolean {
     }
 }
 
+// the actual UI for this activity
 @Composable
 fun AuthUI(){
     Column(modifier = Modifier

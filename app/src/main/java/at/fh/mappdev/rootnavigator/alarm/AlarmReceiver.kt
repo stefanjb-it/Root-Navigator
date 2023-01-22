@@ -19,6 +19,7 @@ import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import java.util.*
 
+// receives OS callback and handles the alarm call
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
             val toastText = String.format("Alarm Received")
@@ -29,6 +30,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             startAlarmService(context, intent)
     }
 
+    // starts the alarm service
     private fun startAlarmService(context: Context, intent: Intent) {
         println("AlarmBroadcastReceiver: startAlarmService")
         val intentService = Intent(context, AlarmService::class.java)

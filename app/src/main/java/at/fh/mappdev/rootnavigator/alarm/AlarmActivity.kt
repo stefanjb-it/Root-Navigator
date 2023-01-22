@@ -44,6 +44,7 @@ import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
 
+// screen to set an alarm
 class AlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -191,7 +192,7 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
                             scheduleAlarm(context, selectedDateTime.timeInMillis)
                         }
 
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "SET, remember to alter media volume!", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "Please select or enter valid values!", Toast.LENGTH_SHORT).show()
                     }
@@ -211,6 +212,7 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
     }
 }
 
+// starts scheduling process
 fun scheduleAlarm(ctx:Context, time:Long) {
     val alarm: Alarm = Alarm(
         time,

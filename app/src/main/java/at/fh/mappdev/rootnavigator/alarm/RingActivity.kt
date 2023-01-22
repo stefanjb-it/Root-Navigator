@@ -10,6 +10,7 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import at.fh.mappdev.rootnavigator.R
 
+// activity to dismiss the alarm
 class RingActivity : AppCompatActivity(){
     private var dismiss:Button? = null
     private var clock : ImageView? = null

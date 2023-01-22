@@ -14,6 +14,7 @@ import at.fh.mappdev.rootnavigator.hafas.Connections
 import at.fh.mappdev.rootnavigator.reminder.NewReminderUI
 import at.fh.mappdev.rootnavigator.reminder.ReminderOverviewUI
 
+// compose navigation without intents and restarting activities
 @Composable
 fun NavigationHost(navController: NavHostController, alarmManager: AlarmManager, preferences : SharedPreferences, bottomBarState: MutableState<Boolean>, topBarState:MutableState<Boolean>) {
     NavHost(

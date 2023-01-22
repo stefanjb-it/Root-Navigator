@@ -20,6 +20,8 @@ import at.fh.mappdev.rootnavigator.database.*
 import com.google.android.gms.location.*
 import java.util.*
 
+// central activity after authentication
+// contains all following screens via compose navigation and activity exchange
 class HomeActivity : ComponentActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private val interval: Long = 15000

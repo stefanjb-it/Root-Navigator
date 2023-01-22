@@ -53,7 +53,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseUser
 
-
+// central starting activity
 class LoginActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val locationPermissionCode = 999
@@ -112,6 +112,7 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
+// UI for Login Process
 @Composable
 fun LoginUI(preferences: SharedPreferences){
     var email by remember { mutableStateOf("") }

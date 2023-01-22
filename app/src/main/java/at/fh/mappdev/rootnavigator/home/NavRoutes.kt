@@ -1,5 +1,6 @@
 package at.fh.mappdev.rootnavigator.home
 
+// routes for compose navigation
 sealed class NavRoutes(val route: String) {
     object Home : NavRoutes("home")
     object Reminder : NavRoutes("reminder")

@@ -12,6 +12,7 @@ import at.fh.mappdev.rootnavigator.NotificationInfo
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.auth.LoginActivity
 
+// callback for OS after setting a reminder notification prior
 class NotificationReceiver : BroadcastReceiver() {
     @SuppressLint("LaunchActivityFromNotification")
     override fun onReceive(context: Context, intent: Intent) {

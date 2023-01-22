@@ -41,6 +41,7 @@ import at.fh.mappdev.rootnavigator.database.GlobalVarHolder
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.regex.Pattern
 
+// This activity is used to register a new user
 class RegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class RegistrationActivity : ComponentActivity() {
     }
 }
 
+// activity 1/3 --> mode
 @Composable
 fun RegistrationUIMode(preferences: SharedPreferences){
     var studentMode by remember { mutableStateOf(false) }
@@ -148,6 +150,7 @@ fun RegistrationUIMode(preferences: SharedPreferences){
     }
 }
 
+// activity 2/3 --> general account information
 @Composable
 fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
 
@@ -176,11 +179,6 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
         ) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                /*Card(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(25.dp),
-                    elevation = 10.dp
-                ) {*/
                     Text(
                         modifier = Modifier.padding(16.dp),
                         text = "Enter Account Data",
@@ -189,53 +187,11 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
                         fontSize = 27.sp,
                         color = MaterialTheme.colors.surface
                     )
-                //}
-
             }
 
             Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                /*Card(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(25.dp),
-                    elevation = 10.dp
-                ) {
-                    Column {
-                        Text(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 3.dp),
-                            text = "E-Mail",
-                            textAlign = TextAlign.Center,
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colors.secondary
-                        )
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            TextField(
-                                value = email,
-                                onValueChange = { email = it },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .height(height = 60.dp)
-                                    .fillMaxWidth()
-                                    .testTag("UserEmail"),
-                                colors = TextFieldDefaults.textFieldColors(
-                                    backgroundColor = MaterialTheme.colors.primary
-                                ),
-                                textStyle = TextStyle(
-                                    fontFamily = FontFamily.SansSerif,
-                                    color = MaterialTheme.colors.surface,
-                                    fontSize = 18.sp,
-                                    textAlign = TextAlign.Center
-                                ),
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
-                                )
-                            )
-                        }
-                    }
-                }*/
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     TextField(
@@ -511,6 +467,7 @@ fun RegistrationUIAccount(studentMode: Boolean, preferences: SharedPreferences){
     }
 }
 
+// activity 3/3 --> transport information
 @Composable
 fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, preferences: SharedPreferences){
 
@@ -678,7 +635,7 @@ fun RegistrationUIAddress(StudentMode: Boolean, Email:String, Password:String, p
                                             val intent = Intent(context, AuthActivity::class.java)
                                             context.startActivity(intent)
                                         } else {
-                                            Toast.makeText(context, "Athentication failed!", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "Authentication failed!", Toast.LENGTH_SHORT).show()
                                         }
                                     }
                           } else {

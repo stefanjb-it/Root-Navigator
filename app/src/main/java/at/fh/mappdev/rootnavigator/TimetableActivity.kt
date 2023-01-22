@@ -39,7 +39,6 @@ fun TimetableUI(){
     cm.acceptCookie()
     cm.setCookie(baseUrl, cookieString2)
     cm.flush()
-    Log.e("Cookie", cm.getCookie(baseUrl))
 
     Column(modifier = Modifier
         .fillMaxSize()

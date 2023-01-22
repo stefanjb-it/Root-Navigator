@@ -377,7 +377,7 @@ fun SettingUi(navController: NavHostController, preferences: SharedPreferences, 
                             preferences.edit().putBoolean(GlobalVarHolder.TOBESAVED, false).apply()
                             preferences.edit().putInt(GlobalVarHolder.NOTIFICATIONID, 0).apply()
                             preferences.edit().putString(GlobalVarHolder.REQUESTTIME, "30").apply()
-                            GlobalVarHolder.localReqTime = "0"
+                            GlobalVarHolder.localReqTime = "30"
                             GlobalVarHolder.location.value?.altitude = 0.0
                             GlobalVarHolder.location.value?.latitude = 0.0
 

@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import at.fh.mappdev.rootnavigator.bars.BottomBar
 import at.fh.mappdev.rootnavigator.bars.TopBar
 
+// implements screen layout
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MyScaffold(preferences: SharedPreferences, alarmManager: AlarmManager){

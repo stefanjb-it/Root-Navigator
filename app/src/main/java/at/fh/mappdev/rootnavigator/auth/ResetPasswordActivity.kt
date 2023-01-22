@@ -30,6 +30,7 @@ import at.fh.mappdev.rootnavigator.FirebaseUtils.firebaseAuth
 import at.fh.mappdev.rootnavigator.R
 import at.fh.mappdev.rootnavigator.reminder.NewReminderActivity.startActivity
 
+// user can reset password here
 class ResetPasswordActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class ResetPasswordActivity : ComponentActivity() {
     }
 }
 
+// the actual UI for this activity
 @Composable
 fun ResetPasswordUI(){
     val context = LocalContext.current
