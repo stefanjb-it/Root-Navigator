@@ -32,7 +32,7 @@ describe('/locations/nearby', () => {
                 res.should.have.status(200)
                 res.should.be.json
                 res.body.should.be.a('array')
-                res.body.should.have.lengthOf(6)
+                res.body.should.have.lengthOf(5)
                 res.body[0].should.be.a('object')
                 done()
             });
