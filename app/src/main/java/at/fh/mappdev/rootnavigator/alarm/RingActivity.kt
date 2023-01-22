@@ -14,7 +14,7 @@ class RingActivity : AppCompatActivity(){
     private var dismiss:Button? = null
     private var clock : ImageView? = null
 
-    override fun onCreate(@Nullable savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ring)
         dismiss = findViewById<Button>(R.id.activity_ring_dismiss)

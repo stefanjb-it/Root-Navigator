@@ -188,15 +188,6 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
                         }
 
                         if (NotificationInfo.NOTIFICATIONPERMISSION) {
-                            /*setAlarm(
-                                context,
-                                alarmManager,
-                                selectedDateTime.timeInMillis,
-                                numberOfAlarms.toInt(),
-                                intervalforAlarm,
-                                id
-                            )*/
-                            //setAlarm(context, alarmManager, selectedDateTime.timeInMillis)
                             scheduleAlarm(context, selectedDateTime.timeInMillis)
                         }
 
@@ -220,58 +211,9 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
     }
 }
 
-/*
-fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numberOfAlarms: Int, interval: Long, id : Int){
-    val intent = Intent(context, AlarmReceiver::class.java)
-    intent.putExtra("ID", id)
-    intent.putExtra("DESCRIPTION", "")
-
-    val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_MUTABLE)
-    } else {
-        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
-
-    if (numberOfAlarms > 1){
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, setTime, interval, pendingIntent)
-    } else {
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, setTime, pendingIntent)
-    }
-}
-*/
-
-private fun setAlarm(context:Context, alarmManager:AlarmManager, setTime:Long) {
-    val intent = Intent(context, AlarmReceiver::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_MUTABLE)
-    } else {
-        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
-
-    /*val calendar: Calendar = Calendar.getInstance().apply {
-        timeInMillis = System.currentTimeMillis()
-        set(Calendar.HOUR_OF_DAY, 13)
-    }
-    calendar.set(Calendar.MINUTE, 8)*/
-
-    /*alarmManager.setInexactRepeating(
-        AlarmManager.RTC_WAKEUP,
-        setTime,
-        AlarmManager.INTERVAL_DAY,
-        pendingIntent
-    )*/
-
-    alarmManager.setExact(
-        AlarmManager.RTC_WAKEUP,
-        System.currentTimeMillis() + 10000,
-        pendingIntent
-    )
-}
-
 fun scheduleAlarm(ctx:Context, time:Long) {
     val alarm: Alarm = Alarm(
-        System.currentTimeMillis() + 10000,
+        time,
         true,
     )
     alarm.schedule(ctx)

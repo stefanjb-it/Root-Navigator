@@ -39,7 +39,7 @@ fun Connections(preferences: SharedPreferences, bottomBarState: MutableState<Boo
     when (stationsIdResponse.value?.done) {
         true -> {
             BackendHandler.loadStationDetails(stationsIdResponse.value?.content ?: listOf())
-            Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_LONG).show()
+            Toast.makeText(LocalContext.current, "Your data is almost here!", Toast.LENGTH_SHORT).show()
         }
         else -> Log.i("Data", "Data is being retrieved")
     }
