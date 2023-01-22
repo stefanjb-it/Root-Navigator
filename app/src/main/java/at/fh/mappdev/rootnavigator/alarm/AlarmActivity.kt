@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import at.fh.mappdev.rootnavigator.NotificationInfo
 import at.fh.mappdev.rootnavigator.R
+import at.fh.mappdev.rootnavigator.auth.LoginActivity
 import at.fh.mappdev.rootnavigator.ui.theme.RootNavigatorTheme
 import java.util.*
 
@@ -269,14 +271,16 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
                         }
 
                         if (NotificationInfo.NOTIFICATIONPERMISSION) {
-                            setAlarm(
+                            /*setAlarm(
                                 context,
                                 alarmManager,
                                 selectedDateTime.timeInMillis,
                                 numberOfAlarms.toInt(),
                                 intervalforAlarm,
                                 id
-                            )
+                            )*/
+                            //setAlarm(context, alarmManager, selectedDateTime.timeInMillis)
+                            scheduleAlarm(context, selectedDateTime.timeInMillis)
                         }
 
                         Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
@@ -299,6 +303,7 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
     }
 }
 
+/*
 fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numberOfAlarms: Int, interval: Long, id : Int){
     val intent = Intent(context, AlarmReceiver::class.java)
     intent.putExtra("ID", id)
@@ -316,21 +321,41 @@ fun setAlarm(context: Context, alarmManager: AlarmManager, setTime : Long, numbe
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, setTime, pendingIntent)
     }
 }
+*/
 
+private fun setAlarm(context:Context, alarmManager:AlarmManager, setTime:Long) {
+    val intent = Intent(context, AlarmReceiver::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_MUTABLE)
+    } else {
+        PendingIntent.getBroadcast(context, 999, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
+    /*val calendar: Calendar = Calendar.getInstance().apply {
+        timeInMillis = System.currentTimeMillis()
+        set(Calendar.HOUR_OF_DAY, 13)
+    }
+    calendar.set(Calendar.MINUTE, 8)*/
 
+    /*alarmManager.setInexactRepeating(
+        AlarmManager.RTC_WAKEUP,
+        setTime,
+        AlarmManager.INTERVAL_DAY,
+        pendingIntent
+    )*/
 
+    alarmManager.setExact(
+        AlarmManager.RTC_WAKEUP,
+        System.currentTimeMillis() + 10000,
+        pendingIntent
+    )
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+fun scheduleAlarm(ctx:Context, time:Long) {
+    val alarm: Alarm = Alarm(
+        System.currentTimeMillis() + 10000,
+        true,
+    )
+    alarm.schedule(ctx)
+}

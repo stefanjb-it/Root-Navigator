@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-feature android:name="android.hardware.location.gps" android:required="true"/>
 
@@ -23,8 +24,27 @@
         android:theme="@style/Theme.RootNavigator"
         tools:targetApi="31">
 
+
         <receiver android:name=".alarm.AlarmReceiver" />
         <receiver android:name=".reminder.NotificationReceiver" />
+
+        <receiver android:name=".alarm.AlarmBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".alarm.AlarmService" />
+
+        <activity
+            android:name=".alarm.RingActivity"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
 
         <activity
             android:name=".auth.LoginActivity"

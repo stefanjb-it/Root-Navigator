@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Looper
 import android.widget.Toast
@@ -38,12 +40,23 @@ class HomeActivity : ComponentActivity() {
             Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
         }
         checkForPermission(this)
+        checkForNetworkConnection(this)
         startLocationUpdates()
 
         setContent {
             RootNavigatorTheme {
                 MyScaffold(sharedPrefs, alarmManager)
             }
+        }
+    }
+
+    private fun checkForNetworkConnection(context: Context) {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network)
+
+        if (activeNetwork?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) != true && activeNetwork?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) != true) {
+            Toast.makeText(context,"No network connection!",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -54,6 +67,7 @@ class HomeActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        checkForNetworkConnection(this)
         startLocationUpdates()
     }
 
