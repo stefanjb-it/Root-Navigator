@@ -80,7 +80,7 @@ class AlarmService : Service(){
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationIntent = Intent(this, RingActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         val alarmTitle = "ALARM"
         val notification: Notification = NotificationCompat.Builder(this, NotificationInfo.ALARMID)
             .setContentTitle(alarmTitle)
@@ -91,7 +91,9 @@ class AlarmService : Service(){
         mp?.start()
         val pattern = longArrayOf(0, 100, 1000)
         //vib?.vibrate(pattern, 0)
-        vib?.vibrate(VibrationEffect.createOneShot(1000, 200))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vib?.vibrate(VibrationEffect.createOneShot(1000, 200))
+        }
         startForeground(1, notification)
         return START_STICKY
     }
@@ -117,7 +119,7 @@ class Alarm(
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         val alarmPendingIntent = PendingIntent.getBroadcast(
             context,
-            0, intent, 0)
+            0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             val toastText: String = "SET"
 

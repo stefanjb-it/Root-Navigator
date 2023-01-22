@@ -32,8 +32,8 @@ fun Connections(preferences: SharedPreferences, bottomBarState: MutableState<Boo
     val latHbf = 47.0727551
     //val long = 15.4420971
     val longHbf = 15.4140822
-    // val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
-    var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(latHbf, longHbf, 1000).observeAsState()
+    val stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(currentLocation.value?.latitude ?: (-1).toDouble(), currentLocation.value?.longitude ?: (-1).toDouble(), 1000).observeAsState()//= BackendHandler.getNearbyStations(lat, long, 250).observeAsState()
+    // var stationsIdResponse : State<ResponseType?> = BackendHandler.getNearbyStations(latHbf, longHbf, 1000).observeAsState()
     val finalMap = BackendHandler.getStationMap().observeAsState()
 
     when (stationsIdResponse.value?.done) {

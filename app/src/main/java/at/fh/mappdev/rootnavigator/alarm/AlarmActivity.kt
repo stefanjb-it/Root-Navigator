@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,8 +60,6 @@ class AlarmActivity : ComponentActivity() {
 fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager, preferences : SharedPreferences,) {
     val switchStateOn = remember {mutableStateOf(false)}
     var wakeUpTime by remember { mutableStateOf("") }
-    var numberOfAlarms by remember { mutableStateOf("") }
-    var interval by remember { mutableStateOf("") }
 
     val calendar = Calendar.getInstance()
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -99,159 +98,77 @@ fun AlarmUi(context: Context = LocalContext.current, alarmManager: AlarmManager,
                 .weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Card(
+                backgroundColor = MaterialTheme.colors.primary,
+                shape = RoundedCornerShape(25.dp),
+                elevation = 10.dp
             ) {
-                Text(
-                    text = "OFF / ON",
-                    textAlign = TextAlign.Left,
-                    fontSize = 18.sp,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = switchStateOn.value,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.secondary,
-                        checkedTrackColor = MaterialTheme.colors.secondary,
-                        uncheckedThumbColor = MaterialTheme.colors.surface,
-                        uncheckedTrackColor = MaterialTheme.colors.surface
-                    ),
-                    onCheckedChange = { switchStateOn.value = it },
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(top = 8.dp))
-
-            androidx.compose.animation.AnimatedVisibility(
-                visible = switchStateOn.value,
-                enter = slideInVertically(initialOffsetY = { -it }),
-                exit = slideOutVertically(targetOffsetY = { -it }),
-                content = {
+                Column(modifier = Modifier.padding(all = 24.dp),
+                verticalArrangement = Arrangement.Center){
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Wake up time",
+                            text = "OFF / ON",
                             textAlign = TextAlign.Left,
-                            fontSize = 18.sp,
+                            fontSize = 24.sp,
+                            color = MaterialTheme.colors.surface
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Button(
-                            onClick = { timePickerDialog.show() },
-                            modifier = Modifier
-                                .width(width = 150.dp)
-                                .height(height = 35.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
-                        ) {
-                            Text(
-                                text = if (wakeUpTime == "") "Pick Time" else wakeUpTime,
-                                color = MaterialTheme.colors.onSurface,
-                                fontSize = 15.sp
-                            )
+                        Switch(
+                            checked = switchStateOn.value,
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colors.secondary,
+                                checkedTrackColor = MaterialTheme.colors.secondary,
+                                uncheckedThumbColor = MaterialTheme.colors.surface,
+                                uncheckedTrackColor = MaterialTheme.colors.surface
+                            ),
+                            onCheckedChange = { switchStateOn.value = it },
+                        )
+                    }
+
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = switchStateOn.value,
+                        enter = slideInVertically(initialOffsetY = { -it }),
+                        exit = slideOutVertically(targetOffsetY = { -it }),
+                        content = {
+
+                            Row(modifier = Modifier.padding(top = 18.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Button(
+                                    onClick = { timePickerDialog.show() },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(height = 65.dp),
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                                ) {
+                                    Text(
+                                        text = if (wakeUpTime == "") "Pick Time" else wakeUpTime,
+                                        color = MaterialTheme.colors.onSurface,
+                                        fontSize = 24.sp
+                                    )
+                                }
+                            }
                         }
-                    }
-                })
-
-            Spacer(modifier = Modifier.padding(top = 24.dp))
-
-            androidx.compose.animation.AnimatedVisibility(
-                visible = switchStateOn.value,
-                enter = slideInVertically(initialOffsetY = { -it }),
-                exit = slideOutVertically(targetOffsetY = { -it }),
-                content = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Number of alarms",
-                            textAlign = TextAlign.Left,
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colors.surface
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        TextField(
-                            value = numberOfAlarms,
-                            onValueChange = { numberOfAlarms = it },
-                            singleLine = true,
-                            modifier = Modifier
-                                .height(height = 60.dp)
-                                .width(width = 150.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.primary
-                            ),
-                            label = { Text(text = "times", color = MaterialTheme.colors.secondary) },
-                            textStyle = TextStyle(
-                                fontFamily = FontFamily.SansSerif,
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colors.surface
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number
-                            )
-                        )
-                    }
-                })
-
-            Spacer(modifier = Modifier.padding(top = 24.dp))
-
-            androidx.compose.animation.AnimatedVisibility(
-                visible = switchStateOn.value,
-                enter = slideInVertically(initialOffsetY = { -it }),
-                exit = slideOutVertically(targetOffsetY = { -it }),
-                content = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Interval",
-                            textAlign = TextAlign.Left,
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colors.surface
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        TextField(
-                            value = interval,
-                            onValueChange = { interval = it },
-                            singleLine = true,
-                            modifier = Modifier
-                                .height(height = 60.dp)
-                                .width(width = 150.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.primary
-                            ),
-                            label = { Text(text = "minutes", color = MaterialTheme.colors.secondary) },
-                            textStyle = TextStyle(
-                                fontFamily = FontFamily.SansSerif,
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colors.surface
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number
-                            )
-                        )
-                    }
-                })
-
-            Spacer(modifier = Modifier.padding(top = 24.dp))
-
+                    )
+                }
+            }
         }
 
-            Column(
-                modifier = Modifier
-                    .padding(
-                        bottom = 32.dp,
-                        start = 16.dp,
-                        end = 16.dp
-                    ))
-            {
+        Column(
+            modifier = Modifier
+                .padding(
+                    bottom = 32.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                ))
+        {
             Button(
                 onClick = {
-                    if (switchStateOn.value && wakeUpTime != "" &&
-                        numberOfAlarms.toIntOrNull() != null && numberOfAlarms.toInt() >= 0
-                        && interval.toIntOrNull() != null && interval.toInt() > 0){
+                    if (switchStateOn.value && wakeUpTime != ""){
 
                         val timeArray = wakeUpTime.split(":")
-                        val intervalforAlarm =  interval.toLong() * 60 * 1000
                         val id = preferences.getInt("ALARMID", 1)
 
                         preferences.edit().putInt("ALARMID",(id+1)).apply()
